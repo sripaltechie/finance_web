@@ -1,0 +1,59 @@
+<div class="container" ng-init="init()" >
+    <div class="row">
+        <div class="form-inline">
+            <div class="col-md-3">
+                <select class="form-control" ng-init="filter.chiti=1" ng-model="filter.chiti" ng-options ="ch.id as ch.chitiname + '(' + ch.code + ')'  for ch in cfchiti">
+                    <option value="">Select Chiti</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>S.NO.</th>
+                <th>Date</th>
+                <th>Chiti</th>
+                <th>No</th>
+                <th>Customer</th>
+                <th>Paata</th>
+                <th>Payamount</th>
+                <th>Repayamount</th>
+                <th>Sripal Comm</th>
+                <th>Sowji Comm</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="cf in cfpaata" ng-show="cf.chiti == filter.chiti">
+            <tr>
+                <td>{{$index+1}}</td>
+                <td>{{changeDateUserFormat(cf.date)}}</td>
+                <td>{{cf.chitiname}}({{cf.code}})</td>
+                <td>{{cf.no}}</td>
+                <td>{{cf.customername}} {{cf.cusno}}</td>
+                <td>{{cf.paata}}</td>
+                <td>{{cf.payamount}}</td>
+                <td>{{cf.repayamount}}</td>
+                <td>{{cf.sripalcomm}}</td>
+                <td>{{cf.sowjicomm}} </td>
+                <td>
+                    <a href="#/cfpaata/{{cf.id}}" ><i class="fa fa-eye" aria-hidden="true"></i></a> 
+                    <a href="#/editcfpaata/{{cf.id}}" ><i class="fa fa-edit" aria-hidden="true"></i></a> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    $('table').on('click', 'td', function() {
+       if($( this ).css( "background-color" ) == "rgb(255, 255, 0)"){
+          $(this).css('backgroundColor', 'white');
+       }else{
+          $(this).css('backgroundColor', 'yellow');
+       }
+    });
+ 
+ </script>

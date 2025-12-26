@@ -1,0 +1,677 @@
+v3.1
+-----
+upcoming work
+-------------
+
+Changes
+--------
+-> added feature of saving daybooknotes
+-> edit daybook notes also done
+
+db changes 
+-----------
+-> ALTER TABLE `daybook` ADD `note1` VARCHAR(500) NOT NULL AFTER `note`;
+
+
+
+
+v 3.0
+------
+
+db changes 
+-----------
+-> CREATE TABLE `collectors` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(50) NOT NULL ,  `phone` VARCHAR(20) NOT NULL , `status` INT(8) NOT NULL  DEFAULT '1' , `uid` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> CREATE TABLE `collectoramount` ( `id` INT NOT NULL AUTO_INCREMENT , `date` DATE NOT NULL , `collector` INT(10) NOT NULL , `amount` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> ALTER TABLE `collectoramount` ADD `collectiondate` DATE NOT NULL AFTER `amount`;
+-> ALTER TABLE `collectoramount` ADD `note` VARCHAR(500) NOT NULL AFTER `collectiondate`;
+-> CREATE TABLE `yesno` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(50) NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> INSERT INTO `yesno` (`id`, `name`, `deleted`) VALUES ('1', 'yes', '0'), ('2', 'no', '0')
+-> ALTER TABLE `received` ADD `collectedby` INT(10) NOT NULL AFTER `colid`;
+-> ALTER TABLE `drcr` ADD `collectedby` INT(10) NOT NULL AFTER `forint`;
+-> CREATE TABLE `finance`.`daybook` ( `id` INT NOT NULL AUTO_INCREMENT , `date` DATE NOT NULL , `note` VARCHAR(1000) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> ALTER TABLE `daybook` ADD `note1` VARCHAR(500) NOT NULL AFTER `note`;
+//db query for getting the collection ttl
+SELECT *,SUM(a.amount) as amount,SUM(b.credit) as credit,SUM(b.debit) as debit FROM `received` a left join pmtrans b on a.id = b.tableid and b.paymentmode = 1 WHERE collectedby = 1 GROUP by a.pmid;
+
+
+Mar 9 2023
+-----------
+- updated ledger with local storage
+
+UPDATE `received` SET `paymentmode` = '0' WHERE `received`.`rcvddate`< "2023-02-01"
+
+
+
+
+
+//SELECT*,a.id as id,m.pmcredit as pmcredit,CONCAT(b.firstname,' ',b.lastname)as customername,a.customer as customer,a.amount as amount,a.paymentmode as paymentmode,p.modename as paymentmodename,a.pmid as pmid,a.note as note,c.amount as colamt,d.tYpe as tYpe,a.colid as colid,a.rcvddate as rcvddate,d.code as code,c.sowji as sowjicomm,c.suri as suricomm,c.fullandevi as fullandevicomm,s.chiti as asaluchiti,a.chiti as chiti,c.date as coldate,a.collectedby as collectedby,q.name as collectorname from `received`a left join customers b on a.customer=b.id LEFT JOIN collection c on a.colid=c.id and c.deleted=0 LEFT JOIN chiti d on a.chiti=d.id and d.deleted=0 LEFT JOIN asalu s on a.asaluid=s.id and s.deleted=0 LEFT JOIN paymentmodes p on a.paymentmode=p.id and p.deleted=0 LEFT JOIN(SELECT x.id as id,sum(y.credit)as pmcredit,y.tableid as pmid from received x left join pmtrans y on x.id=y.tableid and y.tablename='received'and y.paymentmode=1 and y.deleted=0 group by y.tableid)m on a.id=m.id left join collectors q on a.collectedby=q.id where a.deleted=0 and b.deleted=0 and a.rcvddate=?and a.collectedby=?limit 3000
+
+
+
+
+
+
+
+ideas 
+-----
+* make date buttons with script js 
+* show only 5 entries in chiti.html with showall option
+
+running linked -- 134
+
+V 2.3
+-----
+-> Delete and rcvd entry button in editdrcr and editasalu
+
+
+
+first get chiti status 1
+for loop of chiti 
+first get asalu and calculate remaining asalu
+
+if type = 4 monthly then
+    first get collection with received 0
+    get totalpendingamt of interest and also insert ids of pending collection in colid
+    then get received entres with "in colid" 
+    if above array true then deduct the amount from totalpendingamt
+
+
+
+
+
+V 2.2
+------
+Changes 
+--------
+-> Create Payment mode
+
+
+DB changes
+----------
+
+-> CREATE TABLE `chandsu7_finance`.`paymentmodes` ( `id` INT NOT NULL AUTO_INCREMENT , `modename` VARCHAR(500) NOT NULL , `opbal` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+-> ALTER TABLE `drcr` ADD `paymentmode` INT(8) NOT NULL AFTER `forint`;
+-> ALTER TABLE `drcr` ADD `pmid` VARCHAR(100) NOT NULL AFTER `paymentmode`;
+
+-> CREATE TABLE `chandsu7_finance`.`taskmain` ( `id` INT NOT NULL AUTO_INCREMENT , `lastdate` INT NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+-> CREATE TABLE `chandsu7_finance`.`tasks` ( `id` INT NOT NULL AUTO_INCREMENT , `date` DATE NOT NULL ,  `customer` INT(10) NOT NULL , `chiti` INT(10) NOT NULL , `collectionid` INT(10) NOT NULL , `amount` INT(10) NOT NULL , `note` VARCHAR(1000) NOT NULL , `status` INT(8) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+-> ALTER TABLE `received` ADD `paymentmode` INT(8) NOT NULL AFTER `colid`;
+-> ALTER TABLE `received` ADD `pmid` VARCHAR(100) NOT NULL AFTER `paymentmode`;
+
+-> CREATE TABLE `chandsu7_finance`.`pmtrans` ( `id` INT NOT NULL AUTO_INCREMENT , `tablename` VARCHAR(500) NOT NULL , `tableid` INT(8) NOT NULL , `paymentmode` INT(8) NOT NULL , `amount` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+not runned -> ALTER TABLE `pmtrans` DROP `tableid`; 
+not runned -> ALTER TABLE `pmtrans` CHANGE `tablename` `tableid` VARCHAR(500) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+-> ALTER TABLE `interest` ADD `paymentmode` INT(10) NOT NULL AFTER `debit`;
+-> ALTER TABLE `interest` ADD `pmid` VARCHAR(100) NOT NULL AFTER `paymentmode`;
+-> ALTER TABLE `chiti` ADD `ccommpaymentmode` INT(8) NOT NULL AFTER `ccomm`;
+-> ALTER TABLE `chiti` ADD `ccommpmid` INT(8) NOT NULL AFTER `ccommpaymentmode`;//dont submit this query
+-> ALTER TABLE `chiti` DROP `ccommpmid`; if submmitted above query then submit this 
+-> ALTER TABLE `chiti` ADD `paymentmode` INT(10) NOT NULL AFTER `amount`;
+-> ALTER TABLE `chiti` ADD `pmid` VARCHAR(100) NOT NULL AFTER `paymentmode`;
+-> ALTER TABLE `pmtrans` CHANGE `tableid` `tableid` INT(10) NOT NULL;
+not runned -> ALTER TABLE `pmtrans` ADD `tablename` VARCHAR(200) NOT NULL AFTER `id`;
+-> ALTER TABLE `cftrans` ADD `paymentmode` INT(10) NOT NULL AFTER `credit`;
+-> ALTER TABLE `cftrans` ADD `pmid` VARCHAR(100) NOT NULL AFTER `paymentmode`;
+
+
+ALTER TABLE `drcr` CHANGE `pmid` `pmid` VARCHAR(100) NOT NULL;
+ALTER TABLE `received` CHANGE `pmid` `pmid` VARCHAR(100) NOT NULL;
+ALTER TABLE `interest` CHANGE `pmid` `pmid` VARCHAR(100) NOT NULL;
+ALTER TABLE `chiti` CHANGE `pmid` `pmid` VARCHAR(100) NOT NULL;
+-> ALTER TABLE `chiti` ADD `advintmonths` INT(8) NOT NULL AFTER `tYpe`;
+-> ALTER TABLE `pmtrans` CHANGE `amount` `credit` INT(10) NOT NULL;
+-> ALTER TABLE `pmtrans` ADD `debit` INT(10) NOT NULL AFTER `credit`;
+-> ALTER TABLE `pmtrans` ADD `date` DATE NOT NULL AFTER `id`;
+ALTER TABLE `chiti` ADD `irregular` BOOLEAN NOT NULL AFTER `note`;
+
+id
+taskid
+date
+notes
+status
+cr up del
+
+
+Apr 11,12
+----------
+-> create edit and get payment mode pages with full stack done
+
+Apr 13
+-------
+-> changed total editdrcr page and added payment mode to create,edit(get page pending )
+
+
+Apr 14
+-------
+-> added get page with paymentmode feature
+-> changing dashboard1 with typeahead customername and adding paymentmode feature (still work is under process)
+
+
+Apr 15
+-------
+-> working on received collection 
+-> update notes feature in Chiti.html
+-> dashboard.html monthly updated
+-> daily collection page is separated from dashboard and step1 updated , steps 2,3,4(have to check), update is almost done
+-> paymentmode feature added in daily collection
+-> auto balance amount of monthly collection feature is added
+-> Updated received button in chiti.html
+
+
+Apr 16
+------
+-> daily collection page updated with paymentmode feature - steps 2,3,4(checked), update is done
+-> updated received feature in chiti.html for monthly chiti's
+-> updating daily collection feature in chiti.html for daily chiti
+-> have to check is_chiti_status_closed feature in chiti.html
+
+
+Apr 18
+------
+-> not sure of is_chiti_status_closed , will check later
+-> added filter and sort feature in received amount with color variation depending on asalu and interest
+-> upcoming work - add paymentmode in cftrans , multi paymentmode feature plan
+
+
+Apr 19
+-------
+
+-> ideas for multi paymentmode -> when selected multi pm ng-show - pmmode and amt table with add button
+-> working in create drcr page , check slice method
+
+
+
+Apr 21
+--------
+-> ng-change="chck()" in all for chitfund value
+-> Next work getpmtrans dbHandler call and editdrcr
+
+Apr 23
+-------
+-> working on getpmtrans dbHandler call and editdrcr
+
+May 15
+------
+-> Done editdrcr
+-> working on dashboardctrl -> receivedcollection(indexphp)
+
+June 28
+---------
+-> done daily collection pmtrans 
+-> pending work - check if pmtrans total is equal to coll amt
+
+June 29
+-------
+-> checked if pmtrans total is equal to coll amt
+
+
+July 6 2022
+------------
+-> work to do - paymentmode in interestpaid 
+-> check indexphp call of interestpaid , dbHandler
+dbchange - ALTER TABLE `interest` ADD `paymentmode` INT(10) NOT NULL AFTER `debit`;
+
+July 11 2022
+------------
+-> updated dashboard with new features like : 
+    * non-repeat funcs for get chiti and collection
+    * hami select option to typeahead feature
+    * changed _ symbol to () this for hami in customer
+-> updating create chiti page with init() as its old version page
+
+
+July 12 2022
+-------------
+-> updating createchiti page -> updating chck function
+
+
+July 15 2022
+------------
+-> createchiti page update
+
+
+Aug 8 2022
+----------
+-> updated daily collection page for the lag
+-> working on createchiti 
+-> next work add paymentmode in db n php
+
+Aug 9 2022
+----------
+-> added paymentmode in db n php
+-> next work add multi pmtrans and create received in pmtrans php
+
+
+Aug 11 2022
+------------
+-> created pmtrans post for advint
+-> next work pmtrans post for chiti amount
+-> done above works , now just have to check
+
+
+Aug 26 2022
+-----------
+-> removed advint pmtrans feature 
+-> just have to check once daily create chiti for received entry
+
+
+Aug 27 2022
+------------
+-> created Delete collection feature
+
+
+Aug 28 2022
+------------
+-> create chiti page almost done
+-> pending changes
+    - check before submitting chiti form that all pmmode are properly set
+
+Sept 13 2022
+-------------
+-> checked createchiti page
+    - still pending
+
+Oct 10 2022
+-----------
+-> Working on editchiti - changing equal to createchiti and adding paymentmode feature
+
+Oct 11 2022
+-----------
+-> Working on editchiti - almost changed have to check setnextfocus func and all funcs
+
+Oct 19 2022
+-----------
+-> Edit chiti paymentmode done 
+-> next have to work on interest table
+
+Oct 20 2022
+-----------
+-> create chiti and drcr pmid feature added
+-> next have to work on interest table
+
+Oct 21 2022
+-----------
+-> working on edit asalu
+
+Oct 22 2022
+-----------
+-> edit asalu page done
+-> working on daybook - getinterest call
+
+
+Nov 6 2022
+-----------
+-> daybook - getdrcr - pmtrans - debit/credit 
+-> SELECT * FROM `pmtrans` a LEFT JOIN drcr t on a.tableid = t.id WHERE tablename = "drcr"
+
+
+Nov 14 2022
+------------
+-> convert pmtrans table from amount column to debit & credit column
+
+
+
+Nov 23 2022
+------------
+-> convert pmtrans table from amount column to debit & credit column
+    -> working on createcftrans page - html & appjs done 
+    -> indexphp & dbHandler error getting null response in editcftrans call : editcfDetail
+    -> changed create edit & getpmtrans calls in dbHandler
+
+
+
+
+
+changes
+-------
+
+
+                    
+
+
+
+
+
+<----- end here for V2.2 ----->
+
+
+changes for Aug 29
+-------------------
+-> ALTER TABLE `received` ADD `colid` INT(10) NOT NULL AFTER `chiti`;
+
+DROP TABLE `asalu`, `cfchiti`, `cfchiticustomers`, `cfcustomers`, `cfpaata`, `chitfund`, `chiti`, `collection`, `customers`, `drcr`, `interest`, `interestrows`, `received`, `sowji`, `sowjichiti`, `without`;
+
+V 2.1
+------
+Changes
+---------
+-> Changes in chiti.html
+    -> Print button for displaying only daily asalu list
+-> Ledger customername heading error solved
+
+
+Works to be done
+----------------
+1.  createcfpaata
+2. 
+
+db changes
+-----------
+createcfchiti table 
+-> CREATE TABLE `finance`.`cfchiti` ( `id` INT NOT NULL AUTO_INCREMENT ,`date` DATE NOT NULL , `chitiname` VARCHAR(50) NOT NULL , `code` INT(10) NOT NULL , `no` INT(10) NOT NULL , `amount` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> CREATE TABLE  `finance`.`cfchiticustomers` ( `id` INT NOT NULL AUTO_INCREMENT , `chiti` INT(10) NOT NULL, `customer` INT(10) NOT NULL , `cusno` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+inserted 4 chiti's
+-------------------
+-> INSERT INTO `cfchiti` (`id`, `date`, `chitiname`, `code`, `no`, `amount`, `created`, `updated`, `deleted`) VALUES (NULL, '2020-01-01', 'sowji chiti', '0', '20', '50000', '2021-06-09 00:00:00', '2021-06-09 00:00:00', '0');
+-> INSERT INTO `cfchiti` (`id`, `date`, `chitiname`, `code`, `no`, `amount`, `created`, `updated`, `deleted`) VALUES (NULL, '2020-03-01', 'sowji chiti', '1', '20', '50000', '2021-06-09 00:00:00', '2021-06-09 00:00:00', '0');
+-> INSERT INTO `cfchiti` (`id`, `date`, `chitiname`, `code`, `no`, `amount`, `created`, `updated`, `deleted`) VALUES (NULL, '2020-10-01', 'lucky chiti', '0', '20', '20000', '2021-06-09 00:00:00', '2021-06-09 00:00:00', '0');
+-> INSERT INTO `cfchiti` (`id`, `date`, `chitiname`, `code`, `no`, `amount`, `created`, `updated`, `deleted`) VALUES (NULL, '2020-11-01', 'lucky chiti', '1', '20', '20000', '2021-06-09 00:00:00', '2021-06-09 00:00:00', '0')
+
+
+cfpaata table 
+    -> id,date,chiti,no,customer,paata,payamount,repayamount,sripalcomm,sowjicomm
+-> CREATE TABLE `finance`.`cfpaata` ( `id` INT NOT NULL AUTO_INCREMENT , `date` DATE NOT NULL , `chiti` INT(10) NOT NULL , `no` INT(10) NOT NULL , `customer` INT(10) NOT NULL , `paata` INT(20) NOT NULL , `payamount` INT(20) NOT NULL , `repayamount` INT(20) NOT NULL , `sripalcomm` INT(10) NOT NULL , `sowjicomm` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> ALTER TABLE `cfcustomers` ADD `first` INT(10) NOT NULL AFTER `phone`, ADD `firstid` INT(10) NOT NULL AFTER `first`;
+-> CREATE TABLE `finance`.`cftrans` (`id` INT NOT NULL AUTO_INCREMENT ,`date` DATE NOT NULL,`chiti` INT(10) NOT NULL,`paata` INT(10) NOT NULL,`customer` INT(10) NOT NULL,`debit` INT(20) NOT NULL,`credit` INT(20) NOT NULL, `note` VARCHAR(500) NOT NULL , `created` DATETIME NOT NULL,`updated` DATETIME NOT NULL,`deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> ALTER TABLE `cftrans` ADD `note` VARCHAR(500) NOT NULL AFTER `credit`;
+
+June 9 
+-------
+
+
+
+work done
+----------
+-> Created tables cfchiti,cfpaata in db
+-> inserted values in cfchiti table of sowji chiti(0,1),lucky chiti(0,1)
+-> made createcfpaata.html -> appjs pending
+
+
+pending work
+------------
+->deisgn createcfchiti page 
+
+
+
+
+
+June 11
+--------
+-> working on createcfpaata
+
+Pending work
+------------
+-> getcustomerid function 
+-> createcfpaata in indexphp , dbHandler
+
+
+June 15 
+--------
+work done
+---------
+-> Created post(cfpaata ) fullstack
+
+pending work
+------------
+-> Required fields,test createcfpaata page
+
+June 16
+--------
+work done
+---------
+-> Required fields in createcfpaata
+
+pending work
+-> getcfpaata fullstack
+
+
+June 24
+--------
+working on
+----------
+-> getcfpaata fullstack(Done)
+-> getcfpaata/id fullstack
+-> createcfchiticustomers ->popupanim
+
+work done
+----------
+-> getcfpaata fullstack
+
+
+June 25
+-------
+working on
+----------
+-> createcfchiticustomers (done but appjs pending work)
+
+pending work 
+-------------
+-> getcfpaata/id fullstack
+
+
+work done
+----------
+->popupanim
+
+
+June 27
+--------
+working on
+----------
+-> getcfpaata fullstack ->cusno value error
+
+pending work
+-------------
+-> getcfpaata/id fullstack
+
+July 7
+-------
+-> Changes in chiti.html
+-> Print button for displaying only daily asalu list
+
+July 10
+-------
+working on
+----------
+-> getcfpaata fullstack ->cusno value error
+-> subledger type in createcfcustomers
+
+
+
+July 11
+-------
+working on
+----------
+-> cftrans page fullstack -> 1st html page
+-> db fields -> id,date,chiti,paata,customer,debit,credit,note 
+-> show cftrans in daybook
+
+db changes
+----------
+-> ALTER TABLE `cfcustomers` ADD `first` INT(10) NOT NULL AFTER `phone`, ADD `firstid` INT(10) NOT NULL AFTER `first`;
+-> ALTER TABLE `cfcustomers` CHANGE `firstid` `firstid` VARCHAR(50) NOT NULL;
+
+work done
+---------
+-> getcfpaata fullstack ->cusno value error
+-> subledger type in createcfcustomers
+
+
+July 12
+-------
+
+working on
+----------
+-> create cftrans page fullstack -> 1st html page
+-> db fields -> id,date,chiti,paata,customer,debit,credit,note 
+
+
+work done
+---------
+-> Ledger customername heading error solved
+
+
+
+July 12
+-------
+
+working on
+----------
+-> getcftrans fullstack ->html page
+
+db changes
+----------
+-> CREATE TABLE `finance`.`cftrans` (`id` INT NOT NULL AUTO_INCREMENT ,`date` DATE NOT NULL,`chiti` INT(10) NOT NULL,`paata` INT(10) NOT NULL,`customer` INT(10) NOT NULL,`debit` INT(20) NOT NULL,`credit` INT(20) NOT NULL,`created` DATETIME NOT NULL,`updated` DATETIME NOT NULL,`deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+-> ALTER TABLE `cftrans` ADD `note` VARCHAR(500) NOT NULL AFTER `credit`;
+
+
+work done
+---------
+-> Ledger customername heading error solved
+-> create cftrans page fullstack 
+-> db fields -> id,date,chiti,paata,customer,debit,credit,note 
+
+
+
+July 13
+-------
+
+working on
+----------
+-> getcftrans fullstack ->html page
+-> show cftrans in daybook
+
+ideas
+------
+-> Getfilter by customer page -> thinking of which customers to bring and how to display subledger
+
+
+
+July 14
+--------
+
+working on
+----------
+-> getcftrans fullstack ->html page
+-> show cftrans in daybook
+
+ideas
+------
+-> Getfilter by customer page -> thinking of which customers to bring and how to display subledger
+-> sowji chiti press -> getcftrans 
+
+
+July 17
+--------
+work done
+----------
+-> getcftrans fullstack 
+-> show cftrans in daybook
+
+next work
+----------
+-> Edit cftrans full stack
+
+
+July 18 
+--------
+working done
+-------------
+-> Edit cftrans full stack
+
+
+
+July 20
+---------
+Work done
+---------
+-> getcustomerid function error -> solved
+-> added highlight for customers pending balance
+
+Next work
+---------
+-> get repayamount details
+-> get balance customers name and amount in createcftrans
+
+
+July 21
+-------
+Working on
+---------
+-> editchiti with collection
+
+work done
+--------
+-> Error in cfpaata page of mismatch of paid entries with customerlist -> SOLVED
+
+
+July 22
+-------
+working on
+----------
+-> Suri Ledger
+-> Edit suri chiti's
+
+
+
+July 28
+-------
+-> Chiti status pending modal in chiti.html
+
+
+Aug 4
+-----
+-> editcollection error
+-> In daybook ccomm increasing with each submit click
+
+
+
+
+Aug 11
+--------
+Changes in chiti.html 
+-> Add amount in chiti rectified ->changed files -> chiti.html,appjs
+-> Buttons width set according to mini laptop
+-> rectified deleting chiti call in indexphp 
+->background yellow for tables in daybook -> daybook
+
+
+Aug 12
+------
+-> chiti.html+appjs
+-> cfpaata.html
+-> create drcr.html
+
+
+Aug 26
+------
+-> daybook.html
+-> getting received amount entries for getting collections of received amount
+
+customerlist = mcx - commodity, comm-> brokerage
+
+
+Aug 29 
+------
+-> ALTER TABLE `received` ADD `colid` INT(10) NOT NULL AFTER `chiti`;
+
+Aug 30
+--------
+-> Changing whole daybook page with appjs
+    -> added new collection type by adding colid to received amt and linked received amt to collection
+    -> done with old collection model -> tied up with customer
+-> ALTER TABLE `cfcustomers` ADD `maincus` INT(10) NOT NULL AFTER `firstid`;
+
+
+
+Type
+cash in 
+cash out
+mcx
+fno

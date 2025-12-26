@@ -1,0 +1,100 @@
+<h1>Income Generated</h1>
+
+
+<div class="col-md-4">
+    <button class="btn btn-primary" data-toggle="modal"  data-target="#inc_modal" >Open Modal</button>
+ </div>
+{{totalinc.toFixed(2)}}
+
+ <!-- Modal -->
+<div id="inc_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h1>Filter </h1>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="inc()" name="incform" >
+                <div class="container">
+                   <div class="form-inline">
+                      <!-- row -->
+                      <div class="row" style="padding-top: 28px;" >
+                         <div class="col-md-3" style="padding-left: 0px;" >
+                            <div class="form-group">
+                               <label>From Date : </label>
+                               <div class="input-group date" >
+                                  <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.from_date" name="from_date" id="from_date" autocomplete="off" ng-change="getcollectionList()" >
+                                  <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-md-3"  >
+                            <div class="form-group">
+                               <label>To Date : </label>
+                               <div class="input-group date" >
+                                  <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.to_date" name="to_date" id="to_date" autocomplete="off" ng-change="getcollectionList()" >
+                                  <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                      <div class="row" style="padding-top: 28px;" >
+                      <div class="col-md-12">
+                        <div class="form-group">
+                           <label>Select Month : </label>
+                           <div id="head2" style="width:15%;float:right;margin-left:5px;">
+                             <select id='gMonth2' ng-model="fmonth" class="form-control">
+                             <option selected value=''>--Select Month--</option>
+                             <option  value='01'>Janaury</option>
+                             <option value='02'>February</option>
+                             <option value='03'>March</option>
+                             <option value='04'>April</option>
+                             <option value='05'>May</option>
+                             <option value='06'>June</option>
+                             <option value='07'>July</option>
+                             <option value='08'>August</option>
+                             <option value='09'>September</option>
+                             <option value='10'>October</option>
+                             <option value='11'>November</option>
+                             <option value='12'>December</option>
+                             </select> 
+                         </div>
+                             
+                        </div>
+                     </div>
+                      </div>
+                      <div class="row" style="padding-top: 30px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Customer : </label>
+                               <select ng-model="filter.customer"  name="filtercustomer" ng-options="c.id as c.Firstname+ ' ' + c.LastName+'('+c.HamiFirstName +')' for c in customers"  class="form-control" >
+                                  <option value="">Select Customer</option>
+                               </select>
+                            </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <!-- row -->
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- Modal content -->
+ 
+ 
+ 
+ 

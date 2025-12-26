@@ -1,0 +1,413 @@
+<div class="container register" ng-show="display==0" ng-init="init()">
+   <div class="row">
+      <div class="col-md-12">
+         <div class="tab-content" id="myTabContent">
+            <div class="tab-pane active text-align form-new" id="home" role="tabpanel" aria-labelledby="home-tab">
+               <h1 class="register-heading">Ledger</h1>
+                    
+               <form ng-submit="showledger()" >
+                  <div class="form-inline">
+                     <!--1st row-->
+                     <div class="row register-form" style="font-size: 15px;" >
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <input type="checkbox" ng-true-value="1" ng-false-value="0"  ng-model="bydatechck">
+                              <label>By Date</label>
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <input type="checkbox" ng-true-value="1" ng-false-value="0"  ng-model="bymonthchck">
+                              <label>By Month</label>
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                              <input type="checkbox" ng-true-value="1" ng-false-value="0"  ng-model="byyearchck">
+                              <label>By Year</label>
+                           </div>
+                        </div>
+                     </div>
+                     <!--first row end-->
+                     <!--Bydatechck start-->
+                     <div class="row register-form" style="padding-top: 50px;" ng-show="bydatechck == 1" >
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              <label>From Date : </label>
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control"   placeholder="Date" ng-model="filter.from_date" name="fdate" id="fdate" autocomplete="off" ng-change="getcollectionList()" >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-6"  >
+                           <div class="form-group">
+                              <label>To Date : </label>
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control"   placeholder="Date" ng-model="filter.to_date" name="tdate" id="tdate" autocomplete="off" ng-change="getcollectionList()" >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                           </div>
+                        </div>
+                      
+                     </div>
+                     <!--Bydatechck end-->
+               
+                     <!--Bymonthchck start-->
+                     <div class="row register-form" style="padding-top: 50px;" ng-show="bymonthchck == 1" >
+                        <div class="col-md-7" >
+                           <div class="form-group">
+                              <label>Select Month : </label>
+                                <select  ng-model="fmonth" class="form-control">
+                                <option selected value=''>--Select Month--</option>
+                                <option  value='01'>Janaury</option>
+                                <option value='02'>February</option>
+                                <option value='03'>March</option>
+                                <option value='04'>April</option>
+                                <option value='05'>May</option>
+                                <option value='06'>June</option>
+                                <option value='07'>July</option>
+                                <option value='08'>August</option>
+                                <option value='09'>September</option>
+                                <option value='10'>October</option>
+                                <option value='11'>November</option>
+                                <option value='12'>December</option>
+                                </select> 
+                            </div>
+                                
+                        </div>
+                        
+            <div class="col-md-5"   >
+               <div class="form-group">
+                  <label>Select Year : </label>
+                     <select  ng-model="fyear"  ng-options="y.id as y.year for y in yearr" class="form-control">
+                     
+                     </select> 
+               </div>
+            </div>
+
+                       
+   </div>
+   <!--Second row end-->
+                     <!--byyearcheck-->
+<div class="row register-form" style="padding-top: 50px;" ng-show="byyearchck == 1">
+ <div class="col-md-12">
+      <div class="form-group">
+         <label>Select Year : </label>
+            <select  ng-model="fyear"  ng-options="y.id as y.year for y in yearr" class="form-control">
+            
+            </select> 
+      </div>
+   </div>
+   
+</div>
+
+
+<!--byyearcheck end-->
+<div class="container" ng-show="bydatechck || bymonthchck || byyearchck == 1" >
+   <div class="col-md-12"  style="padding-top: 20px;">
+      <div class="form-group">
+         <label>Customer : </label>
+         <select ng-options="c.id as c.Firstname + ' ' + c.LastName+ '('+c.HamiFirstName  +')' for c in customers" class="form-control" ng-model="filter.customer" >
+            <option value="">Select customers</option>
+         </select>
+      </div>
+   </div>
+   <div class="container" style="padding-top: 100px;" >
+      <div class="col-md-3">
+         <div class="form-group">
+            <label>For int</label>
+            <select class="form-control" ng-model="filter.forint">
+               <option value="">For int</option>
+               <option value="1">Yes</option>
+               <option value="0">NO</option>
+            </select>
+           
+         </div>
+      </div>
+      <div class="col-md-2" ng-show="filter.forint==0" >
+         <label>Don't Show Credits</label>
+         <input type="checkbox" class="form-control" ng-true-value="0" ng-false-value="1"  ng-model="crchck">
+      </div>
+      <div class="col-md-7"></div>
+</div>
+   <!--button div-->
+   <div class="container  col-md-12" style="padding-top:50px;">
+      <input type="submit" value="Submit" class="btn btn-success">
+   </div>
+   <!--button div-->
+
+</div>
+
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+      <!--Ledger list-->
+      <div class="container" ng-show="display == 1" >
+         <center> <h1>{{customername}}</h1></center>
+         <div class="col-md-6"  >
+            <button ng-click="creditorscusfunc(1)" class="btn btn-primary noprint" >Show Full</button>
+         </div>
+         <div class="col-md-6" style="text-align-last: right;" ng-show="display == 1">
+          <div class="form-group">
+             <label>Opening Balance : </label>{{(opbal).toFixed(2)}}
+          </div>
+          </div>
+          <table class="table table-responsive table-bordered table-condensed table-hover ">
+             <thead>
+             <tr style=" top: 0;position: sticky;background-color: white;">
+                <th class="text-center">SNO</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">Debit</th>
+                <th class="text-center">Credit</th>        
+                <th class="text-center">Note</th>
+                <th class="text-center">Balance</th>
+                <th ng-show="filter.forint" class="text-center">Asalu Balance</th>
+                <th ng-show="filter.forint" class="text-center">Int Bal</th>
+                <th class="text-center">Edit</th>
+             </tr>
+             </thead>
+             <tbody>
+                <tr ng-repeat="d in drcr track by $index" ng-class="checkintcolor(d.interestentry)" >
+                   <td>{{$index+1}}</td>
+                   <td>{{ changeDateUserFormat(d.date)}}  </td>
+                   <td>{{d.debit}}  </td>
+                   <td>{{d.credit}}  </td>        
+                   <td style="white-space: pre-line;">{{d.note}}  </td>
+                   <td>{{(opbal + d.balance).toFixed(2)}}</td>
+                   <td ng-show="filter.forint">{{(opbal + d.asalubal).toFixed(2)}}</td>
+                   <td ng-show="filter.forint">{{(opbal + d.balance - d.asalubal).toFixed(2)}}</td>
+                   <td > <a target="_blank" ng-href="#/editdrcr/{{d.id}}"><span class="glyphicon glyphicon-edit"></span></a> </td>
+                   <!-- <td ng-show="d.interestentry"> <a ng-href="#/editinterest/{{d.id}}"><span class="glyphicon glyphicon-edit"></span></a> </td> -->
+                </tr>
+                <tr>
+                   <td></td>
+                </tr>
+                <tr>
+                   <td colspan="8">
+                      <!--Accordian start-->
+                      <div class="panel-group" id="accordion" ng-show= "drcr[0].customer == 1 || filter.customer == 1">
+                         <div class="panel panel-default"  >
+                            <div class="panel-heading">
+                               <h4 class="panel-title">
+                                  <div data-toggle="collapse" data-parent="#accordion" ng-href="#collapsecoll">Sowji Monthly & Weekly Comm :{{getsum(countable,"sowji")}}</div>
+                               </h4>
+                            </div>
+                            <div id="collapsecoll" style="border: 2px solid black;" class="panel-collapse collapse ">
+                               <div class="panel-body">
+                                  <b><div class="row">
+                                     <div class="text-center col-md-1">
+                                           Cid
+                                     </div>
+                                     <div class="text-center col-md-1">
+                                           Chiti id
+                                     </div>
+                                     <div class="text-center col-md-2">
+                                           Customer
+                                     </div>
+                                     <div class="text-center col-md-2">
+                                           Date
+                                     </div>
+                                     <div class="text-center col-md-2">
+                                        Rcvd Date
+                                        </div>
+                                     <div class="text-center col-md-2">
+                                           Amount
+                                     </div>
+                                     <div class="text-center col-md-2">
+                                           Sowji
+                                     </div>
+                                     <hr style="border: 2px solid black;">
+                                  
+                                  </div></b>
+                                  <div class="row" id="coll1table" ng-repeat ="m in countable" ng-show="m.sowji!=0  ">
+                                     
+                                        <div class="text-center col-md-1" id="colltable" ng-show="m.sowji!=0">
+                                              {{m.id}}
+                                        </div>
+                                        <div class="text-center col-md-1" ng-show="m.sowji!=0">
+                                              <a href="#/chiti/{{m.chiti}}" >{{m.chiti}} </a>
+                                        </div>
+                                        <div class="text-center col-md-2"ng-show="m.sowji!=0">
+                                              {{m.customerFL}}
+                                        </div>
+                                        <div class="text-center col-md-2"ng-show="m.sowji!=0">
+                                              {{m.date}}
+                                        </div>
+                                        <div class="text-center col-md-2"ng-show="m.sowji!=0">
+                                           {{m.rcvddate}}
+                                     </div>
+                                        <div class="text-center col-md-2"ng-show="m.sowji!=0">
+                                              {{m.amount}}
+                                        </div>
+                                        <div class="text-center col-md-2"ng-show="m.sowji!=0">
+                                              {{m.sowji}} 
+                                        </div>
+                                        <hr style="border: 2px solid black;">
+                                     </div>
+                                     
+                                  </div>
+                                     
+                               </div>
+                            </div>
+                      </div>
+                      <!--Accordian end-->
+                      <!--Accordian start-->
+                      <div class="panel-group" id="accordion" ng-show= "drcr[0].customer == 1 || filter.customer == 1">
+                         <div class="panel panel-default"  >
+                            <div class="panel-heading">
+                               <h4 class="panel-title">
+                                  <div data-toggle="collapse" data-parent="#accordion" ng-href="#collapsecoll1">Sowji Daily Comm :{{getsum(notcountable,"amount")}}</div>
+                               </h4>
+                            </div>
+                            <div id="collapsecoll1" style="border: 2px solid black;" class="panel-collapse collapse ">
+                               <div class="panel-body">
+                                  <b><div class="row">
+                                     <div class="text-center col-md-1">
+                                           Cid
+                                     </div>
+                                     <div class="text-center col-md-1">
+                                           Chiti id
+                                     </div>
+                                     <div class="text-center col-md-2">
+                                           Date
+                                     </div>
+                                     <div class="text-center col-md-1">
+                                           Amount
+                                     </div>
+                                     
+                                     <hr style="border: 2px solid black;">
+                                  
+                                  </div></b>
+                                  <div class="row" id="coll1table" ng-repeat ="d in notcountable"  >
+                                     
+                                        <div class="text-center col-md-3" id="colltable" >
+                                              {{d.id}}
+                                        </div>
+                                        <div class="text-center col-md-3" >
+                                              <a href="#/chiti/{{d.chiti}}" >{{d.chiti}} </a>
+                                        </div>
+                                        <div class="text-center col-md-3">
+                                              {{d.date}}
+                                        </div>
+                                        <div class="text-center col-md-3">
+                                              {{d.amount}}
+                                        </div>
+                                        <hr style="border: 2px solid black;">
+                                     </div>
+                                     
+                                  </div>
+                                     
+                               </div>
+                            </div>
+                      </div>
+                      <div class="panel-group" id="accordion2" ng-show= "drcr[0].customer == 90 || filter.customer == 90">
+                         <div class="panel panel-default">
+                            <div class="panel-heading">
+                               <h4 class="panel-title">
+                                  <div data-toggle="collapse" data-parent="#accordion2" ng-href="#collapsecoll2">Suri Comm :{{getsum(suricollection,"suri")}}</div>
+                               </h4>
+                            </div>
+                            <div id="collapsecoll2" style="border: 2px solid black;" class="panel-collapse collapse ">
+                               <div class="panel-body">
+                                  <b><div class="row">
+                                     <div class="text-center col-md-3">
+                                           Cid
+                                     </div>
+                                     <div class="text-center col-md-3">
+                                           Chiti ids
+                                     </div>
+                                     <div class="text-center col-md-3">
+                                           Date
+                                     </div>
+                                     <div class="text-center col-md-3">
+                                           Amount
+                                     </div>
+                                     
+                                     <hr style="border: 2px solid black;">
+                                  
+                                  </div></b>
+                                  <div class="row" id="coll2table" ng-repeat ="d in suricollection"  >
+                                     
+                                        <div class="text-center col-md-3" id="coll2table" >
+                                              {{d.id}}
+                                        </div>
+                                        <div class="text-center col-md-3" >
+                                              <a href="#/chiti/{{d.chiti}}" >{{d.chiti}} </a>
+                                        </div>
+                                        <div class="text-center col-md-3">
+                                              {{changeDateUserFormat(d.date)}}
+                                        </div>
+                                        <div class="text-center col-md-3">
+                                              {{d.suri}}
+                                        </div>
+                                        <hr style="border: 2px solid black;">
+                                     </div>
+                                     
+                                  </div>
+                                     
+                               </div>
+                            </div>
+                      </div>
+                      <!--Accordian end-->
+                   </td>
+                </tr>
+                <tr>
+                   <td></td>
+                   <td></td>
+                   <td > <b>Total Debit : {{getsum(drcr,"debit")}}</b> </td>
+                   <td > <b>Total Credit : {{(getsum(drcr,"credit")).toFixed(2)}}</b> </td>     
+                   <td ng-show="getsum(demo,'sowji')!=0 "><b>Total Sowji Comm :{{getsum(demo,"sowji")}}</b></td>
+                   <td></td>
+                </tr>
+                <tr>
+                   <td colspan="8" class="text-right"><b>Balance :  {{(opbal +getsum(drcr,"credit")+getsum(notcountable,"amount")+getsum(countable,"sowji")  -getsum(drcr,"debit")).toFixed(2) }}</b> </td>
+                   
+                </tr>
+             </tbody>
+          </table>
+          <!-- <button type="button" class="btn btn-primary" ng-click="goBack()">Back</button> -->
+          <button type="button" class="btn btn-primary" ng-click="display = 0">Back</button>          
+       </div>
+<!--<p>Hello</p> 
+                        <table class="table ">
+                              <thead >
+                                 <tr>
+                                    <th>Cid</th>
+                                    <th>Chiti id</th>
+                                    <th> Customer </th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Sowji</th>
+                                    <th>Hami</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                        <tr  ng-repeat ="c in collection">
+                        <td> {{c.id}}</td>
+                        <td> <a href="#/chiti/{{c.chiti}}" >{{c.chiti}} </a></td>
+                        <td> {{c.customerFL}} </td>
+                        <td> {{c.date}} </td>
+                        <td> {{c.amount}} </td>
+                        <td> {{c.sowji}} </td>
+                        <td> {{c.haminame}} </td>
+                     </tr> -->     
+
+
+<script>
+   $('table').on('click', 'td', function() {
+      if($( this ).css( "background-color" ) == "rgb(255, 255, 0)"){
+         $(this).css('backgroundColor', 'white');
+      }else{
+         $(this).css('backgroundColor', 'yellow');
+      }
+   });
+
+</script>

@@ -1,0 +1,103 @@
+<style>
+    .success{
+        background-color: #4fd34f;
+    }
+
+    .danger{
+        background-color: rgb(247, 147, 147);
+    }
+</style>
+<div class="container" ng-init="init()">
+    <h1>Collection Report</h1>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="form-inline">
+           <div class="form-group col-md-4"  style="padding-left: 120px;" >
+              <div class="input-group date" >
+                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.date" name="dAte" id="dAte" autocomplete="off" ng-change="showdaybook()" >
+                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+              </div>
+              <br>
+              <br>
+              <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+              <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+              <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+              <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+           </div>
+           <div class="form-group col-md-4"  style="padding-left: 120px;" >
+                <select ng-model="filter.collector" ng-options="c.id as c.name for c in collectorsList"  class="form-control">
+
+                </select>
+            </div>
+           <div class="col-md-3" >
+              <button  class="btn btn-primary"  ng-click="getCollectionReport()" >Submit</button>
+           </div>
+           <!-- <div class="col-md-3" >
+             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="">Toggle both elements</button>
+          </div> -->
+        </div>
+     </div>
+     <div class="container" ng-show="collectionreport.collectionList.length > 0 || collectionreport.collectionRcvd.length > 0">
+        <table class="table table-bordered table-hover" ng-show="collectionreport.collectionList" >
+            <thead>
+                <tr>
+                    <th>SNO</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Collector</th>
+                    <th>Paymentmode</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in collectionreport.collectionList">
+                    <td>{{$index + 1}} </td>
+                    <td>{{changeDateUserFormat(r.date)}}</td>
+                    <td>{{r.customername}}</td>
+                    <td>{{r.amount}}</td>
+                    <td>{{r.collectorname}}</td>
+                    <td>{{r.paymentmodename}}</td>
+                    <td>{{r.note}}</td>
+                </tr>
+                
+                
+                <tr>
+                    <td colspan="3">Total</td>
+                     <td>{{getsum(collectionreport.collectionList,"amount")}}</td> 
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table table-bordered table-hover" ng-show="collectionreport.collectionRcvd">
+            <thead>
+                <tr>
+                    <th colspan="7" class="text-center">Collection Received </th>
+                </tr>
+                <tr>
+                    <th>SNO</th>
+                    <th>Date</th>
+                    <!-- <th>Customer</th> -->
+                    <th>Amount</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in collectionreport.collectionRcvd">
+                    <td>{{$index+1}}</td>
+                    <td >{{changeDateTimeUserFormat(r.date)}}</td>
+                    <td>{{r.amount}}</td>
+                    <td>{{r.amount}}</td>
+                    <td>{{r.note}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row text-center" ng-class="checkColor()" style="height: 30px;"> 
+            <span ng-show="!pendingCollection" style="font-size: large;"> {{pendingCollection}}</span>
+            <span ng-show="pendingCollection > 0" style="font-size: large;"> Pending Collection is {{pendingCollection}}</span>
+        </div>
+    </div>
+</div>

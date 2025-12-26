@@ -1,0 +1,256 @@
+<div class="container" ng-init="int_init()" >
+   <div class="row text-center">
+      <div class="col-md-2">
+         <select ng-model="intmon" ng-options="m.id as m.mon for m in months" class="form-control" style="width: 150px;">
+                  <option value="">Select Month</option>
+         </select>   
+      </div>
+      <div class="col-md-2 col-xs-2 col-sm-2">
+         <select ng-model="intyear"  ng-options="y.id as y.year for y in yearr" class="form-control" style="width: 150px;">
+                  <option value="">Select Year</option>
+         </select>   
+      </div>
+      <div class="col-md-3 col-xs-3 col-sm-3">
+         <select ng-change="drcrint()"  ng-model="filtercustomer" name="customer" id="customer" style="width: 200px;"
+         ng-options="c.id as c.Firstname+ ' ' +c.LastName for c in customers" class= "form-control" >
+         <option selected value="">select Customer</option>
+         </select>                
+      </div>
+      <div class="col-md-2 col-xs-2 col-sm-2" ng-show="calculated == 0">
+         <input type="checkbox"  ng-true-value="1" ng-false-value="2" ng-model="intperint" ng-change="drcrint(1)" >
+         <label>Int Per int </label>
+      </div>
+      <div class="col-md-2 col-xs-2 col-sm-2">
+         <button class="btn btn-primary"  ng-click="drcrint()">Calculate Interest </button>   
+         <button class="btn btn-primary" ng-show="calculated ==1 || calculated ==2 " ng-click="calculated=0;drcrint(1)" >Again Cal</button>
+      </div>
+      
+      <div class="col-md-1 col-xs-1 col-sm-1">
+         <button class="btn btn-primary"  ng-click="postint()">Submit</button>
+      </div>
+   </div>
+<p ng-show="calculated == 1 || calculated == 2" style="background-color: rgb(192, 96, 96);color: white;" >Interest is already Submitted ! , this is the submitted result </p>
+     <!-- ex{{intRows}} -->
+   
+         <div class="panel-group" id="accordion1" style="padding-top: 30px;" ng-show="filtercustomer>0 && calculated == 0">
+            <div class="panel panel-default">
+               <div class="panel-heading" >
+                  <h4 class="panel-title">
+                        <div data-toggle="collapse"  data-parent="#accordion1" ng-href="#collapse{{intRows.customer}}"  >
+                           {{intRows.customername}}
+                        </div>
+                  </h4>
+               </div>
+               <div id="collapse{{intRows.customer}}" class="panel-collapse collapse in" ng-show="calculated == 0">
+                  <div class="panel-body">
+                     <div >
+                        <table class="table">
+                           <thead>
+                              <th>S.NO</th>
+                              <th>Date</th>
+                              <th>Credit</th>
+                              <th>Debit</th>
+                              <th>Note</th>
+                              <th>Interest</th>
+                              <th>Edit</th>
+                           </thead>
+                           <tbody> 
+                              <tr  ng-repeat = "o in intRows.intArr" ng-class="o.note">
+                                 <td>{{$index + 1}}</td>
+                                 <td>{{changeDateUserFormat(o.date)}} </td>
+                                 <td >
+                                    <input type="text" ng-model="o.credit" style="width: 100px;" ng-disabled="((arrInd != $index) || (o.credit == 0)) " >
+                                 </td>
+                                 <td>
+                                    <input type="text" ng-model="o.debit" style="width: 100px;" ng-disabled="((arrInd != $index) || (o.debit == 0)) " >
+                                 </td>                                
+                                 <td>{{o.note}} </td>
+                                 <td><input type="text" ng-model="o.intamount" style="width: 100px;" ng-disabled="arrInd != $index" > </td>  
+                                 <td>
+                                    <button ng-click="arrIndfun($index,o)">Edit</button>
+                                 </td>
+                              </tr>
+                              <tr >
+                                 <td colspan="4"></td>
+                                 <td >
+                                    Total Interest
+                                 </td>
+                                 <td>
+                                    <input type="text" style="width: 100px;" ng-model="intRows.credit">
+                                 </td>                                
+                                 <td></td>
+                              </tr> 
+                              
+                           </tbody>
+                        </table>
+                     </div>
+                  </div> <!--panel body end tag-->
+
+               </div>                              
+            </div>
+       </div>
+
+       <div class="panel-group" id="accordion1" style="padding-top: 30px;" ng-repeat="int in interest" ng-show="filtercustomer>0 && calculated == 1">
+         <div class="panel panel-default">
+            <div class="panel-heading" >
+               <h4 class="panel-title">
+                  <div data-toggle="collapse"  data-parent="#accordion1" ng-href="#collapse{{int.id}}">
+                     {{customername}}
+                  </div>
+               </h4>
+            </div>
+            <div id="collapse{{int.id}}" class="panel-collapse collapse in" >
+               <div class="panel-body">
+                  <div >
+                     <table class="table">
+                        <thead>
+                           <th>S.NO</th>
+                           <th>Date</th>
+                           <th>Credit</th>
+                           <th>Debit</th>
+                           <th>Note</th>
+                           <th>Interest</th>
+                           <!-- <th>Edit</th> -->
+                        </thead>
+                        <tbody> 
+                           <tr  ng-repeat = "o in int.introws" ng-class="o.note">
+                              <td>{{$index + 1}}</td>
+                              <td>{{changeDateUserFormat(o.date)}} </td>
+                              <td >
+                                 <input type="text" ng-model="o.credit" style="width: 100px;" ng-disabled="((arrInd != $index) || (o.credit == 0)) " >
+                              </td>
+                              <td>
+                                 <input type="text" ng-model="o.debit" style="width: 100px;" ng-disabled="((arrInd != $index) || (o.debit == 0)) " >
+                              </td>                                
+                              <td>{{o.note}} </td>
+                              <td><input type="text" ng-model="o.intamount" style="width: 100px;" ng-disabled="arrInd != $index" > </td>  
+                              <td>
+                                 <!-- <button ng-click="arrIndfun($index,o)">Edit</button> -->
+                              </td>
+                           </tr>
+                           <tr ng-show="int.id <= 181">
+                              <td colspan="7">
+                                 <textarea style="width: 600px;height: 150px;" ng-model="int.note1"></textarea>
+                              </td>
+                           </tr>
+                           <tr >
+                              <td colspan="4"></td>
+                              <td >
+                                 Total Interest
+                              </td>
+                              <td>
+                                 <input type="text" style="width: 100px;" ng-model="int.credit">
+                              </td>                                
+                              <td></td>
+                           </tr> 
+                           
+                        </tbody>
+                     </table>
+                  </div>
+               </div> <!--panel body end tag-->
+
+            </div>
+                           
+         </div>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div id="payint_modal{{d.customer}}" class="modal fade interestModal" tabindex="-1" role="dialog" ng-repeat = "d in lstt ">
+    <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h1>Interest Paid to {{d.customername}} </h1>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="payint($index)" name="payintform" >
+                <div class="container">
+                   <div class="form-inline">                  
+                      <!-- row -->
+                      <div class="row" style="padding-top: 28px;" >
+                        <div class="col-md-6 text-center">
+                           <div class="form-group">
+                              <label> Date : </label>
+                              <div class="input-group date" >
+                               <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="ffdate" name="ffdate" id="ffdate" autocomplete="off"  >
+                               <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                           </div>
+                        </div>
+                     </div>
+                      <div class="row" style="padding-top: 30px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Customer : </label>
+                               <select ng-model="d.customer"  name="fcustomer" ng-options="c.id as c.Firstname+ ' ' + c.LastName+'('+c.HamiFirstName +')' for c in customers"  class="form-control" >
+                                  <option value="">Select Customer</option>
+                               </select>
+                            </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row" style="padding-top: 30px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Amount : </label>
+                               <input type="text" name="famount" ng-model="d.debit" class="form-control">
+                            </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- Modal content -->
+
+ 
+ <script type="text/javascript">
+ 
+ $('.interestModal').on('shown.bs.modal', function(e) {
+    $('.input-group.date').datepicker({
+      format: "dd/mm/yyyy",
+      startDate: "01-01-2015",
+      endDate: "01-01-2020",
+      todayBtn: "linked",
+      autoclose: true,
+      todayHighlight: true
+    });
+  });
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- how does this page work
+   when page load its goes to functions
+   -> $scope.int_init -> $scope.getcustomerlist 
+
+   when i click on calculate it goes to
+   -> $scope.drcrint

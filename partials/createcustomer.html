@@ -1,0 +1,112 @@
+<form novalidate  name="customerform" ng-submit = "createcustomer()" ng-init="init()"  style="padding-top: 50px;" >
+<div class="form-inline">
+  
+    <div class="row text-center">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label>First Name:</label>
+                <input type="text" ng-keydown="setNextFocus($event,'','LName')" ng-model="Customer.FName" name="FName" id="FName" class="form-control" required >
+                <div role="alert">
+                    <span class="error" ng-show="(customerform.FName.$dirty || submitted) && customerform.FName.$error.required">
+                    Required!
+                    </span>
+                 </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" ng-keydown="setNextFocus($event,'','Phone')" ng-model="Customer.LName" name="LName" id="LName" class="form-control">
+                </div>
+         </div>
+         <div class="col-md-4">
+                <div class="form-group">
+                    <label>Phone No. :</label>
+                    <input type="text" ng-keydown="setNextFocus($event,'','proofchck')" ng-model="Customer.Phone" name="Phone" id="Phone" class="form-control">
+                </div>
+         </div>
+    </div>
+    <div class="row text-center"style="padding-top:20px;">
+        <div class="col-md-3">
+            <div class="form-group">
+                <input type="checkbox" ng-change="chckboxfocus(Customer.proofchck,'aAdhar')" ng-true-value="1" ng-false-value="0" ng-keydown="setNextFocus($event,'','forInt')" ng-model="Customer.proofchck" name="proofchck" id="proofchck" class="form-control" >
+                <label>Proof's submitted</label>
+            </div>
+        </div>
+        <div class="col-md-1">
+                <div class="form-group">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-keydown="setNextFocus($event,'','hami')" ng-change="chckboxfocus(Customer.forint,'intRate')" ng-model="Customer.forint" name="forInt" id="forInt" class="form-control" >
+                    <label>For int</label>
+                </div>
+        </div>
+        <div class="col-md-2" ng-show="Customer.forint==1" >
+            <div class="form-group">
+                <label>Interest Rate: </label>
+                <input type="text" ng-model="Customer.intrate" ng-keydown="setNextFocus($event,'','hami')" name="intRate" id="intRate" class="form-control" style="width: 100px;" >
+            </div>
+        </div>
+        <div class="col-md-4">
+        <select  ng-model="Customer.Hami" class="form-control" ng-keydown="setNextFocus($event,'','IsHami')" ng-options="h.SNO as h.Firstname + '  ' + h.LastName  for h in hami" name="hami" id="hami"  >
+            <option selected value="">Select Hami</option>
+         </select> 
+        <input type="checkbox" name="IsHami" id="IsHami" ng-model="Customer.IsHami"  ng-true-value="1" ng-false-value="0" > <label>Is he Hami?</label>
+        
+        </div>
+        <!-- <div class="col-md-2">
+            <input type="checkbox" name="chitfund" id="chitfund" ng-model="Customer.chitfund" ng-true-value="1" ng-false-value="0" > <label>Chit Fund</label>
+        </div> -->
+    </div>
+    <div class="row text-center"style="padding-top:20px;" ng-show="Customer.proofchck == 1" >
+            <div class="col-md-1">
+                <div class="form-group">
+                    <input type="checkbox" ng-keydown="setNextFocus($event,'','passBook')" ng-true-value="1" ng-false-value="0" ng-model="Customer.aadhar" name="aAdhar" id="aAdhar" class="form-control" >
+                    <label>Aadhar</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input type="checkbox" ng-keydown="setNextFocus($event,'','debitCard')" ng-true-value="1" ng-false-value="0" ng-model="Customer.passbook" name="passBook" id="passBook" class="form-control" >
+                    <label>Pass Book</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="Customer.debitcard" class="form-control" ng-keydown="setNextFocus($event,'','chQ')" name="debitCard" id="debitCard" >
+                    <label>Debit Card</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="Customer.cheque" class="form-control" ng-keydown="setNextFocus($event,'','pNote')" name="chQ" id="chQ" >
+                    <label>Cheque</label>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="Customer.pnote" class="form-control" ng-keydown="setNextFocus($event,'','greenSheet')" name="pNote" id="pNote" >
+                    <label>Promissory Note</label>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="Customer.greensheet" class="form-control" ng-keydown="setNextFocus($event,'','forInt')" name="greenSheet" id="greenSheet" >
+                    <label>Greensheet</label>
+                </div>
+            </div>
+    </div>
+    <div class="row text-center"style="padding-top:20px;">
+        <textarea ng-model ="Customer.note" ng-keydown="setNextFocus($event,'','LName')" style="width: 300px;height: 80px;"> </textarea>
+    </div>
+        <div class="text-center" style="padding-top:20px;">
+            <input type="submit" class="btn btn-primary"  value="Create">
+        </div>
+        {{response}}
+</div>
+</form>
+
+
+
+
+
+
+

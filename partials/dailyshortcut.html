@@ -1,0 +1,155 @@
+<style>
+    .fixed-content {
+        top: 200px;
+        bottom:0;
+        position:fixed;
+        overflow-y:scroll;
+        overflow-x:hidden;
+    }
+</style>
+<div class="container"  ng-init="init()" style="width: 1500px">
+    <center><h1>Daily</h1></center>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <div class="input-group date" >
+                <input type="text" style="width:180px;" class="form-control" ng-change="setDate();"  placeholder="Date" ng-model="daily.date" name="dAte" id="dAte" autocomplete="off" required>
+                <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+            </div>
+                <!-- <br> -->
+                <br>
+                    <input type="button" class="btn btn-primary" ng-click="dtodaydate($index)" value="0">
+                    <input type="button" class="btn btn-primary" ng-click="dyesterdaydate($index)" value="1">
+                    <input type="button" class="btn btn-primary" ng-click="dDByesterdaydate($index)" value="2">
+                    <input type="button" class="btn btn-primary" ng-click="dD2Byesterdaydate($index)" value="3">
+            </div>   
+        </div> 
+        <div class="col-md-2">
+            <button class="btn btn-primary" ng-click="filterData()">Filter</button>
+        </div>
+    </div>
+    <div class="row" style ="margin-top:50px">
+        <div class="form-inline">
+            <div class="col-md-5" >
+                <div ng-show="!disp">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <textarea name="note" id="note" ng-model="daily.note" style="height: 600px;width:300px;" >
+                        
+                            </textarea>
+                        </div>
+                        <div class="col-md-3" style="margin-left: 40px">
+                            
+                            <textarea ng-show="dailyarr.length" ng-model="dailydata"  style="height: 600px;width:300px;" ></textarea>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="disp" class="fixed-content" >
+                    <center><h1>{{selected.customername}}</h1></center>
+                    <table class="table table-responsive table-bordered table-condensed table-hover ">
+                        <thead>
+                            <tr>
+                                <th>SNO</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="last in lasttrans" >
+                                <td>{{$index+1}}</td>
+                                <td>{{changeDateUserFormat(last.date)}} </td>
+                                <td>{{last.amount}} </td>
+                                <td>{{last.note}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <center>
+                        <button class='btn btn-primary'><a href="#/chiti/{{selected.chiti}}" target="_blank" style="color:white;">Show chiti</a> </button>
+                        <button class='btn btn-primary' ng-click="disp = 0" >Back</button>
+                    </center>
+                </div>
+            </div>
+            <div class="col-md-4" ng-show="dailyarr.length" >
+                <button class='btn btn-primary' ng-click='fulldisp =! fulldisp'><span ng-show="!fulldisp">Show</span> <span ng-show="fulldisp">Hide</span> Full Details</button>
+                <button class='btn btn-primary' ng-click="onLinkClick('rawData')" >Show Raw Data</button>
+                <button class='btn btn-primary' ng-click='createDaily()'>Submit</button>
+                <table style="max-width:100%;white-space:nowrap;margin-top: 10px;" class="table table-responsive table-bordered table-condensed table-hover ">
+                    <thead>
+                        <tr style="width: fit-content;">
+                            <th>S NO</th>
+                            <th>Customer</th>
+                            <th ng-show="fulldisp">Cus id</th>
+                            <th ng-show="fulldisp">Chiti</th>
+                            <th>Amount</th>
+                            <th>Note</th>
+                            <th >PC Notes</th>
+                            <th>Pymt mode</th>
+                            <th>PC Pymt mode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr  ng-class="d.color" ng-repeat="d in dailyarr">
+                            <td>{{$index+1}}</td>
+                            <td>{{d.customername}}</td>
+                            <td ng-show="fulldisp">{{d.customer}}</td>
+                            <td ng-show="fulldisp">{{d.cid}}</td>
+                            <td>{{d.amt}}</td>
+                            <td>{{d.note}}</td>
+                            <td style="width: fit-content;">
+                                <input style="width: 120px;" type="text" name="note1" id="note1" ng-model="d.note1" ng-disabled="lastind != $index" class="form-control">
+                            </td>
+                            <td>{{d.pmmode}}</td>
+                            <!-- <td ng-show="d.pcpmmode.length == 1" >
+                                {{d.pcpmmode[0].modename}}
+                            </td> -->
+                            <td >
+                                <select ng-model="d.pcpmmode" ng-change="setpcpmmode($index)" ng-options="pm.id as pm.modename for pm in paymentmodelist">
+
+                                </select>
+                            </td>
+                            <td>
+                                <button ng-click="showLast3(d.cid,d.customername)" class="btn btn-primary" >Last 3 Details</button>
+                            </td>
+                            <td> 
+                                <button class='btn btn-primary' ng-click='editnote1($index)'> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-show="errentries.length" >
+        <div class="col-md-4">
+            <textarea ng-show="dailyarr.length" name="note" id="note" ng-model="errdata" style="height: 600px;width:300px;" >
+                        
+            </textarea>
+            <div id="rawData">
+                <h3>Raw Data</h3>
+                <textarea ng-show="dailyarr.length" name="note11" id="note11" ng-model="daily.note" style="height: 600px;width:300px;" >
+                </textarea>
+            </div>
+            <!-- <textarea ng-model="dailydata"  style="height: 600px;width:300px;" ></textarea> -->
+        </div>
+        <div class="col-md-8">
+            <table class="table table-bordered table-condensed table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>S NO.</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="err in errentries">
+                        <td>{{$index + 1}}</td>
+                        <td>{{err}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

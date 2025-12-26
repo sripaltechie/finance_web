@@ -1,0 +1,147 @@
+
+<div class="container" style="font-size: large;" ng-init="init()">
+   <h1><center> Edit Received</center></h1>
+    <div class="col-md-4">
+       
+    </div>
+    <div class="col-md-4">
+      
+    </div>
+    <div class="col-md-4">
+       <button class="btn btn-primary" data-toggle="modal"  data-target="#receivedmodal" >Open Modal</button>
+    </div>
+    <div style="padding-top: 50px;">
+    <table  class="table table-responsive table-bordered table-condensed">
+       <tr>
+          <th>#</th>
+          <th>id</th>
+          <th>Customer Name</th>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Asalu </th>
+          <th>Asalu id</th>
+          <th>Chiti</th>
+          <th>Paymentmode</th>
+          <th>note</th>
+          <th>Edit</th>
+       </tr>
+       <tr ng-repeat="c in receivedamount " >
+          <td>{{$index+1}}</td>
+          <td>{{c.id}}</td>
+          <td><a ng-href="#/chiti/{{c.id}}" >{{c.customername}} : </a></td>
+          <td>{{ changeDateUserFormat(c.rcvddate)}}</td>
+          <td> {{c.amount}} </td>
+          <td> {{c.asalu }} </td>
+          <td> {{c.asaluid}} </td>
+          <td> {{c.chiti}} </td>
+          <td> {{c.paymentmodename}} </td>
+          <td>{{c.note}}</td>
+          <td><a ng-href="#/editreceived/{{c.id}}" ><span class="glyphicon glyphicon-edit"></span></a> </td>
+       </tr>
+       <tr>
+         <td colspan="4"></td>
+         <td>{{getsum(receivedamount,"amount")}}</td>
+       </tr>
+    </table>
+ </div>
+ </div>
+ 
+ <!-- Modal -->
+ <div id="receivedmodal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h1>Edit Chiti</h1>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="getreceivedlist()" name="editchitibyfilterform" >
+                <div class="container">
+                   <div class="form-inline">
+                      <div class="row" style="padding-left: 28px;">
+                         <div class="col-md-3 text-center">
+                            <div class="form-group">
+                               <label>From ID : </label>
+                               <input type="number" name="filterfid" ng-model="filter.fromid" class="form-control">
+                            </div>
+                         </div>
+                         <div class="col-md-2 text-center">
+                            <div class="form-group">
+                               <label>To ID : </label>
+                               <input type="number" name="filtertid" ng-model="filter.toid" class="form-control">
+                            </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row" style="padding-top: 28px;" >
+                         <div class="col-md-3" style="padding-left: 0px;" >
+                            <div class="form-group">
+                               <label>From Date : </label>
+                               <div class="input-group date" >
+                                  <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.from_date" name="from_date" id="from_date" autocomplete="off" ng-change="getcollectionList()" >
+                                  <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-md-3"  >
+                            <div class="form-group">
+                               <label>To Date : </label>
+                               <div class="input-group date" >
+                                  <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.to_date" name="to_date" id="to_date" autocomplete="off" ng-change="getcollectionList()" >
+                                  <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                      <div class="row" style="padding-top: 30px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Customer : </label>
+                               <select ng-model="filter.customer"  name="filtercustomer" ng-options="c.id as c.Firstname+ ' ' + c.LastName+'('+c.HamiFirstName +')' for c in customers"  class="form-control" >
+                                  <option value="">Select Customer</option>
+                               </select>
+                            </div>
+                         </div>
+                      </div>
+                      <div class="row" style="padding-top: 30px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Paymentmode : </label>
+                               <select ng-model="filter.paymentmode"  name="filterpaymentmode" ng-options="c.id as c.modename for c in paymentmodeList"  class="form-control" >
+                                  <option value="">Select Paymentmode</option>
+                               </select>
+                            </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row" style="padding-top: 30px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Amount : </label>
+                               <input type="number" name="filteramount" ng-model="filter.amount" class="form-control">
+                            </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- Modal content -->
+ 
+ 
+ 
+ 

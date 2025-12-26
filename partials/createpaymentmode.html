@@ -1,0 +1,137 @@
+<div class="container" ng-init="init()">
+    <div style="border: 1px inset black;border-radius: 5px;width: 500px;margin: auto;padding: 40px;">
+        <h1 style="text-align: center;" >Create Payment Mode</h1>
+        <form novalidate  name="createpaymentmodeForm" ng-submit = "createpaymentmode()" action=""  style="padding-top: 50px;" >
+                    <div class="col-md-12 ">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" ng-model="paymentmode.modename" name="modename" id="modename" class="form-control" required autocomplete="off" focus >
+                            <div role="alert">
+                                <span class="error" ng-show="(createpaymentmodeForm.modename.$dirty || submitted) && createpaymentmodeForm.modename.$error.required">
+                                Required!
+                                </span>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Opening Balance:</label>
+                                <input type="text" ng-model="paymentmode.opbal" name="opbal" id="opbal" class="form-control" autocomplete="off" focus>
+                            </div>
+                     </div>
+                     <!-- <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Phone No. :</label>
+                                <input type="text" ng-model="paymentmode.phone" name="Phone" id="Phone" class="form-control" autocomplete="off" focus>
+                            </div>
+                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Primary / Secondary :</label>
+                            <select ng-model="paymentmode.first" ng-init="paymentmode.first =1" name="first" id="first" class="form-control" focus>
+                                <option value="1">Yes</option>
+                                <option value="2">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 " ng-show="paymentmode.first == 2">
+                        <div class="form-group">
+                            <label class="col-md-4 col-xs-4 col-sm-4 text-right" >paymentmode</label>
+                            <div class="col-md-8 col-xs-8 col-sm-8">
+                                <input type="text" id="firstidname" name="firstidname" ng-model="paymentmode.firstidname" ng-required="paymentmode.first == 2" class="form-control"  typeahead="paymentmode.fname + ' ' + paymentmode.lname for paymentmode in cfpaymentmodes | filter:{fname:$viewValue} " autocomplete="off" >
+                                <span class="error" ng-show="(createpaymentmodeForm.paymentmode.$dirty || submitted) && createpaymentmodeForm.paymentmode.$error.required" >
+                                    paymentmode Required!
+                                </span>
+                            </div>
+                        </div>                   
+                    </div> -->
+                    <!-- <div class="col-md-12" style="font-size: 12px;">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Mcx Commission (in %) :</label>
+                                <input type="text" ng-model="paymentmode.mcxcommpercentage" name="mcxcommission" id="mcxcommission" class="form-control" autocomplete="off" focus >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Fno Commission (in %) :</label>
+                                <input type="text" ng-model="paymentmode.fnocommpercentage" name="fnocommission" id="fnocommission" class="form-control" autocomplete="off" focus>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Opening Balance :</label>
+                            <input type="text" ng-model="paymentmode.openingbal" name="openingBal" id="openingBal" class="form-control" autocomplete="off" focus>
+                        </div>
+                    </div> -->
+                    <div class="text-center" style="padding-top:20px;">
+                        <input type="submit" class="btn btn-primary"  value="Create">
+                    </div>
+            </div>
+            </form>        
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <form novalidate  name="paymentmodeform" ng-submit = "createpaymentmode()" action=""  style="padding-top: 50px;" >
+    <div class="form-inline">
+      
+        <div class="row text-center">
+            <div class="col-md-3 ">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" ng-model="sowjichiti.FName" name="FName" id="FName" class="form-control" required >
+                    <div role="alert">
+                        <span class="error" ng-show="(paymentmodeform.FName.$dirty || submitted) && paymentmodeform.FName.$error.required">
+                        Required!
+                        </span>
+                     </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <input type="text" ng-model="sowjichiti.LName" name="LName" id="LName" class="form-control">
+                    </div>
+             </div>
+             <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Phone No. :</label>
+                        <input type="text" ng-model="sowjichiti.Phone" name="Phone" id="Phone" class="form-control">
+                    </div>
+             </div>
+             <div class="col-md-3">
+                    <div class="form-group">
+                        <label>No of Chiti:</label>
+                        <input type="text" ng-change="noInput()" ng-model="sowjichiti.noof" name="noof" id="Phone" class="form-control">
+                    </div>
+             </div>
+        </div>
+        <div ng-show="sowjichiti.noof > 0" class="row text-center"style="padding-top:20px;">
+            <div style="margin-top: 5px;" class="col-md-2" ng-repeat="ch in noofChitis">
+                <input placeholder="Alias name{{ch + 1}}" class="form-control"> 
+            </div>
+        </div>
+    
+        <div  class="row text-center"style="padding-top:20px;">
+            <textarea ng-model ="sowjichiti.note" style="width: 300px;height: 80px;"> </textarea>
+        </div>
+            <div class="text-center" style="padding-top:20px;">
+                <input type="submit" class="btn btn-primary"  value="Create">
+            </div>
+            {{response}}
+    </div>
+    </form> -->
+    

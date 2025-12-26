@@ -1,0 +1,126 @@
+<div class="container" ng-init="init()">
+    <center><h1>Received Collection</h1></center>
+    <form novalidate class="form-inline" name="rcvdcollfilterform">
+        <div class="row">
+            <div class="col-md-2">
+                <label>By Date</label>
+                <label class="switch">
+                    <input type="checkbox" ng-change="stepschck(1)" ng-true-value="1" ng-false-value="0" ng-model="steps.date" ><span class="slider round"></span>
+                </label>
+            </div>
+            <div class="col-md-2">
+                <label>By Month</label>
+                <label class="switch">
+                    <input type="checkbox" ng-change="stepschck(2)" ng-true-value="1" ng-false-value="0" ng-model="steps.month" ><span class="slider round"></span>
+                </label>
+            </div>
+            <div class="col-md-2">
+                <label>By Year</label>
+                <label class="switch">
+                    <input type="checkbox" ng-change="stepschck(3)" ng-true-value="1" ng-false-value="0" ng-model="steps.year" ><span class="slider round"></span>
+                </label>
+            </div>
+            <div class="col-md-2">
+                <select ng-change="getrcvdcollection()" class="form-control" name="sort_by" id="sort_by" ng-model="filter.sort_by">
+                    <option value="a.date">Coll Date</option>
+                    <option value="a.rcvddate">Rcvd Date</option>
+                    <option value="c.firstname">Customer</option>
+                    <option value="a.amount">Amount</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <select ng-change="getrcvdcollection()" class="form-control" name="sort_order" id="sort_order" ng-model="filter.sort_order">
+                    <option value="asc">Asc</option>
+                    <option value="desc">Desc</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <select ng-change="getrcvdcollection()" class="form-control" name="received" id="received" ng-model="filter.received">
+                    <option value="">Rcvd?</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-primary" ng-click="getrcvdcollection()"> Submit </button>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 30px;">
+            <div class="form-inline">
+                <div class="col-md-3" ng-show="steps.date">
+                    <div class="form-group">
+                        <label for="fromdate">From Date</label>
+                        <div class="input-group date" >
+                            <input type="text" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.fromdate"  ng-keydown="setNextFocus($event,'','tYpe')" name="fromdate" id="fromdate" autocomplete="off" ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3" ng-show="steps.date">
+                    <div class="form-group">
+                        <label for="todate">To Date</label>
+                        <div class="input-group date" >
+                            <input type="text" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.todate"  ng-keydown="setNextFocus($event,'','tYpe')" name="todate" id="todate" autocomplete="off" ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" ng-show="steps.month">
+                <div class="form-group">
+                   <label>Select Month : </label>
+                     <select  ng-model="fmonth" class="form-control">
+                     <option selected value=''>--Select Month--</option>
+                     <option  value='01'>Janaury</option>
+                     <option value='02'>February</option>
+                     <option value='03'>March</option>
+                     <option value='04'>April</option>
+                     <option value='05'>May</option>
+                     <option value='06'>June</option>
+                     <option value='07'>July</option>
+                     <option value='08'>August</option>
+                     <option value='09'>September</option>
+                     <option value='10'>October</option>
+                     <option value='11'>November</option>
+                     <option value='12'>December</option>
+                     </select> 
+                 </div>                     
+            </div>
+            <div class="col-md-3" ng-show="steps.year || steps.month" >
+                <div class="form-group">
+                    <label>Select Year : </label>
+                    <select  ng-model="fyear"  ng-options="y.id as y.year for y in yearr" class="form-control">
+                    </select> 
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-hovered" style="margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>SNO</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Chiti</th>
+                <th>Type</th>
+                <th>Rcvd Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="coll in rcvdcoll">
+                <td>{{$index+1}} </td>
+                <td>{{changeDateUserFormat(coll.date)}} </td>
+                <td><span ng-click="gotochiti(coll)">{{coll.customerFL}}({{coll.haminame}})<span ng-show="coll.code">({{coll.code}})</span></span></td>
+                <td>{{coll.amount}}</td>
+                <td>{{coll.chiti}}</td>
+                <td>{{chititypes[coll.tYpe]}}</td>
+                <td>{{changeDateUserFormat(coll.rcvddate)}}</td>
+            </tr>
+            <tr>
+                <td colspan="3" >Total</td>
+                <td>{{getsum(rcvdcoll,"amount")}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

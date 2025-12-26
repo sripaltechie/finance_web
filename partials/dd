@@ -1,0 +1,184 @@
+ <form novalidate name="chitiform" ng-submit = "createchiti()" action="" >
+<div class="form-inline">
+  
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Customer Name:</label>
+                    <select  ng-model="chiti.customer" name="customer" id="customer" ng-options="c.id as c.Firstname+ ' ' +c.LastName for c in customers" class= "form-control" required>
+                    <option selected value="">select Customer</option>
+                    
+                    </select>   
+                   
+                </div>
+                <div role="alert">
+                    <span class="error" ng-show= "(chitiform.nAme.$dirty || submitted )&& chitiform.nAme.$error.required" >
+                        Required!
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Date:</label>
+                        <div class="input-group date" >
+                            <input type="text" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="chiti.dAte" name="dAte" id="dAte" ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                         </div>
+                    </div>
+             </div>
+             <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Chiti Type :</label>
+                        <select  ng-model="chiti.tYpe" class="form-control" ng-options="t.id as t.type for t in chititypes" name="tYpe" id="tYpe" required >
+                               <option selected value="">Select Chiti Type</option>
+                            </select> 
+                    </div>
+                    <div role="alert">
+                        <span class="error" ng-show="(chitiform.tYpe.$dirty || submitted) && chitiform.tYpe.$error.required">
+                            Required!
+                        </span>
+                    </div>
+             </div>
+            <!--<div class="col-md-3">
+                    <div class="form-group">
+                        <select class="form-control" ng-model="chiti.stAtus" name="stAtus" id="stAtus" required > 
+                            <option value="1">Pending</option>
+                            <option value="2">Closed</option>
+                        </select>
+                        <div role="alert">
+                            <span class="error" ng-show="(chitiform.stAtus.$dirty || submitted) && chitiform.stAtus.$error.required">
+                                Required!
+                            </span>
+                        </div>
+                    </div>
+            </div>
+        </div>  
+        
+       <div ng-show= "chiti.tYpe==1" >
+        <div>
+            <center><h1>Daily</h1></center>
+        </div>
+
+
+
+             <div class="row text-center" style=" padding-top:7px;">
+                <div class="col-md-4 ">
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" ng-model="chiti.aMount" name="aMount" id="aMount" class="form-control" placeholder="Amount" required > 
+                        <div role="alert">
+                            <span class="error" ng-show="(chitiform.pdamount.$dirty || submitted) && chitiform.pdamount.$error.required" >
+                                Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Per.Day:</label>
+                            <input type="number" ng-model="chiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" required >
+                            <div role="alert">
+                                <span class="error" ng-show= "(chitiform.pd.$dirty || submitted) && chitiform.pd.$error.required">
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                 </div> 
+                 <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Sowji Comm :</label>
+                            <input type="number" ng-model="chiti.SPAE" class="form-control" name="SPAE" id="SPAE" >
+                        </div>
+                 </div>
+        </div>
+    </div>
+    <div ng-show= "chiti.tYpe==2" >      
+    <div>
+                    <center><h1>Weekly</h1></center>
+                </div>
+                <div class="row text-center" style=" padding-top:7px; ">
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            <label>Amount:</label>
+                            <input type="number" ng-model="chiti.aMount" class="form-control" placeholder="Amount" name="aMount" id="aMount" > 
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Per.Week:</label>
+                                <input type="number" ng-model="chiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" >
+                            </div>
+                     </div>
+                     <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Sowji Comm :</label>
+                                <input type="number" ng-model="chiti.SPAE" class="form-control">
+                            </div>
+                     </div>
+            </div>
+            </div>
+            <div ng-show= "chiti.tYpe==3" >
+            <div>
+                <center><h1>10's</h1></center>
+            </div>
+            <div class="row text-center" style=" padding-top:7px; ">
+                <div class="col-md-4 ">
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" ng-model="chiti.aMount" class="form-control" placeholder="Amount" name="aMount" id="aMount" > 
+                    </div>
+                </div>
+                <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Per.10th Day:</label>
+                            <input type="number" ng-model="chiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" >
+                        </div>
+                 </div>
+                 <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Sowji Comm :</label>
+                            <input type="number" ng-model="chiti.SPAE" class="form-control">
+                        </div>
+                 </div>
+        </div>
+        </div>
+        <div ng-show= "chiti.tYpe==4" >
+        <div>
+            <center><h1>Monthly</h1></center>
+        </div>
+        <div class="row text-center" style=" padding-top:7px; ">
+            <div class="col-md-3 ">
+                <div class="form-group">
+                    <label>Amount:</label>
+                    <input type="number" ng-model="chiti.aMount" class="form-control" placeholder="Amount" name="aMount" id="aMount" > 
+                </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Per.Month:</label>
+                        <input type="number" ng-model="chiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm">
+                    </div>
+             </div>
+             <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Interest Rate:</label>
+                        <input type="text" ng-model="chiti.interestrate" class="form-control" name="interestrate" id="interestrate" >
+                    </div>
+             </div>
+             <div class="col-md-3">
+                <div class="form-group">
+                    <label>Sowji Comm :</label>
+                    <input type="number" ng-model="chiti.SPAE" class="form-control" name="SPAE" id="SPAE">
+                </div>
+         </div>
+         
+         </div>
+         </div>
+         <div class="text-center"style="padding-top:50px";>
+    <center>     <input type="submit" class="btn btn-primary" value="Create Chiti">                 </center>
+         </div>
+         
+            
+        </div>
+    </form>
+    
+    {{response}}    

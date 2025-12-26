@@ -1,0 +1,136 @@
+<style >
+
+    @media screen{
+        .highlight{
+            background-color: red!important;
+            color: white;
+            font-size: large;
+        }
+        .highlight a{
+            color: white;
+            font-size: large;
+        }
+
+        .warning a{
+            color: orange;
+            /* font-size: large; */
+        }
+        .highlight:hover {
+            background-color: rgb(234, 147, 147)!important;
+        }
+
+        /* .freeze-table{
+            border-spacing: 0;
+            padding: 0;
+            /* border: ; 
+        }
+
+        thead th{
+            top: 0;
+            position: sticky;
+            background-color: white;
+        } */
+
+    }
+    
+
+</style>
+
+<div ng-init="init()">
+    <div class="container">
+        <center>
+            <h1 ng-show="filter.days == 1">One Month Crossed</h1>
+            <h1 ng-show="filter.days == 2">Two Months Crossed</h1>
+            <h1 ng-show="filter.days == 3">Three Months Crossed</h1>
+            <h1 ng-show="filter.days == 4">Four+ Months Crossed</h1>
+        </center>
+        <div class="row noprint" >
+            <div class="form-inline">
+                <div class="col-md-2 col-sm-2">
+                    <label>Chiti Type</label>
+                    <select class="form-control" ng-options="c.id as c.type for c in chititypes"  ng-change="getpendingchitilist()" ng-model="filter.tYpe">
+                       <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2" ng-show="filter.tYpe == 5">
+                    <label>Days</label>
+                    <select class="form-control" ng-change="getpendingchitilist()"  ng-model="filter.days">
+                       <option value="">Select</option>
+                       <option value="1">One month</option>
+                       <option value="2">Two months</option>
+                       <option value="3">Three months</option>
+                       <option value="4">4+ months</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2" >
+                    <label>Sort</label>
+                    <select class="form-control" ng-change="getpendingchitilist()"  ng-model="filter.sorttype">
+                        <option value="">Select</option>
+                        <option value="1">Pending Int</option>
+                        <!-- <option value="2">Two months</option>
+                        <option value="3">Three months</option>
+                        <option value="4">4+ months</option> -->
+                     </select>
+                </div>
+                <!-- <div class="col-md-3 col-sm-3" ng-show="filter.tYpe == 4">
+                    <label>Days</label>
+                    <select class="form-control" ng-change="getpendingchitilist()"  ng-model="filter.days">
+                       <option value="">Select</option>
+                       <option value="1">One month</option>
+                       <option value="2">Two months</option>
+                       <option value="3">Three months</option>
+                       <option value="4">4+ months</option>
+                    </select>
+                </div> -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class=" text-right" >Hami</label>
+                        <div >
+                            <input autocomplete="none" autocomplete="off" type="text" name="haminame" id="haminame" ng-model="haminame" class="form-control" typeahead="hami.Firstname + '_' + hami.LastName for hami in hamilist | filter:{Firstname:$viewValue}" focus> 
+                        </div>
+                    </div>
+                </div>      
+                <div class="col-md-3">
+                    <button type="button" ng-click="hidezeroasalu = !hidezeroasalu" ng-init="hidezeroasalu=0" class="btn btn-primary">Hide</button>
+                    <button type="button" ng-click="onlyname = !onlyname" ng-init="onlyname=0" class="btn btn-primary">Names</button>
+                    <button type="button" ng-click="getpendingchitilist()" class="btn btn-primary">Filter</button>
+                    <button type="button" ng-click="print()" class="btn btn-primary">Print</button>
+                </div>
+            </div>
+        </div>
+        <table style="margin-top:10px;" class="table table-bordered table-hover">
+            <thead>
+                <tr style=" top: 0;position: sticky;background-color: white;">
+                    <th ng-hide="onlyname">S.NO</th>
+                    <th ng-hide="onlyname">Date</th>
+                    <th>Customer</th>
+                    <th ng-hide="onlyname">Days</th>
+                    <th ng-hide="onlyname">Amount</th>
+                    <th ng-hide="onlyname">Balance asalu</th>
+                    <th ng-hide="onlyname">Balance Interest</th>
+                    <th ng-hide="onlyname">Interest Months</th>
+                    <th ng-hide="onlyname">Total Int Months (Upto Today)</th>
+                    <th ng-hide="onlyname">Chiti</th>
+                    <th ng-hide="onlyname">Interest</th>
+                    <th ng-hide="onlyname">Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="chiti in pendingchitilist | orderBy : '-days' " ng-hide="hidezeroasalu && chiti.remainingasalu <= 0" ng-class="checkdays(chiti.days)" >
+                    <td ng-hide="onlyname">{{$index+1}}</td>
+                    <td ng-hide="onlyname">{{changeDateUserFormat(chiti.date)}}</td>
+                    <td><a ng-href="#/chiti/{{chiti.id}}" target="_blank" >{{chiti.customername}}({{chiti.haminame}})<span ng-show="chiti.code">({{chiti.code}})</span><span ng-show="onlyname">({{getKvalue(chiti.chitiamount)}})</span></a></td>
+                    <td ng-hide="onlyname">{{chiti.days}}</td>
+                    <td ng-hide="onlyname">{{chiti.amount}}</td>
+                    <td ng-hide="onlyname">{{chiti.remainingasalu}}</td>
+                    <td ng-hide="onlyname">{{chiti.remainingint}}</td>
+                    <td ng-hide="onlyname">{{chiti.intpendingmonths}}</td>
+                    <td ng-hide="onlyname">{{chiti.ttlintpendingmonths}}</td>
+                    <td ng-hide="onlyname">{{chiti.id}}</td>
+                    <td ng-hide="onlyname"> {{chiti.interestrate}} </td>
+                    <td ng-hide="onlyname">{{chititypes[chiti.tYpe-1].type}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

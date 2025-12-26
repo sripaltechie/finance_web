@@ -1,0 +1,104 @@
+
+<div class="Container" ng-init="init()">
+    <div style="border: 5px inset black;border-radius: 5px;width: 500px;margin: auto;padding: 40px;">
+        <h1 style="text-align: center;"> Create Collector Amount</h1>
+        <form nonvalidate name="createcollectoramountForm" ng-submit="createcollectoramount()" action=""
+            style="padding-top: 50px;">
+            <div class="col-md-12" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label class="col-md-3">Date</label>
+                    <div class="col-md-9">
+                            <input type="text" style="width:160px;"  class="form-control datetimepicker"  ng-model="trans.date" autocomplete="off" focus/>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="input-group date1">
+                
+                <input type="text" class="form-control datetimepicker" id="datetime" ng-model="datetime" />
+            </div> -->
+            <div class="col-md-12" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label class="col-md-3">Collector</label>
+                    <div class="col-md-9">
+                        <select class="form-control" ng-model="trans.collector" name="collector" id="collector" ng-options="c.id as c.name for c in collectorslist" focus required >
+
+                        </select>
+                        <div role="alert">
+                            <span class="error" ng-show="(createcollectoramountForm.collector.$dirty || submitted) && createcollectoramountForm.collector.$error.required">
+                            Required!
+                            </span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            
+                <div class="col-md-12" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label class="col-md-3">Amount</label>
+                        <div class="col-md-9">
+                            <input type="text" ng-model="trans.amount" name="Amount" id="Amount" class="form-control" autocomplete="off" focus>
+                        </div>
+                    </div>
+                    </div>
+                    <div  style="margin-bottom: 10px;" class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group date" >
+                                    <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="collection date" ng-model="trans.collectiondate" name="date" id="date" autocomplete="off" focus>
+                                    <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <br>
+                            <br> -->
+                        <div class="col-md-6">
+                            <input type="button" class="btn btn-primary" ng-click="todaydate(1)" value="0">
+                            <input type="button" class="btn btn-primary" ng-click="yesterdaydate(1)" value="1">
+                            <input type="button" class="btn btn-primary" ng-click="DByesterdaydate(1)" value="2">
+                            <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate(1)" value="3">
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label class="col-md-3">Note</label>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="trans.note" name="Note" id="Note" class="form-control"
+                                    autocomplete="off" focus>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" style="padding-top:20px;">
+                        <input type="submit" class="btn btn-primary" value="Create">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+      $('.datetimepicker').datetimepicker({
+        format: 'd/m/Y H:i:s',
+        value: new Date(), // set the initial value to the current date and time
+        onChangeDateTime: function(dp, $input) {
+            // document.getElementById("datetime").value = new Date();
+            console.log($input.val()); // log the selected value to the console
+        }
+      });
+    //   document.getElementById("datetime").value = new Date();
+    });
+  </script>
+<!-- <script>
+    $(document).ready(function () {
+        $('.datetimepicker').datetimepicker({
+            format: 'Y-m-d H:i:s',
+            value: new Date(),
+            onChangeDateTime: function(dp, $input) {
+            console.log($input.val()); // log the selected value to the console
+          }
+        });
+        // console.log(document.getElementById("datetime").value );
+    });
+</script> -->

@@ -1,0 +1,287 @@
+<center><h1>Reverse Chiti</h1></center>
+
+<form novalidate name="revchitiform" ng-submit = "createchiti()"  >
+    <div class="form-inline">
+      
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Customer Name:</label>
+                        <select  ng-model="revchiti.customer" name="customer" id="customer" ng-options="c.id as c.Firstname+ ' ' +c.LastName+'('+c.HamiFirstName+')' for c in customers" class= "form-control" required>
+                        <option selected value="">select Customer</option>
+                        
+                        </select>   
+                       
+                    </div>
+                    <div role="alert">
+                        <span class="error" ng-show= "(chitiform.nAme.$dirty || submitted )&& chitiform.nAme.$error.required" >
+                            Required!
+                        </span>
+                    </div>
+                </div>
+                 <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Chiti Type :</label>
+                            <select  ng-model="revchiti.tYpe" class="form-control" ng-options="t.id as t.type for t in chititypes" name="tYpe" id="tYpe" required >
+                                   <option selected value="">Select Chiti Type</option>
+                                </select> 
+                        </div>
+                        <div role="alert">
+                            <span class="error" ng-show="(chitiform.tYpe.$dirty || submitted) && chitiform.tYpe.$error.required">
+                                Required!
+                            </span>
+                        </div>
+                 </div>
+                <div class="col-md-4">
+                        <div class="form-group">
+                            <select class="form-control" ng-model="revchiti.status" name="status" id="status" required > 
+                                <option value="1">Pending</option>
+                                <option value="2">Closed</option>
+                            </select>
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.status.$dirty || submitted) && chitiform.status.$error.required">
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                </div>
+            </div>  
+            
+           <div ng-show= "revchiti.tYpe==1" >
+            <div>
+                <center><h1>Daily</h1></center>
+            </div>
+    
+    
+    
+                 <div class="row text-center" style=" padding-top:7px;">
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            <label>Amount:</label>
+                            <input type="number" ng-model="revchiti.aMount" name="aMount" id="aMount" class="form-control" placeholder="Amount" required > 
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.pdamount.$dirty || submitted) && chitiform.pdamount.$error.required" >
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Per Day:</label>
+                                <input type="number" ng-model="revchiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" required >
+                                <div role="alert">
+                                    <span class="error" ng-show= "(chitiform.pd.$dirty || submitted) && chitiform.pd.$error.required">
+                                        Required!
+                                    </span>
+                                </div>
+                            </div>
+                     </div> 
+                     <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Sowji Comm :</label>
+                                <input type="number" ng-model="revchiti.sowji" class="form-control" name="sowji" id="sowji" >
+                            </div>
+                     </div>
+            </div>
+        </div>
+        <div ng-show= "revchiti.tYpe==2" >      
+        <div>
+                        <center><h1>Weekly</h1></center>
+                    </div>
+                    <div class="row text-center" style=" padding-top:7px; ">
+                        <div class="col-md-4 ">
+                            <div class="form-group">
+                                <label>Amount:</label>
+                                <input type="number" ng-model="revchiti.aMount" class="form-control" placeholder="Amount" name="aMount" id="aMount" > 
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Per.Week:</label>
+                                    <input type="number" ng-model="revchiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" >
+                                </div>
+                         </div>
+                         <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Sowji Comm :</label>
+                                    <input type="number" ng-model="revchiti.sowji" class="form-control">
+                                </div>
+                         </div>
+                </div>
+                </div>
+                <div ng-show= "revchiti.tYpe==3" >
+                <div>
+                    <center><h1>10's</h1></center>
+                </div>
+                <div class="row text-center" style=" padding-top:7px; ">
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            <label>Amount:</label>
+                            <input type="number" ng-model="revchiti.aMount" class="form-control" placeholder="Amount" name="aMount" id="aMount" > 
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Per 10th Day:</label>
+                                <input type="number" ng-model="revchiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" >
+                            </div>
+                     </div>
+                     <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Sowji Comm :</label>
+                                <input type="number" ng-model="revchiti.sowji" class="form-control">
+                            </div>
+                     </div>
+            </div>
+            </div>
+            <div ng-show= "revchiti.tYpe==4" >
+            <div>
+                <center><h1>Monthly</h1></center>
+            </div>
+            <div class="row text-center" style=" padding-top:7px; ">
+                <div class="col-md-3 ">
+                    <div class="form-group">
+                        <label>Amount:</label>
+                        <input type="number" ng-model="revchiti.aMount" class="form-control" placeholder="Amount" name="aMount" id="aMount" > 
+                    </div>
+                </div>
+                <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Per Month:</label>
+                            <input type="number" ng-model="revchiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm">
+                        </div>
+                 </div>
+                 <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Interest Rate:</label>
+                            <input type="text" ng-model="revchiti.interestrate" class="form-control" name="interestrate" id="interestrate" >
+                        </div>
+                 </div>
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Sowji Comm :</label>
+                        <input type="number" ng-model="revchiti.sowji" class="form-control" name="sowji" id="sowji">
+                    </div>
+             </div>
+             
+             </div>
+             </div>
+             <div class="text-center"style="padding-top:50px";>
+        
+             </div>
+             
+                
+        {{response}}    
+
+    <div class="container" style="padding-top:30px; " >
+            <div class="row">
+                <div class="col-md-3">
+                        <div class="form-group">
+                            <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="chiti.dAte" name="dAte" id="dAte" autocomplete="off" >
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        <br>
+                        <br>
+                    
+                            <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+                            <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+                            <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+                            <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+                    </div>   
+                </div>  
+            <div class="col-md-2">
+            <div class="form-group">
+        <select ng-change="getcolllistgrp()"  ng-model="Hami" class="form-control" ng-options="h.id as h.Firstname + '  ' + h.LastName  for h in hami" name="hami" id="hami"  >
+            <option selected value="">Select Hami</option>
+         </select>
+        </div> 
+        </div>
+        <div class="col-md-2">
+                <div class="form-group">
+            <select ng-change="getcollectionList()"  ng-model="chitifilter" class="form-control" ng-options="cl.chiti as cl.customerFL + '- ' + cl.chiti  for cl in collectiongrp" name="hami" id="hami"  >
+                <option selected value="">Select Chiti </option>
+             </select>
+            </div> 
+            </div>      
+       <!-- <div class="col-md-2">
+            <div class="form-group">
+        <select ng-change="getreceivedamount()"  ng-model="receivedfrom" class="form-control" ng-options="h.id as h.Firstname + '  ' + h.LastName  for h in customers" name="hami" id="hami"  >
+            <option selected value="">Received From </option>
+         </select>
+        </div> 
+        </div>      -->
+         <div class="col-md-3">
+             <div class="form-group">
+                <label>Cash </label>
+                <input type="number"  ng-model= "revchiti.cash" class="form-control" style="width: 150px;">{{extradisp}}
+            </div>
+            
+        </div>
+        
+    </div>
+
+
+    <div class="row" style="padding-top: 50px;">
+            <div class="col-md-3">
+                <div class="form-group">
+                        <label>Extra's : </label>
+                <input type="number"  ng-model= "bfreextra" >
+                
+                </div>
+            </div>
+        <div class="col-md-1"  >
+                <button class="btn btn-primary" ng-click="getextraamt()" >Add</button>
+        </div>
+         <div class="col-md-6" style="padding-top: 20px;">
+         <label>Note : </label>
+         <textarea ng-model="note" style="width: 500px;height: 100px;" ></textarea>
+         
+        </div>
+
+        
+          
+        
+    </div>
+    <br>
+    <br>
+    <table  style="padding-top: 50px;" class="table condensed-table">
+            <tr>
+             <td>ID</td>
+             <td>Chiti ID</td>
+             <td>Customer</td>
+             <td>Date</td>
+             <td>Amount</td>
+             <td>Received</td>
+            </tr>
+    </thead>
+    <tbody>
+        <tr  ng-repeat="c in collection" >
+            <td><a ng-href="">{{c.id}}</a></td>
+            <td>{{c.chiti}} </td>
+            <td><a ng-href="#/chiti/{{c.chiti}}">{{c.customerFL}}</a></td>
+            <td>{{changeDateUserFormat(c.date)}}</td>
+            <td>{{c.amount}}</td>
+            <td><input type="checkbox" style="width: 40px;height: 40px;"  ng-model="c.received" > </td>
+        </tr>
+       
+    </tbody>
+    </table> 
+     <div class="container" style="padding-left: 500px;">
+         <div class="col-md-6">
+            <button type="button" class="btn btn-primary"><a style="color: white;" ng-href="#/createcustomer">Add Customer</a></button>  
+            <input type="submit" class="btn btn-primary" value="Create Chiti">            
+            
+           <!--<button class="btn btn-primary" ng-click="addcollection()" >Submit</button>-->
+         </div>
+     </div>
+   
+     <!--<button class=" btn btn-primary" ><a href="#" style="color: white;" id="save-link">Download</a> </button>-->
+    
+</div>
+</div>
+</form>
+
+
+ 

@@ -1,0 +1,169 @@
+
+
+Pending works
+-> typeahead in all pages for customername -> chitfund pages
+-> setnextfocus 
+- interest - edit modal for post int -> are you sure 
+- index.php -> getInterest
+- interestcal entry -> auto write notes -> 
+
+
+
+new feature
+-------------
+ onsubmit="myButton.disabled = true; return true;"
+
+
+
+
+V_2.0
+------
+db changes for V 2.0
+---------------------
+-> CREATE TABLE `finance`.`cfcustomers` ( `id` INT NOT NULL AUTO_INCREMENT , `fname` VARCHAR(50) NOT NULL , `lname` VARCHAR(50) NOT NULL , `phone` VARCHAR(20) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+
+v 2.0 journal
+--------------
+May 29
+--------
+db changes
+-----------
+-> CREATE TABLE `finance`.`cfcustomers` ( `id` INT NOT NULL AUTO_INCREMENT , `fname` VARCHAR(50) NOT NULL , `lname` VARCHAR(50) NOT NULL , `phone` VARCHAR(20) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+work done
+----------
+-> made fullstack feature of Create,get,get/:id,put/:id chitfund customer
+
+next work
+---------
+-> createcfpaata
+
+
+
+
+
+
+V_1.1
+------
+    
+v 1.1 Changelog
+---------------
+1. Toast feature at createChiti,createdrcr , editdrcr
+2. changed Date format to user format in getchiti.html 
+3. chiti.code in getchitilist
+4. added hami name in Dashboard -> same chiti daily
+
+
+
+
+V_1.0
+------
+
+db changes
+-----------
+1. CREATE TABLE `finance`.`interestrows` ( `id` INT NOT NULL AUTO_INCREMENT , `intid` INT(10) NOT NULL , `date` DATE NOT NULL , `credit` INT(10) NOT NULL , `debit` INT(10) NOT NULL , `note` VARCHAR(500) NOT NULL , `days` INT(10) NOT NULL ,`intamount` INT(10) NOT NULL , `op` INT(10) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+no need -> 2. ALTER TABLE `interestrows` ADD `days` INT(10) NOT NULL AFTER `note`;
+3. CREATE TABLE `finance`.`interest` ( `id` INT NOT NULL AUTO_INCREMENT , `date` DATE NOT NULL , `customer` INT(10) NOT NULL , `credit` INT(10) NOT NULL , `debit` INT(10) NOT NULL , `note` VARCHAR(500) NOT NULL , `note1` VARCHAR(500) NOT NULL , `created` DATETIME NOT NULL , `updated` DATETIME NOT NULL , `deleted` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+4. UPDATE  customers SET lastname= " "  where lastname="."
+
+INSERT INTO interest(date,customer,debit,credit,note,note1,created,updated) SELECT date,customer,debit,credit,note,note1,created,updated FROM drcr WHERE note = 'interestcal';
+don't do this -> DELETE FROM drcr WHERE note = 'interestcal';
+
+
+journal
+
+Apr 22
+--------
+renovated interest page with intRows and made arrindfun func -> only single customer allowed for displaying int
+->checked interest calculations , they are ok!
+
+pending work - 
+-> if changed the both credit and debit then show invalid  -> post interest with interestarr -> have to make intperint  -> if int paid then show only results from get call
+
+Apr 23
+--------
+Apr 22 pending work Done
+-------------------------
+-> if changed the both credit and debit then show invalid
+-> post interest with interestarr 
+-> if int paid then show only results from get call
+
+Done work today
+--------------
+(NOT TESTED)
+app.js -> PNotify but can't remove with time
+index.php -> get interest with interestrows in index.php 
+dbHandler -> Done with get interest and interestrows
+
+->done int calc -> post int with introws -> 
+->in interest page get int with introws if already calculated -> else do calculations
+-> toaster -> evn mkeobj in data.js
+
+
+pending work -> have to make intperint
+
+
+
+
+
+Apr 24
+--------
+Apr 23 pending work Done
+-------------------------
+-> have to make intperint
+
+
+done work today
+-> made shortcut of ctrl up,down,left,right
+
+
+pending work -> have to check  toast working for int calculated more than 1 time
+
+
+
+Apr 25
+--------
+Apr 24 pending work Done
+-------------------------
+-> have to check  toast working for int calculated more than 1 time
+
+
+Apr 27
+-------
+work done -> changed navigation bar with animation
+
+Apr 28 
+-------
+work done
+---------
+->Filter list in customer name
+
+
+pending work-> add filter list in get chitilist
+
+
+
+Apr 29
+------
+Apr 28 pending work done -> 
+
+
+work done
+--------
+-> changed in createcustomer for capitalizeFirstLetter -> fname , lname 
+
+misc
+-----
+-> scriptjs ->capitalizeFirstLetter
+
+
+
+June 11
+--------
+-> working on createcfpaata
+
+Pending work
+------------
+-> getcustomerid function 
+-> createcfpaata in indexphp , dbHandler

@@ -1,0 +1,117 @@
+<div class="container" ng-init="init()" style="border: 1px solid black;height: 650px;width: 500px;border-radius: 14px;padding: 20px;padding-right: 50px;margin-top: -45px;">
+    <center><h1 style="padding-bottom: 50px;"> Create Paata</h1></center>
+    <form ng-submit = "createPaata()" name="createPaataForm" novalidate >
+        <!-- <div class="form-inline"> -->
+            <div class="row text-center" style="width: 384px;margin-left: 25px;">
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="item form-group has-success text-center">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" for="date">Date: <span class="required">*</span>
+                        </label> 
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input onfocus="initArrow(this)" onkeydown="setArrow(event,this)" style="width: 153px;" id="date" ng-model="paata.date" name="date" class="date-picker form-control  has-feedback-left date" type="text" required autocomplete="off" focus> 
+                            <!-- onblur="setProperValue(this)" -->
+                            <span class="error" ng-show="(createPaataForm.date.$dirty || submitted) && createPaataForm.date.$error.required" >
+                                Date Required!
+                            </span>
+                        </div>
+                     </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >chiti</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <select ng-change="getcustomerlist()" ng-model="paata.chiti" name="chiti" id="chiti" ng-options="c.id as c.chitiname + '('+c.code+')'  for c in cfchiti" class= "form-control"  focus required>
+                            <option selected value="">Select Chiti</option>
+                            </select>   
+                            <span class="error" ng-show="(createPaataForm.chiti.$dirty || submitted) && createPaataForm.chiti.$error.required" >
+                                Chiti Required!
+                            </span>
+                        </div>
+                    </div>                   
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >No</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="number" class="form-control" ng-model="paata.no" name="no" id="no" focus autocomplete="off">
+                            <span class="error" ng-show="(createPaataForm.no.$dirty || submitted) && createPaataForm.no.$error.required" >
+                                No Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Customer</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" id="customer" name="customer" ng-model="paata.customername" class="form-control"  typeahead="customer.customername + '_' + customer.cusno for customer in cfchiticustomers | filter:{customername:$viewValue} " autocomplete="off" required focus>
+                            <span class="error" ng-show="(createPaataForm.customer.$dirty || submitted) && createPaataForm.customer.$error.required" >
+                                Customer Required!
+                            </span>
+                        </div>
+                    </div>                   
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Paata</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" ng-change="getVals()" class="form-control" ng-model="paata.paata" name="paata" id="paata" autocomplete="off" focus required>
+                            <span class="error" ng-show="(createPaataForm.paata.$dirty || submitted) && createPaataForm.paata.$error.required" >
+                                Paata Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Pay Amount</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" class="form-control" ng-model="paata.payamount" name="payamount" id="payamount" autocomplete="off" focus required>
+                            <span class="error" ng-show="(createPaataForm.payamount.$dirty || submitted) && createPaataForm.payamount.$error.required" >
+                                Payamount Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Repay Amount</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" class="form-control" ng-model="paata.repayamount" name="repayamount" id="repayamount" autocomplete="off" focus required>
+                            <span class="error" ng-show="(createPaataForm.repayamount.$dirty || submitted) && createPaataForm.repayamount.$error.required" >
+                                Payamount Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Sripal Comm</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" class="form-control" ng-model="paata.sripalcomm" name="sripalcomm" id="sripalcomm" autocomplete="off" focus required>
+                            <span class="error" ng-show="(createPaataForm.sripalcomm.$dirty || submitted) && createPaataForm.sripalcomm.$error.required" >
+                                Payamount Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Sowji Comm</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" class="form-control" ng-model="paata.sowjicomm" name="sowjicomm" id="sowjicomm" autocomplete="off" required >
+                            <span class="error" ng-show="(createPaataForm.sowjicomm.$dirty || submitted) && createPaataForm.sowjicomm.$error.required" >
+                                Payamount Required!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="" style="padding: 28px;text-align: center;">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        <!-- </div> -->
+    </form>
+
+
+</div><!-- container -->

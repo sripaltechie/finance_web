@@ -1,0 +1,58 @@
+<form novalidate name="entryform"  ng-submit="createentry() " style="padding-top:100px;">
+    <div class="form-inline">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Date:</label>
+                    <div class="input-group date" >
+                        <input type="text" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="entry.dAte" name="dAte" id="dAte" ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <select ng-model="entry.customer" name="customer" id="customer" ng-options="c.id as c.Firstname+ ' ' + c.LastName for c in customers" class="form-control" >
+                        
+                    <option selected value="" >Select Customer</option>
+                    <option> {{c.Firstname}} {{c.LastName}} </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select ng-model="drcr" name="drcr" id="drcr"  class="form-control">
+                    <option selected value="1">Debit</option>
+                    <option value="2">Credit</option>
+                </select>
+                <input type="number" ng-model="drcramount" name="drcramount" id="drcramount" class="form-control" > 
+            </div>
+
+            <div class="row" style="padding-top:100px; " >
+                <div class="col-md-12">
+                    <textarea  ng-model="entry.note" name="note" id="note" rows=20 cols=50 ></textarea>
+                </div>
+            </div>
+
+
+            <div class="row text-center " style="padding-top:200px;">
+                <div class="col-md-12">
+                    <input type="submit"  class="form-control btn btn-primary" >
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+    </div>        
+
+
+
+
+
+
+
+</form>

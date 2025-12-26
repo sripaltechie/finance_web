@@ -1,0 +1,29 @@
+<div class="Container" ng-init="init()">
+    <center>
+        <h1>Collectors Amount List</h1>
+    </center>
+    <div class="center">
+        <table class="table table-bordered table-hover" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Collector</th>
+                    <th>Amount</th>
+                    <th>Collection Date</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="t in collectorsamountlist" ng-class="checkamount(t.amount)">
+                 <td>{{t.date}}</td>
+                 <td>{{t.collector}}</td>
+                 <td>{{t.amount}}</td>
+                 <td>{{t.collectiondate}}</td>
+                 <td>{{t.note}}</td>
+                
+            </tbody>
+        </table>
+    </div>
+
+
+</div>

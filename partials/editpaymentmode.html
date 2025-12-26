@@ -1,0 +1,27 @@
+<div class="container" ng-init="init()">
+    <div style="border: 1px inset black;border-radius: 5px;width: 500px;margin: auto;padding: 40px;">
+        <h1 style="text-align: center;" >Edit Payment Mode</h1>
+        <form novalidate  name="editpaymentmodeForm" ng-submit = "editpaymentmode()" action=""  style="padding-top: 50px;" >
+                    <div class="col-md-12 ">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" ng-model="paymentmode.modename" name="modename" id="modename" class="form-control" required autocomplete="off" focus >
+                            <div role="alert">
+                                <span class="error" ng-show="(editpaymentmodeForm.modename.$dirty || submitted) && editpaymentmodeForm.modename.$error.required">
+                                Required!
+                                </span>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Opening Balance:</label>
+                                <input type="text" ng-model="paymentmode.opbal" name="opbal" id="opbal" class="form-control" autocomplete="off" focus>
+                            </div>
+                     </div>
+                    <div class="text-center" style="padding-top:20px;">
+                        <input type="submit" class="btn btn-primary"  value="Edit">
+                    </div>
+            </div>
+            </form>        
+    </div>   

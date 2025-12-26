@@ -1,0 +1,907 @@
+<!-- <style>
+   @media print {
+    tr.asalu {
+        background-color: #1a4567 !important;
+        -webkit-print-color-adjust: exact; 
+    }
+}
+
+@media print {
+    .asalu th {
+        color: white !important;
+    }
+}
+</style> -->
+
+<div ng-init = "init()">
+<center><h1> {{chiti.customername}}({{chiti.haminame}}) ({{chiti.code}}) </h1></center>
+<div class="row container">
+   <div class="col-md-6 noprint" >
+      <button class="btn btn-primary"  ><a ng-href="#/customer/{{chiti.customer}}" style="color:white;">Back</a></button>
+      <button class="btn btn-primary"  ><a ng-href="#/daybook" style="color:white;">Daybook</a></button>
+      <button class="btn btn-primary" ng-show="sss==0" ng-click="sss=1">Chiti Details</button>
+      <button class="btn btn-primary" ng-show="sss==1" ng-click="sss=0">Chiti Details</button>
+      <button class="btn btn-primary noprint" ng-click="print()">Print</button>
+      <button class="btn btn-success" class="form-control noprint" data-toggle="modal" data-target="#datediffmodal" >Date Diff</button>
+      <button type="button" class="btn btn-primary" ng-show="collection.length > 8" ng-click="introws = !introws"><span ng-show="introws">Show All</span><span ng-show="!introws">Hide</span> Interest</button>
+</div>
+<div class="col-md-6 noprint" >
+<div class="text-right">
+   <button class="btn btn-success" ng-show="chiti.status == 1" ng-click="chiti.status = 2;editchiti()">Close Chiti Status </button>
+   <button class="btn btn-success" ng-show="chiti.status == 2" ng-click="chiti.status = 1;editchiti()">Pending Chiti Status  </button>
+   <button class="btn btn-success"><a style="color :white;" href="#/editchiti/{{chiti.id}}">Edit Chiti</a> </button>
+   <button class="btn btn-success" class="form-control" data-toggle="modal" data-target="#modify_chiti_modal" >Modify</button>
+   <button class="btn btn-danger"  ng-click="deletechiti()">Delete Chiti  &nbsp; <span class="glyphicon glyphicon-trash"></span> </button>
+   <button class="btn btn-success" ng-click="sendWhatsapp()">Whatsapp</button>
+</div>
+</div>
+</div>
+<div class="container" style="border: 1px solid black;margin-top: 30px;padding: 20px;">
+<div style="font-weight:bold; font-size: 20px;">
+
+<div ng-show="sss ==1" >
+   <div class="container" >
+      
+      <div class="col-md-2 noprint">
+         ID : {{chiti.id}}
+      </div>
+      <div class="col-md-3">
+         Date : {{changeDateUserFormat(chiti.date)}}
+      </div>
+      <div class="col-md-3">
+         Chiti Type: {{chititype[chiti.tYpe-1]}}
+      </div>
+      <div class="col-md-2">
+         Amount : {{chiti.chitiamount}}
+      </div>
+      <div class="col-md-2" ng-show="!chiti.irregular">
+         <b>Regular</b>
+         <button class="btn btn-primary" ng-click="chiti.irregular = 1;editchiti()" >Change</button>
+      </div>
+      <div class="col-md-2" ng-show="chiti.irregular">
+         <b>Irregular</b>
+         <button class="btn btn-primary" ng-click="chiti.irregular = 0;editchiti()" >Change</button>
+      </div>
+      
+   
+   </div>
+   <div class="row" >
+      <div class="col-md-3 noprint">
+         Per {{pertype[chiti.tYpe-1]}} : {{chiti.pdwtm}}
+      </div>
+      <div class="col-md-3 noprint" ng-show="chiti.sowji>0">
+         Sowji Profit : {{chiti.sowji}}
+     </div>
+     <div class="col-md-3 noprint" ng-show="chiti.fullandevi>0">
+         Fullandevi Profit : {{chiti.fullandevi}}
+      </div>    
+      <div class="col-md-3" ng-show ="chiti.tYpe==4">
+               Interest : {{chiti.interestrate}}
+      </div>    
+<!-- </div> -->
+
+<!-- </div>
+<div class="row" > -->
+   <!-- <div class="row" ng-show="displaysowjicom==1" >
+      <div class="col-md-12" style="background-color:cyan;width: 60%;">
+         <p>Sowji's Commission [{{getsowjid[0].amount}}] is added to her A/C on {{changeDateUserFormat(getsowjid[0].date) }} </p>
+      </div>
+   </div> -->
+   <div class="col-md-3 noprint">
+      status : {{status[chiti.status-1]}}
+   </div>
+   <div class="col-md-3 noprint">
+      Pending Collections : {{pendingcollection.length}}
+   </div>
+   <div class="col-md-3" ng-show ="chiti.tYpe==4 || chiti.tYpe== 5">
+      Remaining Asalu: {{chiti.remainingasalu}}
+   </div> 
+   <div class="col-md-2 noprint">
+      <input type="checkbox" ng-true-value= "1" ng-false-value="0" ng-model="collstat" ng-change="getcollectionlist()"> <label>Received:</label>
+   </div>
+</div>
+    
+</div>
+
+<!--accordion-->
+<div class="panel-group" id="accordion" style="padding-top: 20px;" ng-show ="chiti.tYpe==4 || chiti.tYpe== 5">
+   <div class="panel panel-default"  >
+      <div class="panel-heading">
+         <h1 class="panel-title">
+            <div data-toggle="collapse" data-parent="#accordion" ng-href="#collapse11">Asalu received : {{asaluttl}}</div>
+         </h1>
+      </div>
+      <div id="collapse11" class="panel-collapse collapse ">
+         <div class="panel-body">
+            <table class="table table-condensed table-hover " id="daybooktable">
+               <thead class="thead-dark">
+                  <tr>
+                     <th>S.No</th>
+                     <th>Date</th>
+                     <th>Amount </th>
+                     <th>Note</th>
+                     <th>Paymentmode</th>
+                     <th class="noprint">Edit</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr class="danger" ng-repeat ="a in getasalu" ng-show= "a.amount !=0" >
+                     <td> {{$index+1}}</td>
+                     <td> {{changeDateUserFormat(a.date)}} </td>
+                     <td> {{a.amount}} </td>
+                     <td  style="white-space: pre-line;">{{a.note}} </td>
+                     <td ng-show="a.paymentmode != 50">{{a.paymentmodename}} </td>
+                     <td ng-show="a.paymentmode == 50">
+                        <table class="table">
+                           <tr ng-repeat="pm in a.pmtrans">
+                              <td>{{pm.paymentmodename}}</td>
+                              <td>{{pm.credit}} </td>
+                           </tr>
+                        </table>
+                     </td>
+                     <td class="noprint">
+                        <a href="#/editasalu/{{a.id}}" ><span class="glyphicon glyphicon-edit"></span> </a>
+                        <button class="btn btn-danger" ng-click="deleteasalu(a.id)">
+                           <span class="glyphicon glyphicon-trash"></span> 
+                        </button>
+                        <button style="margin-left:12px ;" class='btn btn-primary' ng-click='plusNotes($index)'> <b> +1 </b></button>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+<!--accordion-->
+<!--chitiamount accordion-->
+<div class="panel-group" id="accordion1" style="padding-top: 20px;" ng-show ="chiti.tYpe==4 && chiti.tYpe== 5">
+   <div class="panel panel-default"  >
+      <div class="panel-heading">
+         <h1 class="panel-title">
+            <div data-toggle="collapse" data-parent="#accordion1" ng-href="#collapse112">Added amount in chiti : </div>
+         </h1>
+      </div>
+      <div id="collapse112" class="panel-collapse collapse ">
+         <div class="panel-body">
+            <table class="table table-condensed table-hover" id="daybooktable">
+               <thead class="thead-dark">
+                  <tr>
+                     <th>S.No</th>
+                     <th>Date</th>
+                     <th>ChitiAmount </th>
+                     <th>Note</th>
+                     <th>Edit</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr ng-repeat ="a in getasalu" ng-show= "a.amount ==0" >
+                     <td> {{$index+1}}</td>
+                     <td> {{changeDateUserFormat(a.date)}} </td>
+                     <td> {{a.chitiamount}} </td>
+                     <td> {{a.note}} </td>
+                     <td><a href="#/editasalu/{{a.id}}" ><span class="glyphicon glyphicon-edit"></span> </a></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+<!--chitiamount accordion-->
+
+
+<center><h2 style="color: red;margin-left: -250px;">INTEREST</h2></center>
+<table class="table table-responsive table-bordered table-condensed table-condensed table-hover ">
+   <thead>
+       <th>SNO.</th>
+       <th>Date</th>
+       <th>Per {{pertype[chiti.tYpe-1]}} </th>
+       <!-- <th >
+         <span ng-show="getsum(collection,'sowji')>0">Sowji </span> 
+         <span ng-show="getsum(collection,'suri')>0">Suri </span> 
+         <span ng-show="getsum(collection,'fullandevi')>0">Fullandevi </span> 
+         Comm
+         </th> -->
+       <!-- <th ng-show="getsum(collection,'suri')>0">Suri Profit</th>
+       <th ng-show="getsum(collection,'fullandevi')>0">Fullandevi Profit</th> -->
+       <!-- <th>Received</th> -->
+       <th>Received Date </th>
+       <th>Notes</th>
+       <th>Paymentmode</th>
+       <th class="noprint">Edit</th>
+       <th class="noprint">Action</th>
+   </thead>
+   
+   <tr ng-repeat="c in collection" ng-show="!introws || introws && $index > (collection.length - 8)" ng-class="chckparam(c.id,c.received)" >
+       <td>{{$index+1}} </td>
+       <td>{{changeDateUserFormat(c.date)}} </td>
+       <td>{{c.amount}} </td>
+       <!-- <td >
+          <span ng-show="c.sowji > 0">{{c.sowji}} </span>
+          <span ng-show="c.suri > 0">{{c.suri}} </span>
+          <span ng-show="c.fullandevi > 0">{{c.fullandevi}} </span>
+      </td> -->
+      <!-- <td ng-show="c.suri > 0">{{c.suri}} </td>
+         <td ng-show="c.fullandevi > 0">{{c.fullandevi}} </td>
+         <td ng-show="(getsum(collection,'fullandevi')>0 || getsum(collection,'suri')>0 || getsum(collection,'fullandevi')>0  )
+            && (c.sowji >0 || c.suri > 0 || c.fullandevi > 0)" ></td> -->
+            <!-- <td>{{yesno[c.received]}} </td> -->
+            <td>{{changeDateUserFormat(c.rcvddate)}} </td>
+            <td>{{c.notes}} </td>
+            <!-- <td ng-show="c.paymentmode != 50">{{c.paymentmodename}} </td> -->
+            <td ><!--ng-show="c.pmarr.length">-->
+               <table class="table">
+                  <tr ng-repeat="pm in c.pmarr">
+                     <td>{{pm.modename}}</td>
+                     <td>{{pm.amount}} </td>
+                  </tr>
+               </table>
+            </td>
+            <td class="noprint"><a href="#/editcollection/{{c.id}}"><span class="glyphicon glyphicon-edit"></span> </a></td>
+            <td class="noprint">
+               <button type="button" ng-show="!c.received" ng-click="rcvdcolpopup('open',c.id,c.amount)" class="btn btn-primary">Received</button>
+               <button type="button" ng-click="updatenotes(c.id,c.amount)" class="btn btn-primary">Update Notes</button>
+            </td>
+         </tr>
+</table>
+
+
+
+<!-- <div class="col-md-3">
+</div> -->
+<div class="row text-center">
+   <div class="container col-md-2" >
+      <button style="width: 150px;" class="btn btn-primary form-control noprint" data-toggle="modal" data-target="#addasalumodal1">Add Amount in Chiti</button>
+   </div>
+   <div class="container col-md-2" >
+      <button style="width: 150px;" class="btn btn-primary form-control noprint" ng-show="chiti.tYpe != 1 && chiti.tYpe != 2 && chiti.tYpe != 5" data-toggle="modal" data-target="#addasalumodal">Add Asalu Received</button>
+      <button style="width: 150px;" class="btn btn-primary form-control noprint" ng-show="chiti.tYpe == 5" ng-click="dailycolinit()">Daily Coll Rcvd</button>
+   </div>
+   <!-- <div class="container col-md-2" >
+      <button style="width: 100px;" class="btn btn-primary form-control noprint" ng-show="chiti.tYpe == 5" data-toggle="modal" data-target="#dailymodal">create Entry</button>
+   </div> -->
+   <div class="container col-md-3 noprint"  ng-show="chiti.tYpe == 4 || chiti.tYpe == 5">
+       <button  style="width: 200px;" class="btn btn-primary form-control" data-toggle="modal" data-target="#addmonthmodal">Add Monthly collection</button>
+       <div style="padding-bottom:20px;"></div>
+   </div>
+   <div class="container col-md-2 noprint">
+      <select class="form-control" ng-model="rcvdfilter" ng-change="getreceivedamount(rcvdfilter)">
+         <option value="1" selected>Individual</option>
+         <option value="2">By date</option>
+      </select>
+   </div>
+   <div class="container col-md-1 noprint">
+      <button ng-show="ascdsc == 1" class="btn btn-primary" type="button" ng-click="getreceivedamount(3)">Asc</button>
+      <button ng-show="ascdsc == 2" class="btn btn-primary" type="button" ng-click="getreceivedamount(4)">Dsc</button>
+   </div>
+</div>
+
+
+<!--Received cash accordion-->
+<div class="panel-group " id="accordion1" style="padding-top: 70px;" >
+   <div class="panel panel-default"  >
+      <div class="panel-heading">
+         <h1 class="panel-title">
+            <div data-toggle="collapse" data-parent="#accordion1" ng-href="#collapse113">Received Cash  : {{getsum(receivedamount,"amount")}}</div>
+         </h1>
+      </div>
+      <div id="collapse113" class="panel-collapse collapse ">
+         <div class="panel-body">
+            <table class="table table-condensed table-hover" id="rcvdcashtable">
+               <thead class="thead-dark">
+                  <tr>
+                     <td colspan="5"> 
+                        <div class="row " >
+                           <div class="col-md-7"></div>
+                           <div class="col-md-5">
+                              <div style="background-color: #C4E3F3;width: 15px;height: 25px;" class="col-md-3" ></div>
+                              <span class="col-md-3">Interest</span>
+                              <div style="background-color: #EBCCCC;width: 15px;height: 25px;" class="col-md-3"></div>
+                              <span class="col-md-3">Asalu</span>
+                           </div>
+                        </div>
+                     </td>
+                  </tr>
+                  <tr>
+                     <th>S.No</th>
+                     <th>Date</th>
+                     <th>Rcvd Date</th>
+                     <th>ChitiAmount </th>
+                     <th>Note</th>
+                     <th>Edit</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr ng-repeat ="r in receivedamount" ng-class="checkcolor(r.asaluid)" >
+                     <td> {{r.id}}</td>
+                     <td> {{changeDateUserFormat(r.coldate)}} </td>
+                     <td> {{changeDateUserFormat(r.rcvddate)}} </td>
+                     <td> {{r.amount}} </td>
+                     <td> {{r.note}} </td>
+                     <td ><a href="#/editreceived/{{r.id}}" ><span class="glyphicon glyphicon-edit"></span> </a></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+</div>
+<!--Received cash accordion-->
+</div>
+{{response}}
+
+<div id="addmonthmodal"class="modal fade" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-md" >
+        <!-- Modal content -->
+        <div class="modal-content">
+           <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <center>
+                 <h4> Insert the Number of Collection Entries you want </h4>
+              </center>
+           </div>
+           <div class="modal-body">
+              <form ng-submit="addmonthcol()" name="addmonthcolform" >
+                 <div class="container">
+                    <div class="form-inline">
+                       <div class="row" style="padding-left: 28px;">
+                          <div class="col-md-5 text-center">
+                             <div class="form-group">
+                                <label>Number of Entries : </label>
+                                <input type="number" name="noof" ng-model="noof" class="form-control">
+                             </div>
+                          </div>
+                       </div>
+                       <!-- row -->
+                       <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                            <div class="col-md-5 text-center">
+                               <div class="form-group">
+                                  <label>Interest Amount : </label>
+                                  <input type="number" name="intamt" ng-model="intamt" class="form-control">
+                               </div>
+                            </div>
+                        </div>        
+                         <!-- row -->
+                       <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                            <div class="col-md-5 text-center" ng-show="chiti.hami != 90">
+                               <div class="form-group">
+                                  <label>Sowji Comm : </label>
+                                  <input type="number" name="sowjicomm" ng-model="sowjicomm" class="form-control">
+                               </div>
+                            </div>
+                            <div class="col-md-5 text-center" ng-show="chiti.hami == 90">
+                              <div class="form-group">
+                                 <label>Suri Comm : </label>
+                                 <input type="number" name="suricomm" ng-model="suricomm" class="form-control">
+                              </div>
+                           </div>
+                        </div>                   
+                       <div class="row text-center" style="padding-top: 20px;"  >
+                          <div class="col-md-6">
+                             <input type="submit" class="btn btn-success"  >
+                          </div>
+                       </div>
+                    </div>
+                    <!-- form-inline -->
+                 </div>
+                 <!-- container -->
+              </form>
+           </div>
+        </div>
+     </div>
+  </div>
+  <!-- Modal content -->
+<!--add asalu-->
+<div id="addasalumodal"class="modal fade" tabindex="-1" role="dialog" >
+   <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h4> Add Asalu Received </h4>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="addasalu()" name="addasaluform" >
+                <div class="container">
+                   <div class="form-inline">
+                      <div class="row" style="padding-left: 28px;">
+                         <div class="col-md-5 text-center">
+                           <div class="form-group " >
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="asalu.date" name="dAte" id="dAte" autocomplete="off"  >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                             <br>
+                             <br>
+                              <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+                              <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+                              <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+                              <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+                           </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                           <div class="col-md-5 text-center">
+                              <div class="form-group">
+                                 <label> Amount : </label>
+                                 <input type="number" name="intamt" ng-model="asalu.amount" class="form-control">
+                              </div>
+                           </div>
+                       </div>        
+                        <!-- row -->
+                        
+                        <div class="row " style="padding-top: 28px;padding-left: 28px;" focus>
+                           <!-- start -->
+                              <div class="col-md-5" ng-show="asalu.paymentmode != 50"  style="margin-top: 10px;" >
+                                 <div class="form-group">
+                                    <label>Payment mode: </label>
+                                    <select class="form-control" ng-change="checkmultipm()" ng-options="pm.id as pm.modename for pm in paymentmodelist"  ng-model="asalu.paymentmode" focus> 
+                                       <option selected>Select</option>
+                                    </select>
+                                 </div>
+                              </div>
+                           <div class="col-md-8" ng-show="asalu.paymentmode == 50"  style="margin-top: 10px;">
+                                 <form name="multipmform" >
+                                    <div class="row" ng-repeat="multi in asalu.pmtrans">
+                                       <div class="col-md-5" >
+                                             <div class="form-group">
+                                                <label>Payment mode: </label>
+                                                <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                                   <option selected>Select</option>
+                                                </select>
+                                             </div>
+                                       </div>
+                                       <div class="col-md-5" style="margin-left: -70px;">
+                                             <div class="form-group">
+                                                <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Credit</label>
+                                                <div class="col-md-7 col-xs-7 col-sm-7">
+                                                   <input style="width: 100px;" autocomplete="off" type="text" name="credit" id="credit" ng-model="multi.credit" class="form-control" focus> 
+                                                </div>
+                                             </div>                   
+                                       </div>
+                                       </div>
+                                 </form>
+                           </div>   
+                        </div>
+                           <!-- end -->
+                        <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                              <div class="col-md-5 text-center">
+                                 <div class="form-group">
+                                    <label> Note : </label>
+                                    <textarea type="text" name="intnote" ng-model="asalu.note" class="form-control">
+                                       
+                                    </textarea>
+                                 </div>
+                              </div>
+                          </div>        
+                           <!-- row -->
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+
+ 
+ <div id="dailycolmodal"class="modal fade" tabindex="-1" role="dialog" >
+   <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h4> Add Daily Collection Received </h4>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="dailycol()" name="dailycolForm" >
+                <div class="container">
+                   <div class="form-inline">
+                      <div class="row" style="padding-left: 28px;">
+                         <div class="col-md-5 text-center">
+                           <div class="form-group " >
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="daily.date" name="dAte" id="dAte" autocomplete="off" focus >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                           </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row " style="padding-top: 28px;padding-left: 28px;" focus>
+                           <div class="col-md-5 text-center">
+                              <div class="form-group">
+                                 <label> Amount : </label>
+                                 <input type="text" name="dailyamt" ng-model="daily.amount" class="form-control">
+                              </div>
+                           </div>
+                       </div>
+                        <!-- row -->
+                        <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                              <div class="col-md-5 text-center">
+                                 <div class="form-group">
+                                    <label> Note : </label>
+                                    <input type="text" name="dailynote" ng-model="daily.notes" class="form-control">
+                                 </div>
+                              </div>
+                          </div>        
+                           <!-- row -->
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+
+
+ <div id="datediffmodal"class="modal fade" tabindex="-1" role="dialog" >
+   <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h4> Insert the Date </h4>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="datediffcol()" name="datediffcolform" >
+                <div class="container">
+                   <div class="form-inline">
+                      <div class="row" style="padding-left: 28px;">
+                         <div class="col-md-5 text-center">
+                            <div class="form-group">
+                               <label>Till Date : </label>
+                               <div class="row" style="padding-left: 28px;">
+                                 <div class="col-md-5 text-center">
+                                   <div class="form-group " >
+                                      <div class="input-group date" >
+                                         <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="diff.date" name="dAte" id="dAte" autocomplete="off"  >
+                                         <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                      </div>
+                                      <br><br>
+                                      <input type="button" class="btn btn-primary" ng-click="todaydiffdate()" value="today">
+                                   </div>
+                                 </div>
+                                 <div class="col-md-5 text-center">
+                                    <input type="number" ng-model="diff.amt" class="form-control" >
+                                 </div>
+                              </div>
+                            </div>
+                         </div>
+                      </div>
+                      <br>
+                      <div>{{diff.result}}</div>
+                      <!-- row -->               
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+  <!--add asalu-->
+  <!--add amount in chiti-->
+<div id="addasalumodal1"class="modal fade" tabindex="-1" role="dialog" >
+   <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h4> Add Amount in Chiti </h4>
+             </center>
+          </div>
+          <div class="modal-body">
+             <form ng-submit="addamountinchiti()" name="addamountinchitiform" >
+                <div class="container">
+                   <div class="form-inline">
+                      <div class="row" style="padding-left: 28px;">
+                         <div class="col-md-5 text-center">
+                           <div class="form-group " >
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="asaludate" name="dAte" id="dAte" autocomplete="off"  >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                             <br>
+                             <br>
+                              <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+                              <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+                              <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+                              <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+                           </div>
+                         </div>
+                      </div>
+                      <!-- row -->
+                      <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                           <div class="col-md-5 text-center">
+                              <div class="form-group">
+                                 <label> Chiti Amount : </label>
+                                 <input type="number" name="chitamt" ng-model="asaluchitiamount" class="form-control">
+                              </div>
+                           </div>
+                       </div>        
+                        <!-- row -->
+                        <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                              <div class="col-md-5 text-center">
+                                 <div class="form-group">
+                                    <label> Note : </label>
+                                    <input type="text" name="intnote" ng-model="asalunote" class="form-control">
+                                 </div>
+                              </div>
+                          </div>        
+                           <!-- row -->
+                      <div class="row text-center" style="padding-top: 20px;"  >
+                         <div class="col-md-6">
+                            <input type="submit" class="btn btn-success"  >
+                         </div>
+                      </div>
+                   </div>
+                   <!-- form-inline -->
+                </div>
+                <!-- container -->
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+  <!--add amount in chiti-->
+
+<!--reminder for status and add month collection  -->
+<div id="statusremmodal"class="modal fade" tabindex="-1" role="dialog" >
+   <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h4> All Collections Received! </h4>
+          </div>
+          <div class="modal-body">
+             <p>All Collections for {{chiti.customername}}'s Chiti have been Received</p>
+          </div>
+          <div class="modal-footer" style="background-color: rgb(87, 189, 236);" >
+             <button class="btn btn-success" ng-click="closechitistatus()" >status close</button>
+             <button class="btn btn-success" ng-click = "pressadmonbtn()" ng-show="chiti.tYpe==4" >Add Monthly Collection</button>
+             <button class="btn btn-danger" data-dismiss="modal" >Cancel</button>
+             
+          </div>
+       </div>
+    </div>
+ </div>
+ <!--reminder for Adding sowji collection  -->
+<div id="sowjicommmodal"class="modal fade" tabindex="-1" role="dialog" >
+   <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h4> Add Sowji Comm! </h4>
+          </div>
+          <div class="modal-body">
+             <p>Add Sowji Commission ( {{getsum(collection,"sowji") }} )  for {{chiti.customername}}'s Chiti </p>
+            
+             <div class="row" style="padding-left: 28px;">
+               <div class="col-md-5 text-center">
+                 <div class="form-group " >
+                    <div class="input-group date" >
+                       <input type="text" style="width:170px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="sowji.date" name="date" id="date" autocomplete="off"  >
+                       <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
+                   <br>
+                   <br>
+                    <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+                    <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+                    <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+                    <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+                 </div>
+               </div>
+              
+            </div>
+            <div class="row" style="padding-left: 28px;">
+               <div class="col-md-6 text-center">
+               <textarea placeholder="note" style="width:300px;height: 100px;" ng-model="sowji.note" ></textarea>
+            </div>
+          </div>
+          </div>
+          <div class="modal-footer" style="background-color: rgb(87, 189, 236);" >
+             <button class="btn btn-success" ng-click="addsowjicomm()" >Add Comm</button>
+             <button class="btn btn-danger" data-dismiss="modal" >Cancel</button>
+             
+          </div>
+       </div>
+    </div>
+ </div>
+</div>
+
+
+<!--Modify chiti-->
+<div id="modify_chiti_modal"class="modal fade" tabindex="-1" role="dialog" >
+      <div class="modal-dialog modal-md" >
+          <!-- Modal content -->
+          <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <center>
+                   <h4> Modify Chiti </h4>
+                </center>
+             </div>
+             <div class="modal-body">
+                <form ng-submit="modifychiti()" name="modify_chiti_form" >
+                   <div class="container">
+                      <div class="form-inline">
+                         <div class="row" style="padding-left: 28px;">
+                            <div class="col-md-5 text-center">
+                               <div class="form-group">
+                                  <label>Chiti Type : </label>
+                                  <select class="form-control" ng-model="modify.tYpe"  name="type" ng-options="c.id as c.type for c in chititypes" >
+                                       <option value="" >Select Chiti Type</option>
+                                   </select>
+                               </div>
+                            </div>
+                         </div>
+                         <!-- row -->
+                         <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                              <div class="col-md-5 text-center">
+                                 <div class="form-group">
+                                    <label>Per Amount : </label>
+                                    <input type="number" name="pdwtm" ng-model="modify.pdwtm" class="form-control">
+                                 </div>
+                              </div>
+                          </div>        
+                           <!-- row -->
+                         <div class="row " style="padding-top: 28px;padding-left: 28px;" >
+                              <div class="col-md-5 text-center">
+                                 <div class="form-group">
+                                    <label>Sowji Comm : </label>
+                                    <input type="number" name="sowjicomm" ng-model="modify.sowji" class="form-control">
+                                 </div>
+                              </div>
+                          </div>                   
+                         <div class="row text-center" style="padding-top: 20px;"  >
+                            <div class="col-md-6">
+                               <input type="submit" class="btn btn-success"  >
+                            </div>
+                         </div>
+                      </div>
+                      <!-- form-inline -->
+                   </div>
+                   <!-- container -->
+                </form>
+             </div>
+          </div>
+       </div>
+    </div>
+    <!-- Modal content -->
+  
+
+
+    <div class="popup1 rcvdcolpopup center">
+      <div class="icon">
+        <i class="fa fa-check"></i>
+      </div>
+      <div class="title">
+        Create Received 
+      </div>
+      <div class="description">
+         <form name="creatercvdForm" >
+            <div class="row">
+               <label class="col-md-5 col-sm-5 col-xs-5">Received Date</label>
+               <div class="col-md-7 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                     <div class="input-group date" >
+                     <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="rcvd.rcvddate" name="dAte" id="dAte" autocomplete="off" required focus >
+                     <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                     </div>
+                     <span class="error" ng-show="(creatercvdForm.date.$dirty || submitted) && creatercvdForm.date.$error.required" >
+                        Date Required!
+                    </span>
+                  </div>   
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-md-5 col-sm-5 col-xs-5">Customer</label>
+               <select ng-change="getreceivedamount()" style="width: 200px;"  ng-model="rcvd.customer" class="form-control" ng-options="h.id as h.Firstname + '  ' + h.LastName +'('+h.HamiFirstName+')' for h in customers" name="rcvdfrom" id="rcvdfrom" required focus >
+                   <option selected value="">Received From </option>
+               </select>
+               <span class="error" ng-show="(creatercvdForm.rcvdfrom.$dirty || submitted) && creatercvdForm.rcvdfrom.$error.required" >
+                  Customer Required!
+              </span>
+           </div> 
+           <div class="form-group form-inline">
+               <label>Amount</label>
+               <input type="text" ng-model= "collectionarr.colamt" name="amount" id="amount" class="form-control" style="width: 150px;" required focus>
+               <span class="error" ng-show="(creatercvdForm.amount.$dirty || submitted) && creatercvdForm.amount.$error.required" >
+                  Amount Required!
+              </span>
+            </div>
+            <div class="form-group form-inline"  ng-show="collectionarr.paymentmode == 1">
+               <label>Paymentmode</label>
+               <select id="paymentmode" ng-change="checkrcvdmultipm()" name="paymentmode" ng-model="collectionarr.paymentmode" ng-options="pm.id as pm.modename for pm in paymentmodelist " class="form-control" required>
+                                        
+               </select>
+               <!-- <input type="number" ng-model= "rcvd.paymentmode" name="paymentmode" id="paymentmode" class="form-control" style="width: 150px;" required focus>
+               <span class="error" ng-show="(creatercvdForm.paymentmode.$dirty || submitted) && creatercvdForm.paymentmode.$error.required" >
+                  paymentmode Required!
+              </span> -->
+            </div>
+            <div class="col-md-12" ng-show="collectionarr.paymentmode == 50"  style="margin-top: 10px;">
+               <form name="multipmform" >
+                  <div class="row" ng-repeat="multi in collectionarr.pmtrans">
+                     <div class="col-md-5" >
+                           <div class="form-group">
+                              <label>Payment mode: </label>
+                              <select name="rcvdpaymentmode{{$index}}" id="rcvdpaymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                 <option selected>Select</option>
+                              </select>
+                           </div>
+                     </div>
+                     <div class="col-md-5">
+                           <div class="form-group">
+                              <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Credit</label>
+                              <div class="col-md-7 col-xs-7 col-sm-7">
+                                 <input style="width: 100px;" autocomplete="off" type="text" name="rcvdcredit{{$index}}" id="rcvdcredit{{$index}}" ng-model="multi.credit" class="form-control" focus> 
+                              </div>
+                           </div>                   
+                     </div>
+                  </div>
+               </form>
+               <button style="margin-bottom: 10px;" type="button" class="btn btn-primary" ng-click="addrcvdpmmode()">Add</button>
+               <button style="margin-bottom: 10px;" type="button" class="btn btn-primary" ng-click="collectionarr.paymentmode = 1;checkrcvdmultipm()">Single</button>
+         </div>   
+            <div class="form-group form-inline">
+               <label >Note</label>
+               <input type="text" ng-model= "rcvd.note" class="form-control" focus>
+            </div>
+            <div class="form-group form-inline">
+               <label >Collection Note</label>
+               <input type="text" ng-model= "rcvd.note1" class="form-control" focus>
+            </div>
+         </form>
+      </div>
+      <div class="dismiss-btn" >
+        <button id="dismiss-popup-btn" ng-click="creatercvd()">Create</button>
+        <button id="dismiss-popup-btn" ng-click="rcvdcolpopup('close')">Close</button>
+      </div>
+    </div>
+
+
+
+    <script>
+      $('table').on('click', 'td', function() {
+         if($( this ).css( "background-color" ) == "rgb(255, 255, 0)"){
+            $(this).css('backgroundColor', 'white');
+         }else{
+            $(this).css('backgroundColor', 'yellow');
+         }
+      });
+   
+   </script>

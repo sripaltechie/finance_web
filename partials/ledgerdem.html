@@ -1,0 +1,57 @@
+<form ng-submit="showledger()" >
+    <div class="container text-center" style="border: 1px solid black;" >
+        <div class="form-inline">
+            <div class="row" style="font-size: 15px;" >
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="checkbox" ng-true-value="1" ng-false-value="0" class="form-control" ng-model="bydatechck">
+                        <label>By Date</label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="checkbox" ng-true-value="1" ng-false-value="0" class="form-control" ng-model="bymonthchck">
+                        <label>By Month</label>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="checkbox" ng-true-value="1" ng-false-value="0" class="form-control" ng-model="byyearchck">
+                        <label>By Year</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 50px;" ng-show="bydatechck == 1" >
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>From Date : </label>
+                        <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="from_date" name="fdate" id="fdate" autocomplete="off" ng-change="getcollectionList()" >
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>To Date : </label>
+                        <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="To_date" name="tdate" id="tdate" autocomplete="off" ng-change="getcollectionList()" >
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Customer : </label>
+                        <select ng-options="c.id as c.Firstname + ' ' + c.LastName+ '('+c.HamiFirstName  +')' for c in customers" class="form-control" ng-model="customer" >
+                            <option value="">Select customers</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!--row div-->
+            <div class="container text-center" style="padding-top:50px;">
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </div>
+        </div>
+    </div>
+</form>

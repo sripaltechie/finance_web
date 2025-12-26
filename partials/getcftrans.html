@@ -1,0 +1,182 @@
+<div class="container" ng-init="init()">
+    <div class="row" ng-show="display == 1">
+        <div class="form-inline">
+            <div class="col-md-4">
+               <button type="button" class="btn btn-primary" ng-click="filterby(1)" >Filter by Chiti</button>
+               <button type="button" class="btn btn-primary" ng-click="filterby(2)" >Filter by Customer</button>
+
+            </div>
+        </div>
+    </div>
+
+     <!-- display if clicked on filterbychiti button -->
+    
+    <div class="row"  ng-show="display == 2">
+        <div class="form-inline">
+            <div class="col-md-4 col-sm-4 col-xs-4">
+                <div class="form-group">
+                    <label class="col-md-4 col-xs-4 col-sm-4 text-right" >chiti</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <select  ng-model="filter.chiti" name="chiti2" id="chiti2" ng-options="c.id as c.chitiname + '('+c.code+')'  for c in cfchiti" class= "form-control"  focus >
+                            <option selected value="">Select Chiti</option>
+                            </select>
+                        </div>
+                </div>
+            </div>
+           
+            <div class="col-md-2 col-sm-2 col-xs-2" >
+                <button type="button" class="btn btn-primary" ng-click="checkfilter()">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" ng-show="display == 2 && cfpaata.length" style="margin-top: 15px;">
+        <table class="table table-bordered table-hover" >
+            <thead>
+                <tr>
+                    <th>NO.</th>
+                    <th>Date</th>
+                    <th>Customer Lifted</th>
+                    <th>Paata</th>
+                    <th>Payamount</th>
+                    <th>Repayamount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="cf in cfpaata" ng-show="cf.chiti == filter.chiti">
+                    <td>{{cf.no}} </td>
+                    <td>{{changeDateUserFormat(cf.date)}} </td>
+                    <td>{{cf.customername}} </td>
+                    <td>{{cf.paata}} </td>
+                    <td>{{cf.payamount}} </td>
+                    <td>{{cf.repayamount}} </td>
+                    <td>
+                        <a href="#/cfpaata/{{cf.id}}" ><i class="fa fa-eye" aria-hidden="true"></i></a> 
+                        <a href="#/editcfpaata/{{cf.id}}" ><i class="fa fa-edit" aria-hidden="true"></i></a> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- display if clicked on filterbycustomer button -->
+    <div class="container" ng-show="display == 3">
+        <div class="row">
+            <div class="form-inline">
+                <div class="col-md-4 col-sm-4 col-xs-4" >
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right">Customer</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input type="text" id="customername" name="customername" ng-model="filter.customername" class="form-control"  typeahead="customer.fname + ' ' + customer.lname for customer in cfcustomers | filter:{fname:$viewValue} " autocomplete="off"  focus>
+                        </div>
+                    </div>       
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2" >
+                    <button type="button" class="btn btn-primary" ng-click="checkfilter()">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="form-inline">
+                <div class="col-md-3 col-sm-3 col-xs-3" ng-repeat="ch in chitinames" style="margin-top: 15px;">
+                    <div style="width: 138px;height: 48px;background-color: darkorange;border-radius: 10px;padding-top: 11px;font-size: 18px;" ng-click="chitiDispfun('chiti',ch.chiti)">
+                        {{ch.chitiname}}  {{ch.code}} 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="form-inline">
+                <div class="col-md-3 col-sm-3 col-xs-3" ng-repeat="cus in customernames" style="margin-top: 15px;">
+                    <div style="width: 138px;height: 48px;background-color: darkorange;border-radius: 10px;padding-top: 11px;font-size: 18px;" ng-click="chitiDispfun('customer',(cus.customername + ' '+ cus.cusno)) ">
+                        {{cus.customername}}  {{cus.cusno}} 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div >
+            <table class="table table-bordered table-hover" style="margin-top: 25px;" >
+                <thead>
+                    <tr>
+                        <th>SNO.</th>
+                        <th>Date</th>
+                        <th>Chiti</th>
+                        <th>Customer</th>
+                        <th>Payamount</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                        <th>Note </th>
+                        <th>Chiti</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="tr in cftrans" ng-show="chitiDisp == tr.chiti && cusDisp == tr.customername + ' ' + tr.cusno" >
+                        <td>{{$index+1}} </td>
+                        <td>{{changeDateUserFormat(tr.date)}} </td>
+                        <td> {{tr.chitiname}}({{tr.code}})({{tr.paatano}}) </td>
+                        <td>{{tr.customername}} {{tr.cusno}} </td>
+                        <td>{{tr.payamount}} </td>
+                        <td>{{tr.debit}} </td>
+                        <td>{{tr.credit}} </td>
+                        <td>{{tr.note}} </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- var tmpcus = {};
+var tmpchiti = {};
+if(k == 0){
+    tmpcus.id = $scope.cfchiticustomers[k].id;
+    tmpcus.customer = $scope.cfchiticustomers[k].customer;
+    tmpcus.customername = $scope.cfchiticustomers[k].customername;
+    tmpcus.cusno = $scope.cfchiticustomers[k].cusno;
+    console.log(tmpcus);
+    $scope.customeravl.push(tmpcus);
+    tmpchiti.chiti = $scope.cfchiticustomers[k].chiti;
+    tmpchiti.chitiname = $scope.cfchiticustomers[k].chitiname;
+    tmpchiti.code = $scope.cfchiticustomers[k].code;
+    $scope.chitiavl.push(tmpchiti);
+}else{
+    var res = false;
+    for(v=0;v<$scope.customeravl.length;v++){
+        if($scope.customeravl[v].customer == $scope.cfchiticustomers[k].customer && $scope.customeravl[v].cusno == $scope.cfchiticustomers[k].cusno){
+            res = true;
+        }
+        if(v == ($scope.customeravl.length-1) && !res){
+            tmpcus.id = $scope.cfchiticustomers[k].id;
+            tmpcus.customer = $scope.cfchiticustomers[k].customer;
+            tmpcus.customername = $scope.cfchiticustomers[k].customername;
+            tmpcus.cusno = $scope.cfchiticustomers[k].cusno;
+            console.log(tmpcus);
+            $scope.customeravl.push(tmpcus);
+        }
+    }
+    res = false;
+    for(w=0;w<$scope.chitiavl.length;w++){
+        if($scope.chitiavl[w].chiti == $scope.cfchiticustomers[k].chiti){
+            res = true;
+        }
+        if(w == ($scope.chitiavl.length-1) && !res){
+            tmpchiti.chiti = $scope.cfchiticustomers[k].chiti;
+            tmpchiti.chitiname = $scope.cfchiticustomers[k].chitiname;
+            tmpchiti.code = $scope.cfchiticustomers[k].code;
+            $scope.chitiavl.push(tmpchiti);
+        }
+    }
+}
+$scope.chitiDisp = $scope.cfchiticustomers[0].chiti;
+$scope.cusDisp = $scope.cfchiticustomers[0].id; -->

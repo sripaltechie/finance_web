@@ -1,0 +1,39 @@
+<div class="Container" ng-init="init()">
+    <div style="border: 5px inset black;border-radius: 5px;width: 500px;margin: auto;padding: 40px;">
+        <h1 style="text-align: center;">Create Collector</h1>
+        <form novalidate name="createcollectorForm" ng-submit="createcollector()" action="" style="padding-top: 50px;">
+            <div class="col-md-12 ">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" ng-model="collector.name" name="fullname" id="fullname" class="form-control"
+                        autocomplete="off" focus required>
+                    <div role="alert">
+                        <span class="error"
+                            ng-show="(createcollectorForm.fullname.$dirty || submitted) && createcollectorForm.fullname.$error.required">
+                            Required!
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Phone no:</label>
+                    <input type="text" ng-model="collector.phone" name="Phoneno" id="Phoneno" class="form-control"
+                        autocomplete="off" focus>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Uid:</label>
+                    <select class="form-control" ng-model="collector.uid"
+                        ng-options="u.uid as (u.firstname+ ' ' + u.lastname) for u in users">
+
+                    </select>
+                </div>
+            </div>
+            <div class="text-center" style="padding-top:20px;">
+                <input type="submit" class="btn btn-primary" value="Create">
+            </div>
+        </form>
+    </div>
+</div>

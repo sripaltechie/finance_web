@@ -1,0 +1,68 @@
+<center><h1> {{chitfund.customername}} </h1></center>
+<div class="row container" ng-init="getchitfund()" >
+   <div class="col-md-6">
+<button class="btn btn-primary"  ><a ng-href="#/customer/{{chiti.customer}}" style="color:white;">Back</a></button>
+<button class="btn btn-primary"  ><a ng-href="#/daybook" style="color:white;">Daybook</a></button>
+<button class="btn btn-primary"  ><a ng-href="#/createdrcr" style="color:white;">Create Drcr</a></button>
+</div>
+<div class="col-md-6">
+<div class="text-right">
+   <button class="btn btn-success" ng-show="chitfund.status == 0" ng-click="closechitistatus()">Close Chiti Status </button>
+   <button class="btn btn-success" ng-show="chitfund.status == 1" ng-click="pendingchitistatuschiti()">Pending Chiti Status  </button>
+   <button class="btn btn-success"><a style="color :white;" href="#/editchitfund/{{chitfund.id}}">Edit Chiti</a> </button>
+   <button class="btn btn-danger"  ng-click="deletechiti()">Delete Chiti  &nbsp; <span class="glyphicon glyphicon-trash"></span> </button>
+</div>
+</div>
+</div>
+<div style="padding-bottom:20px;"></div>
+<div class="container" style="border: 1px solid black;">
+<div style="font-weight:bold; font-size: 20px;">
+
+<div class="container" >
+    
+    <div class="col-md-1">
+        ID : {{chitfund.id}}
+    </div>
+    <div class="col-md-3">
+        Date : {{changeDateUserFormat(chitfund.date)}}
+    </div>
+    <div class="col-md-3">
+        Chiti Type: {{chitfundtypes[chitfund.type-1]}}
+    </div>
+    <div class="col-md-2">
+        Amount : {{chitfund.amount}}
+    </div>
+    <div class="col-md-3">
+        status : {{status[chitfund.status]}}
+     </div>
+  
+</div>
+
+    
+</div>
+    <div style="padding-top: 40px;">
+        <table class="table " id="chitfundtable">
+            <thead class="thead-dark">
+               <tr>
+                  <th>S.No</th>
+                  <th>Date</th>
+                  <th>Credit </th>
+                  <th>Dedit </th>
+                  <th>Note</th>
+                  <th>Edit</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr  ng-repeat ="d in drcr"  >
+                  <td> {{$index+1}}</td>
+                  <td> {{changeDateUserFormat(d.date)}} </td>
+                  <td> {{d.credit}} </td>
+                  <td> {{d.debit}} </td>
+                  <td> {{d.note}} </td>
+                  <td><a href="#/editdrcr/{{d.id}}" ><span class="glyphicon glyphicon-edit"></span> </a></td>
+               </tr>
+            </tbody>
+         </table>
+    </div>  
+         </div>
+      

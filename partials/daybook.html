@@ -1,0 +1,777 @@
+<style >
+   .danger{
+      background-color: darksalmon;
+   }
+</style>
+
+<div ng-init="init()">
+   <center>
+      <h1>DAYBOOK  </h1>
+   </center>
+   <div class=" container row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <button type="button" class="btn btn-primary" ng-click="rcvddate = '01/01/2021';showdaybook()">Jan </button>
+      </div>
+      <div class="col-md-1">
+        <button type="button" class="btn btn-primary" ng-click="rcvddate = '01/07/2021';showdaybook()">July </button>
+     </div>
+      <!-- <div class="col-md-1"></div> -->
+      <div class="col-md-1">
+         <button type="button" class="btn btn-primary" ng-click="rcvddate = '01/08/2021';showdaybook()">Aug </button>
+     </div>
+     <div class="col-md-3"></div>
+     <div class="col-md-1">
+    <button class="btn btn-primary" ng-click="scrollDown()" type="button">Bottom</button>
+     </div>
+   </div>
+   
+   <div class="row" style="margin-top: 10px;">
+      <div class="form-inline">
+         <div class="form-group col-md-3"  style="padding-left: 120px;" >
+            <div class="input-group date" >
+               <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="rcvddate" name="dAte" id="dAte" autocomplete="off" ng-change="showdaybook()" >
+               <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+            </div>
+            <br>
+            <br>
+            <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+            <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+            <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+            <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+         </div>
+         <div class="col-md-3" >
+            <button  class="btn btn-primary"  ng-click="showdaybook()" >Submit</button>
+         </div>
+         <!-- <div class="col-md-3" >
+           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="">Toggle both elements</button>
+        </div> -->
+      </div>
+   </div>
+   <div class="row" ng-class="balanceerr('op')" style="padding: 10px;border: 2px solid black;width: fit-content;display: block;margin-left: auto;margin-right: auto;">
+      <!-- <div class="col-md-2">
+         Opening Bal :{{(daybook.opbal[0]["amt"]).toFixed(2)}}
+      </div> -->
+      <center><h2>Opening Balance</h2></center>
+      <div class="col-md-3" style="font-weight: bold;" ng-repeat="op in daybook.opbal" ng-show="op.amt">
+         {{(op.name)}} :{{(op.amt).toFixed(2)}}
+      </div>
+   </div>
+   <div class="col-md-12" ng-show="submitted">
+      <div class="container col-md-6" >
+         <center>
+            <h1>Creditors</h1>
+         </center>
+         <hr>
+         <!-- <h4 style="padding-left:150px; ">Opening Bal :{{(daybook.opbal[0]["amt"]).toFixed(2)}}</h4> -->
+         <!-- start -->
+         <div class="panel-group" id="accordion">
+           <div class="panel panel-default" ng-repeat="crcust in daybook.creditors.customers" >
+              <div class="panel-heading">
+                 <h4 class="panel-title">
+                    <div data-toggle="collapse" data-parent="#accordion" ng-href="#collapse{{crcust.id}}">{{crcust.firstname}} {{crcust.lastname}} <span ng-show="crcust.hami>0 && crcust.hami != crcust.id">({{crcust.hamifirstname}}) </span> : {{crcust.total}} </div>
+                 </h4>
+              </div>
+              <div id="collapse{{crcust.id}}" class="panel-collapse collapse in">
+                 <div class="panel-body">
+                    <!-- <div ng-show="crcust.disp.collection">
+                        <center><h5>Collection</h5></center>
+                        <table  class="table table-bordered" id="daybooktable">
+                           <thead class="thead-dark">
+                              <tr>
+                                 <th>Cid</th>
+                                 <th>Chiti</th>
+                                 <th> Chiti Id </th>
+                                 <th>Date</th>
+                                 <th>Amount</th>
+                                 <th>Sowji</th>
+                                 <th>Rcvd </th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr  ng-repeat ="c in crcust.collectionlist" >
+                                 <td> {{c.id}}</td>
+                                 <td> <a href="#/chiti/{{c.chiti}}" target="_blank" >{{c.customerFL}}({{c.code}}) </a></td>
+                                 <td> {{c.chiti}} </td>
+                                 <td> {{changeDateUserFormat(c.date)}} </td>
+                                 <td> {{c.amount}} </td>
+                                 <td> {{c.sowji}} </td>
+                                 <td> {{c.rcvd}} </td>
+                              </tr>
+                              <tr>
+                                 <td class="text-right" colspan="8"><b>collectiontotal = {{getcollectiontotal(collection,"amount",amount.customer)}}</b></td>
+                              </tr>
+                              <tr>
+                                 <td colspan="4" ng-show="((amount.amount) - getcollectiontotal(collection,'amount',amount.customer)- (amount.asalurcvd))>0"> {{amount.note}} </td>
+                                 <td class="text-right" colspan="8"><b>Extras = {{ (amount.amount) - getcollectiontotal(collection,"amount",amount.customer)- (amount.asalurcvd)}} </b></td>
+                              </tr>
+                              <tr ng-show="asaluttl>0">
+                                 <td colspan="7"class="text-center" > <h3>Asalu Received </h3></td>
+                              </tr>
+                              <tr ng-repeat="a in asalu" ng-show="amount.customer == a.customer" >
+                                 <td>{{a.id}} </td>
+                                 <td><a href="#/chiti/{{a.chiti}}" target="_blank">{{a.chiti}}</a> </td>
+                                 <td>{{a.customername}} </td>
+                                 <td>{{changeDateUserFormat(a.date)}} </td>
+                                 <td>{{a.amount}} </td>
+                                 <td colspan="2"> {{a.note}} </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div> -->
+                    <div ng-show="crcust.disp.rcvdamt || crcust.disp.collection ">
+                       <table class="table table-bordered" ng-show="getsum(crcust.rcvdamtlist,'asalu')">
+                          <thead>
+                           <tr>
+                              <th>Rcvd id</th>
+                              <th>Chiti</th>
+                              <th>Date</th>
+                              <th>Amount</th>
+                              <th>Note</th>
+                              <th>Pm mode</th>
+                           </tr>
+                          </thead>
+                          <tbody>
+                           <tr  ng-repeat ="col in crcust.rcvdamtlist" ng-show="col.asalu">
+                              <td> <a href="#/editreceived/{{col.id}}" target="_blank" >{{col.id}}</a></td>
+                              <td> <a href="#/chiti/{{col.chiti}}" target="_blank" >{{col.customername}}({{col.code}}) : {{col.chiti}} </a></td>
+                              <td> {{changeDateUserFormat(col.rcvddate)}} </td>
+                              <td> {{col.amount}} </td>
+                              <td> {{col.note}} </td>
+                              <td ng-show="col.paymentmode != 50"> {{col.paymentmodename}} </td>
+                              <td ng-show="col.paymentmode == 50"> 
+                                 <table class="table">
+                                    <tr ng-repeat="pm in col.pmtrans">
+                                          <td>{{pm.paymentmodename}}</td>
+                                          <td>{{pm.credit}} </td>
+                                    </tr>
+                                 </table>
+                              </td>
+                           </tr>
+                          </tbody>
+                       </table>
+                       <table class="table table-bordered" id="daybooktable" ng-show="crcust.disp.rcvdamt && crcust.rcvdamtlist.length != getsum(crcust.rcvdamtlist,'asalu')">
+                          <thead class="thead-dark">
+                             <tr>
+                                <th>Cid</th>
+                                <th>Chiti</th>
+                                <!-- <th> Chiti Id </th> -->
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th ng-show="getsum(crcust.rcvdamtlist,'sowjicomm') || getsum(crcust.collectionlist,'sowjicomm') > 0">Sowji</th>
+                                <th ng-show="getsum(crcust.rcvdamtlist,'suricomm') || getsum(crcust.collectionlist,'suricomm') > 0">Suri</th>
+                                <th ng-show="getsum(crcust.rcvdamtlist,'fullandevicomm') || getsum(crcust.collectionlist,'fullandevicomm') > 0">Fullandevi</th>
+                                <th>Rcvd</th>
+                                <th>Pm mode</th>
+                             </tr>
+                          </thead>
+                          <tbody>
+                           <tr  ng-repeat ="c in crcust.collectionlist" >
+                              <td> {{c.id}}</td>
+                              <td> <a href="#/chiti/{{c.chiti}}" target="_blank" >{{c.customerFL}}({{c.code}}) </a></td>
+                              <!-- <td> {{c.chiti}} </td> -->
+                              <td> {{changeDateUserFormat(c.date)}} </td>
+                              <td> {{c.amount}} </td>
+                              <td> {{c.sowji}} </td>
+                              <td> {{c.rcvd}} </td>
+                              <td></td>
+                           </tr>
+                             <tr  ng-repeat ="col in crcust.rcvdamtlist" ng-show="col.colid">
+                                <td> {{col.id}}</td>
+                                <td> <a href="#/chiti/{{col.chiti}}" target="_blank" >{{col.customername}}({{col.code}}) : {{col.chiti}} </a></td>
+                                <!-- <td> {{col.chiti}} </td> -->
+                                <td> 
+                                   <div ng-show="col.asaluid">{{changeDateUserFormat(col.rcvddate)}} </div>
+                                   <div ng-show="!col.asaluid">{{changeDateUserFormat(col.coldate)}}</div>
+                                 </td>
+                                <td> {{col.colamt}} </td>
+                                <td ng-show="col.sowjicomm > 0">{{col.sowji}} </td>
+                                <td ng-show="col.suricomm > 0">{{col.suri}}</td>
+                                <td ng-show="col.fullandevicomm > 0">{{col.fullandevi}}</td>
+                                <td> {{col.amount}} </td>
+                                <td ng-show="col.paymentmode != 50"> {{col.paymentmodename}} </td>
+                                 <td ng-show="col.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in col.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.credit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                             </tr>
+                             <tr>
+                              <td class="text-right" colspan="2"><b>collection total = {{getsum(crcust.rcvdamtlist,'colamt') + getsum(crcust.collectionlist,'amount') }} </b></td>
+                              <td class="text-right" colspan="2"><b>Received total = {{getsum(crcust.rcvdamtlist,'amount')}}</b></td>
+                              <td  class="text-right" colspan="2"><b> 
+                                 <span ng-show="(getsum(crcust.rcvdamtlist,'amount') - getsum(crcust.rcvdamtlist,'colamt') - getsum(crcust.collectionlist,'amount')) >= 0" >Extras </span> 
+                                 <span ng-show="(getsum(crcust.rcvdamtlist,'amount') - getsum(crcust.rcvdamtlist,'colamt') - getsum(crcust.collectionlist,'amount')) < 0" >Pending </span> 
+                                    = {{getsum(crcust.rcvdamtlist,'amount') - getsum(crcust.rcvdamtlist,'colamt') - getsum(crcust.collectionlist,'amount')}}</b>
+                              </td>
+                             </tr>
+                             <!-- <tr>
+                                <td colspan="4" ng-show="((amount.amount) - getcollectiontotal(collection,'amount',amount.customer)- (amount.asalurcvd))>0"> {{amount.note}} </td>
+                                <td class="text-right" colspan="8"><b>Extras = {{getsum(crcust.rcvdamtlist,'amount') - getsum(crcust.rcvdamtlist,'colamt')}} </b></td>
+                             </tr> -->
+                             <tr ng-show="asaluttl>0">
+                                <td colspan="7"class="text-center" > <h3>Asalu Received </h3></td>
+                             </tr>
+                             <tr ng-repeat="a in asalu" ng-show="amount.customer == a.customer" >
+                                <td>{{a.id}} </td>
+                                <td><a href="#/chiti/{{a.chiti}}" target="_blank">{{a.chiti}}</a> </td>
+                                <td>{{a.customername}} </td>
+                                <td>{{changeDateUserFormat(a.date)}} </td>
+                                <td>{{a.amount}} </td>
+                                <td colspan="2"> {{a.note}} </td>
+                             </tr>
+                          </tbody>
+                       </table>
+                     </div>
+                     <div ng-show="crcust.disp.drcr">
+                        <center>
+                           <h4>Cash Received</h4>
+                        </center>
+                        <table class="table " id="drcrtable">
+                           <thead class="thead-dark">
+                              <tr>
+                                 <th>Id</th>
+                                 <th> Date </th>
+                                 <th>Customer</th>
+                                 <th>Credit</th>
+                                 <th>Debit</th>
+                                 <th>Note</th>
+                                 <th>Pm mode</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr  ng-repeat ="d in crcust.drcrlist"  ng-show="d.creditexp!=1">
+                                 <td><a href="#/editdrcr/{{d.id}}" target="_blank"> {{d.id}}</td></a>
+                                 <td> {{changeDateUserFormat(d.date)}} </td>
+                                 <td> {{d.customername}} </td>
+                                 <td> {{d.credit}} </td>
+                                 <td> {{d.debit}} </td>
+                                 <td> {{d.note}}</td>
+                                 <td ng-show="d.paymentmode != 50"> {{d.paymentmodename}} </td>
+                                 <td ng-show="d.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in d.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.credit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                              </tr>
+                              <tr ng-show="getsum(crcust.drcrlist,'creditexp') >0" >
+                                 <td colspan="7" class="text-center">  <h4>Credits Cleared</h4></td>
+                             </tr>
+                             <tr  ng-repeat ="d in crcust.drcrlist"  ng-show="d.creditexp==1">
+                                  <td> <a href="#/editdrcr/{{d.id}}" target="_blank">{{d.id}}</a></td>
+                                  <td> {{changeDateUserFormat(d.date)}} </td>
+                                  <td> {{d.customername}} </td>
+                                  <td> {{d.credit}} </td>
+                                  <td> {{d.debit}} </td>
+                                  <td> {{d.note}} </td>
+                                  <td ng-show="d.paymentmode != 50"> {{d.paymentmodename}} </td>
+                                 <td ng-show="d.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in d.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.credit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                               </tr>
+                              <tr >
+                                 <td colspan="8" class="text-right"><b>Receipts Total : {{getsum(crcust.drcrlist,"credit")}}</b></td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                     <div ng-show="crcust.disp.ccomm ">
+                        <div ng-show = "getsum(crcust.ccommlist,'suriccomm') > 0">
+                           <center>
+                              <h4>Suri Ccomm : {{getsum(crcust.ccommlist,"suriccomm")}} </h4>
+                           </center>
+                           <table class="table " id="ccommtable">
+                             <thead class="thead-dark">
+                                <tr>
+                                   <th> Chiti Id</th>
+                                   <th> Date </th>
+                                   <th>Customer</th>
+                                   <th>Credit</th>
+                                   <!-- <th>Debit</th>
+                                   <th>Note</th> -->
+                                </tr>
+                             </thead>
+                             <tbody>
+                                <tr  ng-repeat ="su in crcust.ccommlist" >
+                                   <td> {{su.id}}</td>
+                                   <td> {{changeDateUserFormat(su.date)}} </td>
+                                   <td> {{su.customername}} </td>
+                                   <td> {{su.suriccomm}} </td>
+                                   <!-- <td> {{su.debit}} </td> -->
+                                   <!-- <td> {{su.note}}</td> -->
+                                </tr>
+                             </tbody>
+                             </table>
+                        </div>
+                        <div ng-show = "getsum(crcust.ccommlist,'ccomm') > 0">
+                           <center>
+                              <h1>Ccomm : {{getsum(crcust.ccommlist,'ccomm')}} </h1>
+                           </center>
+                           <table class="table " id="ccommtable">
+                             <thead class="thead-dark">
+                                <tr >
+                                   <th> Chiti Id</th>
+                                   <th> Date </th>
+                                   <th>Customer</th>
+                                   <th>Credit</th>
+                                   <th>Pm mode</th>
+                                   <!-- <th>Debit</th>
+                                   <th>Note</th> -->
+                                </tr>
+                             </thead>
+                             <tbody>
+                                <tr  ng-repeat ="c in crcust.ccommlist"  >
+                                   <td> {{c.id}}</td>
+                                   <td> {{changeDateUserFormat(c.date)}} </td>
+                                   <td> {{c.customername}} </td>
+                                   <td> {{c.ccomm}} </td>
+                                   <td ng-show="c.ccommpaymentmodename != 50"> {{c.ccommpaymentmodename}} </td>
+                                    <td ng-show="c.ccommpaymentmodename == 50"> 
+                                       <table class="table">
+                                          <tr ng-repeat="pm in c.pmtrans">
+                                             <td>{{pm.ccommpaymentmodename}}</td>
+                                             <td>{{pm.credit}} </td>
+                                          </tr>
+                                    </table>
+                                    </td>
+                                   <!-- <td> {{su.debit}} </td> -->
+                                   <!-- <td> {{su.note}}</td> -->
+                                </tr>
+                             </tbody>
+                           </table>
+
+                        </div>
+                     </div>
+                     <div ng-show="crcust.disp.cftrans">
+                        <center>
+                           <h1 >Sowji chiti : {{getsum(crcust.cftranslist,'credit')}} </h1>
+                        </center>
+                        <table class="table " id="cftranscrtable">
+                        <thead class="table table-bordered table-hover">
+                           <tr>
+                              <th> Date </th>
+                              <th> Chiti</th>
+                              <th>Customer</th>
+                              <th>Amount</th>
+                              <th>Note</th> 
+                              <th>Pm mode</th>
+                              <!-- <th>Debit</th>-->
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr  ng-repeat ="cf in crcust.cftranslist">
+                              <td> {{changeDateUserFormat(cf.date)}} </td>
+                              <td> <a href="#/cfpaata/{{cf.paata}}" target="_blank"> {{cf.chitiname}}({{cf.code}})({{cf.paatano}})</a></td>
+                              <td> {{cf.customername}} </td>
+                              <td> {{cf.credit}} </td>
+                              <td> {{cf.note}}</td>
+                              <td ng-show="cf.paymentmode != 50"> {{cf.paymentmodename}} </td>
+                                 <td ng-show="cf.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in cf.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.credit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                              <!-- <td> {{su.debit}} </td> -->
+                           </tr>
+                        </tbody>
+                        </table>
+                     </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+         <!-- end -->
+   
+         
+              
+              
+       
+         <b ng-show="submitted">Received Amt total = {{getsum(crcust.rcvdamtlist,"amount")}}</b>
+        
+      </div>
+      <div class="container col-md-6">
+         <center>
+            <h1>Debtors </h1>
+         </center>
+         <hr>
+         
+         <div class="panel-group" id="accordion">
+            <div class="panel panel-default" ng-repeat="drcust in daybook.debitors.customers" >
+               <div class="panel-heading">
+                  <h4 class="panel-title">
+                     <div data-toggle="collapse" data-parent="#accordion" ng-href="#collapse{{drcust.id}}">{{drcust.firstname}} {{drcust.lastname}} <span ng-show="drcust.hami>0 && drcust.hami != drcust.id">({{drcust.hamifirstname}}) </span> : {{drcust.total}} </div>
+                  </h4>
+               </div>
+               <div id="collapse{{drcust.id}}" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                     <div ng-show="drcust.disp.chiti">
+                        <center>
+                           <h1>New chiti</h1>
+                        </center>
+                        <table class="table " id="newchititable">
+                           <thead class="thead-dark">
+                              <tr >
+                                 <th>ID</th>
+                                 <th>Date</th>
+                                 <th> Customer </th>
+                                 <th>Chiti Type</th>
+                                 <th>Amount</th>
+                                 <th>Pm mode</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr  ng-repeat ="chiti in drcust.chitilist" >
+                                 <td> {{chiti.id}}</td>
+                                 <td> {{changeDateUserFormat(chiti.date)}} </td>
+                                 <td> <a href="#/chiti/{{chiti.id}}" target="_blank">{{chiti.customername}}({{chiti.code}}) </a></td>
+                                 <td> {{chititype[chiti.tYpe]}} </td>
+                                 <td> {{chiti.amount}} </td>
+                                 <td ng-show="chiti.paymentmode != 50"> {{chiti.paymentmodename}} </td>
+                                 <td ng-show="chiti.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in chiti.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.debit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                     <div ng-show="drcust.disp.drcr">
+                        <center>
+                           <h4>Payments </h4>
+                        </center>
+                        <table class="table " id="drcrtable">
+                           <thead class="thead-dark">
+                              <tr >
+                                 <th>Type</th>
+                                 <th>Id</th>
+                                 <th> Date </th>
+                                 <th>Customer</th>
+                                 <th>Debit</th>
+                                 <th>Note</th>
+                                 <th>Pm mode</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr  ng-repeat ="d in drcust.drcrlist">
+                                 <td> 
+                                    <b ng-show="d.creditexp == 0" >Pymt</b>
+                                    <b ng-show="d.creditexp == 1" >Credit returned</b>
+                                    <b ng-show="d.creditexp == 2" >Exp</b>
+                                 </td>
+                                 <td><a href="#/editdrcr/{{d.id}}" target="_blank">{{d.id}}</a>
+                                     </td>
+                                 <td> {{changeDateUserFormat(d.date)}} </td>
+                                 <td> {{d.customername}} </td>
+                                 <td> {{d.debit}} </td>
+                                 <td> {{d.note}} </td>
+                                 <td ng-show="d.paymentmode != 50"> {{d.paymentmodename}} </td>
+                                 <td ng-show="d.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in d.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.debit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                              </tr>                              
+                              <tr  ng-show="drcr.length >=1">
+                                 <td class="text-right" colspan="8"><b>Payments Total : {{getsum(drcust.drcrlist,"debit")}} </b></td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+
+
+                     <div ng-show="drcust.disp.cftrans">
+                        <center>
+                           <h4>Chiti Lifted Payment </h4>
+                        </center>
+                        <table class="table " id="drcftranstable">
+                           <thead class="thead-dark">
+                              <tr >
+                                 <th>Id</th>
+                                 <th> Date </th>
+                                 <th>Customer</th>
+                                 <th>Amount</th>
+                                 <th>Note</th>
+                                 <th>Pm mode</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr  ng-repeat ="d in drcust.cftranslist">
+                                 <td> {{d.id}}</td>
+                                 <td> {{changeDateUserFormat(d.date)}} </td>
+                                 <td> {{d.customername}} </td>
+                                 <td> {{d.debit}} </td>
+                                 <td> {{d.note}} </td>
+                                 <td ng-show="d.paymentmode != 50"> {{d.paymentmodename}} </td>
+                                 <td ng-show="d.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in d.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.debit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                              </tr>                              
+                              <tr  ng-show="drcr.length >=1">
+                                 <td class="text-right" colspan="8"><b>Payments Total : {{getsum(drcust.cftranslist,"debit")}} </b></td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                     
+
+                     <div ng-show="drcust.disp.interest">
+                        <center>
+                           <h4>Interest Paid </h4>
+                        </center>
+                        <table class="table " id="drinteresttable">
+                           <thead class="thead-dark">
+                              <tr >
+                                 <th>Id</th>
+                                 <th> Date </th>
+                                 <th>Customer</th>
+                                 <th>Amount</th>
+                                 <th>Note</th>
+                                 <th>Pm mode</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr  ng-repeat ="d in drcust.interestlist">
+                                 <td> {{d.id}}</td>
+                                 <td> {{changeDateUserFormat(d.date)}} </td>
+                                 <td> {{d.customername}} </td>
+                                 <td> {{d.debit}} </td>
+                                 <td> {{d.note}} </td>
+                                 <td ng-show="d.paymentmode != 50"> {{d.paymentmodename}} </td>
+                                 <td ng-show="d.paymentmode == 50"> 
+                                    <table class="table">
+                                       <tr ng-repeat="pm in d.pmtrans">
+                                           <td>{{pm.paymentmodename}}</td>
+                                           <td>{{pm.debit}} </td>
+                                       </tr>
+                                   </table>
+                                 </td>
+                              </tr>                              
+                              
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+         <div ng-show="getsum(cftrans,'debit')>0">
+           <center>
+              <h1 >Sowji chiti : {{getsum(cftrans,'debit')}} </h1>
+           </center>
+           <table class="table " id="cftranscrtable">
+           <thead class="table table-bordered table-hover">
+              <tr>
+                 <th> Date </th>
+                 <th> Chiti</th>
+                 <th>Customer</th>
+                 <th>Amount</th>
+                 <th>Note</th> 
+                 <th>Pm mode</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr  ng-repeat ="cf in cftrans" ng-show="cf.debit > 0">
+                 <td> {{changeDateUserFormat(cf.date)}} </td>
+                 <td> <a href="#/cfpaata/{{cf.paata}}" target="_blank">{{cf.chitiname}}({{cf.code}})({{cf.paatano}})</a></td>
+                 <td> {{cf.customername}} </td>
+                 <td> {{cf.debit}} </td>
+                 <td> {{cf.note}}</td>
+                 <td ng-show="cf.paymentmode != 50"> {{cf.paymentmodename}} </td>
+                  <td ng-show="cf.paymentmode == 50"> 
+                     <table class="table">
+                        <tr ng-repeat="pm in cf.pmtrans">
+                              <td>{{pm.paymentmodename}}</td>
+                              <td>{{pm.debit}} </td>
+                        </tr>
+                     </table>
+                  </td>
+              </tr>
+           </tbody>
+           </table>
+        </div>
+         
+         <table class="table " id="asaluchitiamount " style="border: 1px solid black;">
+           <thead class="thead-dark">
+              <tr ng-show="chitiamountttl>0">
+                 <td colspan="7"class="text-center" > <h3>Added amount in Chiti </h3></td>
+              </tr>
+              <tr ng-show="chitiamountttl>0" >
+                 <th>Id</th>
+                 <th> Date </th>
+                 <th>Customer</th>
+                 <th>Chiti Amount</th>
+                 <th>Chiti</th>
+                 <th>Note</th>
+                 <th>Pm mode</th>
+              </tr>
+           </thead>
+           <tbody>
+              <tr  ng-repeat ="a in asalu"  ng-show="a.amount==0">
+                 <td> {{a.id}}</td>
+                 <td> {{changeDateUserFormat(a.date)}} </td>
+                 <td> {{a.customername}} </td>
+                 <td> {{a.chitiamount}} </td>
+                 <td> {{a.chiti}} </td>
+                 <td> {{a.note}} </td>
+                 <td ng-show="a.paymentmode != 50"> {{a.paymentmodename}} </td>
+                  <td ng-show="a.paymentmode == 50"> 
+                     <table class="table">
+                        <tr ng-repeat="pm in a.pmtrans">
+                              <td>{{pm.paymentmodename}}</td>
+                              <td>{{pm.debit}} </td>
+                        </tr>
+                     </table>
+                  </td>
+              </tr>           
+           </tbody>
+        </table>
+        <div ng-show="getsum(payinterest,'debit')>0">
+           <center>
+              <h1 >Interest Paid : {{getsum(payinterest,'debit')}} </h1>
+           </center>
+           <table class="table " id="payinteresttable">
+              <thead class="table table-bordered table-hover">
+                 <tr>
+                    <th> Date </th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Note</th> 
+                    <th>Pm mode</th>
+                 </tr>
+              </thead>
+              <tbody>
+                 <tr  ng-repeat ="pay in payinterest" >
+                    <td> {{changeDateUserFormat(pay.date)}} </td>
+                    <td> {{pay.customername}} </td>
+                    <td> {{pay.debit}} </td>
+                    <td> {{pay.note}}</td>
+                    <td ng-show="pay.paymentmode != 50"> {{pay.paymentmodename}} </td>
+                     <td ng-show="pay.paymentmode == 50"> 
+                        <table class="table">
+                           <tr ng-repeat="pm in pay.pmtrans">
+                              <td>{{pm.paymentmodename}}</td>
+                              <td>{{pm.debit}} </td>
+                           </tr>
+                     </table>
+                     </td>
+                 </tr>
+              </tbody>
+           </table>
+      </div>
+   </div>
+   </div>
+  
+   <hr>
+   <div class="container" ng-show="submitted" >
+      <div class="row">
+         <div class="form-inline">
+            <div class="col-md-6" >
+              <h3 class="text-left" style="text-decoration: overline">OP : {{(daybook.opbal[0]["amt"]).toFixed(2)}}</h3><h3 class="text-right" style="text-decoration: overline"> Creditors Total  : {{daybook.creditors.total}} </h3> 
+              <!-- {{(opbal).toFixed(2)}} -->
+               <!-- {{  getsum(drcr,"credit")+ getsum(receivedamount,"amount") + getsum(cftrans,"credit") + suriccommttl + ccommttl }}-->
+            </div>
+            <div class="col-md-6">
+             <h3 class="text-right" style="text-decoration: overline">Debtors Total : {{daybook.debitors.total}}</h3>
+              <!-- {{getsum(drcr,"debit")+getsum(chiti,"chitiamount") + getsum(cftrans,"debit") + getsum(payinterest,"debit")  + chitiamountttl }}  -->
+          </div>
+         </div>
+      </div>
+      <div class="row" style="padding: 10px;width: 917px;display: block;margin-left: auto;margin-right: auto;">
+         <div class="col-md-6" >
+            <textarea ng-model="daybookNotes.note" style="min-height: fit-content;min-width: 400px;" ></textarea>
+         </div>
+         <div class="col-md-6" >
+            <button class="btn btn-primary" ng-click="createDaybookNote()" ng-show="!isDaybookNotes">Add</button>
+            <button class="btn btn-primary" ng-click="editDaybookNote()" ng-show="isDaybookNotes">Edit</button>
+         </div>
+      </div>
+      <div class="row" style="padding: 10px;border: 2px solid black;width: 917px;display: block;margin-left: auto;margin-right: auto;">
+         <center><h2>Trans Total</h2></center>
+         <div class="col-md-3" style="font-weight: bold;" ng-repeat="tl in daybook.transttl" ng-show="tl.amt">
+            {{(tl.name)}} :{{(tl.amt).toFixed(2)}}
+         </div>
+      </div>
+      <div class="row" ng-class="balanceerr('op')" style="padding: 10px;border: 2px solid black;width: fit-content;display: block;margin-left: auto;margin-right: auto; margin-top: 20px;">
+         <!-- <div class="col-md-2">
+            Opening Bal :{{(daybook.opbal[0]["amt"]).toFixed(2)}}
+         </div> -->
+         <center><h2>Closing Balance</h2></center>
+         <div class="col-md-3" style="font-weight: bold;" ng-repeat="cl in daybook.closingbal" ng-show="cl.amt">
+            {{(cl.name)}} :{{(cl.amt).toFixed(2)}}
+         </div>
+      </div>
+   <div class="container text-center"  >
+      <h2 style="text-decoration: overline underline"> Balance : {{(daybook.opbal[0].amt + daybook.creditors.total - daybook.debitors.total).toFixed(2)}}</h2>
+          <!-- {{(opbal + getsum(drcr,"credit")+getsum(receivedamount,"amount") + getsum(cftrans,"credit") - getsum(cftrans,"debit") - getsum(payinterest,"debit") + suriccommttl + ccommttl - getsum(drcr,"debit")- getsum(chiti,"chitiamount")).toFixed(2) - chitiamountttl}} -->
+      <!-- {{(opbal + getsum(drcr,"credit")+getsum(receivedamount,"amount") + getsum(cftrans,"credit") - getsum(cftrans,"debit") - getsum(payinterest,"debit") + suriccommttl + ccommttl - getsum(drcr,"debit")- getsum(chiti,"chitiamount")).toFixed(2) - chitiamountttl}} -->
+      <!-- op - {{opbal + getsum(drcr,"credit") }} -->
+      <hr>
+   </div>
+   <button class="btn btn-primary" ng-click="scrollUp()" type="button">Top</button>
+   </div>
+  
+  
+  
+   <tr ng-repeat="co in collection"  ng-show="cu.id == co.customer">
+     <!-- <h1>{{cu.Firstname + ' ' + cu.LastName + ' ' + '(' + cu.HamiFirstName + ')'}}</h1> -->
+     <td>
+         {{$index+1}}
+     </td>
+     <td>
+         {{co.date}}
+     </td>
+     <td>
+         <!-- {{customers[co.customer].name}} -->
+        {{co.customername}}
+     </td>
+     <td>
+         {{co.chiticode}}
+     </td>
+     <td>
+         {{co.amount}}
+     </td>
+     <td>
+         {{co.notes}}
+     </td>
+     </tr>   
+</div>
+
+
+
+   <script>
+      $('table').on('click', 'td', function() {
+         if($( this ).css( "background-color" ) == "rgb(255, 255, 0)"){
+            $(this).css('backgroundColor', 'white');
+         }else{
+            $(this).css('backgroundColor', 'yellow');
+         }
+      });
+   
+   </script>

@@ -1,0 +1,189 @@
+<div class="container" ng-init="init()" >
+    <!--display credits-->
+
+    <div class=" text-center ">
+        <h1>Credits</h1>
+    </div>
+    <div class="form-inline">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Customer :</label>
+                    <select class="form-control" ng-change="getcreditlist()" ng-model="customer" ng-options="c.id as c.Firstname + ' ' + c.LastName+ '('+c.HamiFirstName  +')' for c in customers">
+                        <option value="">Select Customer</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4" style="padding-left: 0px;" >
+                <div class="form-group">
+                   <label>From Date : </label>
+                   <div class="input-group date" style="width: 180px;">
+                      <input type="text"  class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filterr.from_date" name="from_date" id="from_date" autocomplete="off"  >
+                      <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                   </div>
+                </div>
+             </div>
+             <div class="col-md-4" >
+                <div class="form-group">
+                   <label>To Date : </label>
+                   <div class="input-group date" >
+                      <input type="text" class="form-control"   placeholder="Date" ng-model="filterr.to_date" name="tdate" id="tdate" autocomplete="off" >
+                      <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                   </div>
+                </div>
+             </div>
+        </div>
+    </div>
+    
+</div>
+<!--display credits-->
+<div class="container" ng-show = "display==1">
+  
+         <!--accordion-->
+         <div class="panel-group" id="accordion" >
+            <div class="panel panel-default" ng-show="c.debit>0" ng-repeat="c in credits" >
+               <div class="panel-heading">
+                  <h4 class="panel-title">
+                     <div data-toggle="collapse" data-parent="#accordion"  ng-href="#collapse"> {{c.id}} - {{c.date}} : {{c.debit}} &nbsp;&nbsp; [{{c.note }}] <span style="padding-left:500px;"> <button class="btn btn-success" ng-click="crpaymod($index)" >Pay credit</button></span> </div>
+                  </h4>
+               </div>
+               <div id="collapse" class="panel-collapse collapse in">
+                  <div class="panel-body">
+                     <table class="table " id="credittable">
+                        <thead class="thead-dark">
+                           <tr  >
+                              <th>#</th>
+                              <th>Cid</th>
+                              <th>Date</th>
+                              <th>Credit</th>
+                              <th>Note</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                        <tr  ng-repeat ="p in crpaid" ng-show="p.debit==0 && p.crid==c.id">
+                           <td>{{$index+1}} : </td>
+                           <td> {{p.id}}</td>
+                           <td> {{changeDateUserFormat(p.date)}} </td>
+                           <td> {{p.credit}} </td>
+                           <td> {{p.note}} </td>
+                        </tr> 
+                        </tbody>
+                     </table>
+                     
+                  </div>
+               </div>
+            </div>
+         </div>
+         
+
+
+
+   <div style="border:1px solid black;padding: 20px;" class="row text-center" >
+      <div class="col-md-4"  style="border-right:1px solid black;" >
+         <b>Total Credits = {{getsum(credits,'debit')}}</b>
+      </div>
+      <div class="col-md-4" style="border-right:1px solid black;">
+         <b>Total Credits Paid = {{getsum(credits,'credit')}} </b>
+      </div>
+      <div class="col-md-4" style="border-right:1px solid black;">
+         <b>Pending Credits = {{getsum(credits,'debit') - getsum(credits,'credit')}} </b>
+      </div>
+            
+            
+   </div>
+
+</div>
+
+
+
+<!-- Modal -->
+<div id="crpaymodal" class="modal fade" tabindex="-1" role="dialog">
+   <div class="modal-dialog modal-md" >
+      <!-- Modal content -->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center>
+               <h1>Pay Credit for id : {{credits[crpayid].id}} </h1>
+            </center>
+         </div>
+         <div class="modal-body">
+            <form ng-submit="paycredit()" name="paycreditform" >
+               <div class="container">
+                  <div class="form-inline">
+                     <div class="row" style="padding-left: 8px;">
+                        <div class="col-md-3">
+                           <div class="form-group">
+                              <label> Date : </label>
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="crpay.date" name="date" id="date" autocomplete="off" ng-change="getcollectionList()" >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-3">
+                           <div class="form-group">
+                              <label>Credit : </label>
+                              <input type="number" name="credit" ng-model="crpay.credit" class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row" style="padding-left: 8px;">
+                        <div class="col-md-1" ng-show="crpay.paymentmode != 50"  style="margin-top: 15px;" ></div>
+                        <div class="col-md-5" ng-show="crpay.paymentmode != 50"  style="margin-top: 15px;" >
+                           <div class="form-group">
+                               <label>Payment mode: </label>
+                               <select class="form-control" ng-change="checkmultipm()" ng-options="pm.id as pm.modename for pm in paymentmodelist"  ng-model="crpay.paymentmode" focus> 
+                                   <option selected>Select</option>
+                               </select>
+                           </div>
+                       </div>
+                       <div class="col-md-6" ng-show="crpay.paymentmode == 50"  style="margin-top: 10px;">
+                           <form name="multipmform" >
+                               <div class="row" ng-repeat="multi in crpay.pmtrans">
+                                   <div class="col-md-6">
+                                       <div class="form-group">
+                                           <label>Payment mode: </label>
+                                           <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                               <option selected>Select</option>
+                                           </select>
+                                       </div>
+                                   </div>
+                                   <div class="col-md-5" style="margin-left: -32px;">
+                                       <div class="form-group">
+                                           <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Credit</label>
+                                           <div class="col-md-7 col-xs-7 col-sm-7">
+                                               <input style="width: 100px;" autocomplete="off" type="text" name="credit" id="credit" ng-model="multi.credit" class="form-control" focus> 
+                                           </div>
+                                       </div>                   
+                                   </div> 
+                                   <div class="col-md-1">
+                                       <button class="btn btn-danger"  ng-click="deletepmtrans($index)"><span class="glyphicon glyphicon-trash"></span> </button>
+                                   </div>    
+                               </div>                            
+                           </form>
+                           <br>
+                           <button type="button" class="btn btn-primary" ng-click="addpmmode()">Add</button>
+                           <button type="button" class="btn btn-primary" ng-click="crpay.paymentmode = 1;checkmultipm()">Single</button>
+                       </div>
+                     </div>
+                    <!-- row -->
+                     <div class="row text-center" style="padding-top: 20px;"  >
+                        <div class="col-md-6">
+                           <input type="submit" class="btn btn-success"  >
+                        </div>
+                     </div>
+                  </div>
+                  <!-- form-inline -->
+               </div>
+               <!-- container -->
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal content -->
+
+
+
+

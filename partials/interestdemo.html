@@ -1,0 +1,152 @@
+<div class="container" ng-init="getcustomerlist()">
+    <div class="row text-center">
+        <div class="col-md-2">
+            <select ng-model="intmon" ng-options="m.id as m.mon for m in months" class="form-control" style="width: 150px;">
+                    <option value="">Select Month</option>
+            </select>   
+        </div>
+        <div class="col-md-2">
+            <select ng-model="intyear" ng-init="intyear=yearr[1].id" ng-options="y.id as y.year for y in yearr" class="form-control" style="width: 150px;">
+                    <option value="">Select Year</option>
+            </select>   
+        </div>
+        <div class="col-md-3">
+            <select ng-change="drcrint()"  ng-model="filtercustomer" name="customer" id="customer" style="width: 200px;"
+            ng-options="c.id as c.Firstname+ ' ' +c.LastName+'('+c.HamiFirstName+')' for c in customers" class= "form-control" >
+            <option selected value="">select Customer</option>
+            </select>   
+                   
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary"  ng-click="calinttt()">Calculate Interest </button>   
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary" ng-show="display == 2" ng-click="postint()">Submit</button>
+        </div>
+       
+        
+            
+    </div>
+     <!--ex-->
+     <div class="panel-group" id="accordion1" style="padding-top: 30px;">
+        
+
+         <div class="panel panel-default" ng-repeat = "cm in customerdetail" >
+             <div class="panel-heading" >
+                 <h4 class="panel-title">
+                     <div data-toggle="collapse" data-parent="#accordion1" ng-href="#collapse{{cm.id}}">{{cm.customername}}
+                         
+                     </div>
+                 </h4>
+             </div>
+             <div id="collapse{{cm.id}}" class="panel-collapse collapse in">
+                 <div class="panel-body">
+                     <table class="table">
+                         <thead>
+                             <th>S.NO</th>
+                             <th>Date</th>
+                             <th>Credit</th>
+                             <th>Debit</th>
+                             <th>Interest</th>
+                        </thead>
+                         <tbody  ng-repeat="s in drcrr" ng-show="s.customername == cm.customername && s.debit ==0">
+                             <tr>
+                                <td> {{$index}}</td>
+                                <td> {{s.date}}</td>    
+                                <td> {{s.credit}}</td>
+                                <td><input type="checkbox"  ng-model="s.shwdbt" >
+                                    <label>Debit List</label></td>
+                                <td>{{s.intttl}}</td>
+                             </tr>
+                            
+                            
+                            <tr ng-show="s.shwdbt ">
+                               <td colspan="4">
+                                   <table class="table" >
+                                       <thead>
+                                           <th>S.NO</th>
+                                           <th>Date</th>
+                                           <th>Debit</th>
+                                           <th>Interest</th>
+                                           <th>Note</th>
+                                       </thead>
+                                       <tbody>
+                                           <tr  ng-repeat="d in s.debitlist">
+                                                <td>{{$index+1}}</td>
+                                                <td>{{d.date}}</td>
+                                                <td>{{d.debit}}</td>
+                                                <td>{{d.interest}}</td>
+                                                <td>{{d.note}}</td>
+                                           </tr>
+                                       </tbody>
+                                   </table>
+                               </td> 
+                            </tr>
+                            
+                         </tbody>
+                     </table>
+                    <!-- <div class="container" style="padding-left: 1px;padding-right: 70px;">
+                        <h4>
+                                     <div class="col-md-3 text-center" style="border: 1px solid black;">
+                                      S.NO
+                                     </div>
+                                     <div class="col-md-3 text-center" style="border: 1px solid black;">
+                                       Date
+                                     </div>
+                                     <div class="col-md-3 text-center" style="border: 1px solid black;">
+                                        Credit
+                                     </div>
+                                     <div class="col-md-3 text-center" style="border: 1px solid black;">
+                                        Debit
+                                     </div>                   
+                         </h4>
+                        </div>
+                         <br>
+                         
+                             <div  ng-repeat="s in drcrr" ng-show="s.customername == cm.customername && s.debit ==0">
+                                
+                                        <div class="row text-center" style="padding-left: 1px;padding-right: 70px;">
+                                            <div class="col-md-3" style="border: 1px solid black;">
+                                                {{s.id}}
+                                            </div>
+                                            <div class="col-md-3" style="border: 1px solid black;">
+                                                {{s.date}}
+                                             </div>
+                                             <div class="col-md-3" style="border: 1px solid black;">
+                                                {{s.credit}}
+                                             </div>
+                                             <div class="col-md-3 text-center" style="border: 1px solid black;">
+                                                <input type="checkbox"  ng-model="shwdbt" ng-change = "shwdebitlist">
+                                                <label>Debit List</label>
+                                             </div>
+                                        </div>
+                                 </div>-->
+                             </div> <!--panel body end tag-->
+                             
+                                <!--<div id="subcollapse{{s.crid}}" class="panel-collapse collapse in ">
+                                     <div class="panel-body">
+                                            <div class="row text-center" >
+                                                    <div class="col-md-3">
+                                                        {{s.id}}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{s.date}}
+                                                     </div>
+                                                     <div class="col-md-3">
+                                                        {{s.debit}}
+                                                     </div>
+                                                     
+                                                </div> 
+                                    </div>
+                                 </div>-->
+                             </div>
+                            
+                         </div>
+
+                     </div>
+                     <div class="container text-right" style="margin: 0%; ">
+                      <b>  <h4>Total Interest Paid :   {{(allint).toFixed(2)}}</h4> </b>
+                     </div>
+                     
+                 </div>
+             

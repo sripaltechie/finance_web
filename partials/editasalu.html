@@ -1,0 +1,127 @@
+<div class="container">
+    <div>
+        <form novalidate name="editasaluform" ng-init="init()">
+            <div class="form-inline">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Customer Name:  </label>
+                        <select class="form-control" ng-options="c.id as c.Firstname + ' '+ c.LastName + '(' + c.HamiFirstName + ')' for  c in customers" ng-model="asalu.customer" name="customer" id="customer" focus > 
+                            <option value="">Select Customer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Date:</label>
+                        <div class="input-group date">
+                            <input type="text" class="form-control" ng-change="setDate()" placeholder="Date" ng-model="asalu.date" name="dAte" id="dAte" autocomplete="off" > <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i> </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Amount :</label>                                
+                        <input type="number" class="form-control" ng-model= "asalu.amount" focus>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Chiti :  </label> 
+                        <select ng-options="z.id as z.customername +'(' + z.id+')' for z in chiti" ng-model="asalu.chiti" name="status" id="status" class="form-control" focus>
+                        </select>
+                    
+                    </div>
+                </div>
+        
+        </div>
+        <br>
+        <div class="form-inline " style="padding-top: 50px;" >
+            <div class="col-md-3" ng-show="asalu.paymentmode != 50">
+                <div class="form-group">
+                    <label>Payment mode: </label>
+                    <select  ng-change="checkmultipm()" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist"  ng-model="asalu.paymentmode" focus required> 
+                        <!-- <option selected>Select</option> -->
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6" ng-show="asalu.paymentmode == 50"  style="margin-top: 10px;">
+                <form name="multipmform" >
+                    <div class="row" ng-repeat="multi in asalu.pmtrans">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Payment mode: </label>
+                                <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                    <option selected>Select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Amount</label>
+                                <div class="col-md-7 col-xs-7 col-sm-7">
+                                    <input style="width: 100px;" autocomplete="off" type="text" name="credit" id="credit" ng-model="multi.credit" class="form-control" focus> 
+                                </div>
+                            </div>        
+                        </div>  
+                        <div class="col-md-1">
+                            <button class="btn btn-danger"  ng-click="deletepmtrans($index)"><span class="glyphicon glyphicon-trash"></span> </button>
+                        </div>  
+                    </div>                            
+                </form>
+                <button type="button" class="btn btn-primary" ng-click="addpmmode()">Add</button>
+                <button type="button" class="btn btn-primary" ng-click="asalu.paymentmode = 1;checkmultipm()">Single</button>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label>Note :</label>
+                <textarea style="width: 400px ;height : 100px"  ng-model = "asalu.note" focus> </textarea >
+                </div>
+            </div>
+            <!-- <div class="col-md-3">
+                <div class="form-group">
+                    <input type="checkbox" style="width: 40px ;height : 30px" ng-model="rcvdchck" ng-true-value ="1" ng-false-value = "0" class="form-control">
+                    <label style="font-size: 20px ;" >Received amount Entry</label>
+                </div>
+            </div> -->
+            <div class="col-md-4"></div>
+        
+        
+        </div>
+        <div class="col-md-12 text-center">
+            <button class="btn btn-success" ng-click="editasalu()">Edit</button>
+        </div>
+        </form>
+    </div>
+
+
+    <div ng-show="rcvdamtlist.length" style="margin-top:150px ;" >
+        <center><h1>Received Entries For this Collection</h1></center>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr  >
+                    <th>SNO</th>
+                    <th>Rcvd ID</th>
+                    <th>Customer</th>
+                    <th>amount</th>
+                    <th>Notes</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in rcvdamtlist">
+                    <td>{{$index + 1}}</td>
+                    <td>{{r.id}}</td>
+                    <td>{{r.customername}}</td>
+                    <td>{{r.amount}}</td>
+                    <td>{{r.note}}</td>
+                    <td> <a ng-href="#/editreceived/{{r.id}}"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> </td>
+                    <!-- <td>{{}}</td>
+                    <td>{{}}</td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

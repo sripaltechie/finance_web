@@ -1,0 +1,52 @@
+<div class="container" ng-init="init()">
+    <div ng-show="display">
+        <center><h1>{{chitiarr.chitiname}}({{chitiarr.code}}) </h1> </center>
+        <form  name="cfchiticustomersform" ng-submit="submit()" style="width: 30%;">
+          <table class="table table-hover table-bordered table-responsive">
+            <thead>
+              <tr>
+                <th>S.NO</th>
+                <th>Customer</th>
+                <th>No</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="cf in cfchiticustomers">
+                <td>{{$index+1}} </td>
+                <td>
+                  <input ng-disabled="!new && showno != $index" autocomplete="none" autocomplete="off" type="text" name="customername{{$index}}" id="customername{{$index}}" ng-model="cf.customername" class="form-control" typeahead="customer.fname + '_' + customer.lname for customer in cfcustomers | filter:{fname:$viewValue}"  focus> 
+                </td>
+                <td>
+                  <input style="width: 55px;" ng-disabled="!new && showno != $index" type="number" name="cusno{{$index}}" id="cusno{{$index}}" ng-model="cf.cusno" class="form-control" focus> 
+                </td>
+                <td ng-show="!new">
+                  <i ng-show="showno != $index" class="fas fa-edit" ng-click="show($index)"></i>
+                  <button ng-show="showno == $index" type="button" class="btn btn-primary" ng-click="editcfchiticustomer($index)">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button ng-show="new" class="btn btn-success" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+<div class="popup cfchiticustomerpopup center">
+    <div class="icon">
+      <i class="fa fa-check"></i>
+    </div>
+    <div class="title">
+      Selct chiti! 
+    </div>
+    <div class="description">
+      <select name="cfChiti" id="cfChiti" ng-model="chiti"  ng-options="c.id as c.chitiname + '('+c.code+')'  for c in cfchiti"  class="form-control">
+        <option value="">Select Chiti</option>
+      </select>
+    </div>
+    <div class="dismiss-btn" >
+      <button id="dismiss-popup-btn" ng-click="getcfchiticustomers()">View</button>
+      <button id="dismiss-popup-btn" ng-click="popupaction('close')">Close</button>
+    </div>
+  </div>
+ 

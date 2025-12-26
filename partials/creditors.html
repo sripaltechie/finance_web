@@ -1,0 +1,57 @@
+<div class="container" ng-init="init()" >
+    <div class="row text-center">
+        <div class="col-md-3">
+            <select class="form-control" ng-change="getcustomersop()" ng-model="filter.sort_by" >
+                <option value="">Sort By</option>
+                <option value="a.firstname" >Name </option>
+                <option value="amount">Amount </option>
+                <option value="a.intrate" >Int Rate </option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" ng-change="getcustomersop()" ng-model="filter.sort_order" >
+                <option value="">Sort Order</option>
+                <option value="asc" >ASC </option>
+                <option value="desc" >DESC </option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>For Int</label>
+            <label class="switch">
+                <input type="checkbox" ng-change="chckforint()" ng-true-value="1" ng-false-value="0" ng-model="forint" ><span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <!-- <th>S.NO</th> -->
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Interest bal</th>
+                <th>Last Int Month</th>
+                <th>Int rate</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="cr in creditors" ng-show="cr.amount || cr.interest">
+                <!-- <td>{{$index+1}} </td> -->
+                <td ng-click="showLedger(cr.customer)" >{{cr.customername}} </td>
+                <td>{{(cr.amount).toFixed(2)}} </td>
+                <td>{{(cr.interest).toFixed(2)}} </td>
+                <td>{{changeDateUserFormat(cr.lastintmonth)}} </td>
+                <td>{{cr.intrate}} </td>
+                <td>
+                    <a href="#/editcustomer/{{cr.customer}}" target="_blank" ><span class="glyphicon glyphicon-edit"></span> </a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">Total</td>
+                <td>{{getsum(creditors,"amount")}} </td>
+                <td>{{getsum(creditors,"interest")}} </td>
+                <td colspan="3"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

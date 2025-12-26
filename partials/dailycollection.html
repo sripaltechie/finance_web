@@ -1,0 +1,960 @@
+<div class="container" ng-init="init()">
+    <!-- create daily chiti  -->
+<div class="container" ng-show="steps == 0" style="border: 1px solid black;padding: 50px;" > 
+    <div class="row" >
+        <div class="col-md-3">
+            <label>Same Date</label>
+            <label class="switch">
+                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="steps05.date" ><span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-md-3">
+            <label>Same Customer</label>
+            <label class="switch">
+                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="steps05.customer" ><span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-md-3" ng-show="steps05.customer == 1">
+            <label>Same Chiti</label>
+            <label class="switch">
+                <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="steps05.chiti" ><span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary" ng-click="dailyact()"> Submit </button>
+        </div>
+    </div>
+</div>
+
+<div class="container" ng-show="steps == 1 " style="border: 1px solid black;padding: 50px;width: 1400px;margin-left: -100px;" > 
+    <center><h1> Daily </h1></center>
+    <h2>Multi Customers With Different Dates</h2>
+    <form name="dailyStep1CusForm">
+        <div class="form-inline">
+            <div class="row"  style="padding-top: 50px;" >
+                <div class="col-md-2" style="margin-left: -40px" >
+                    <div class="form-group">
+                        <div class="input-group date" >
+                        <input type="text" style="width:150px;" class="form-control" ng-change="setDate();"  placeholder="Date" ng-model="coll.date" name="dAtee" id="dAteee" autocomplete="off" required>
+                        <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
+                        <br>
+                        <br>
+                            <input type="button" class="btn btn-primary" ng-click="dtodaydate($index)" value="today">
+                            <input type="button" class="btn btn-primary" ng-click="dyesterdaydate($index)" value="1">
+                            <input type="button" class="btn btn-primary" ng-click="dDByesterdaydate($index)" value="2">
+                            <input type="button" class="btn btn-primary" ng-click="dD2Byesterdaydate($index)" value="3">
+                    </div>   
+                </div> 
+                <div style="margin-left: 40px;" class="col-md-10">
+                    <table class="table borderless">
+                        <tr>
+                            <td>
+                                <div>
+                                    <label for="customer">Select Customer</label>
+                                    <input type="text" id="customer" name="customer"  ng-blur="getChitiList()" ng-model="coll.customername" class="form-control"  typeahead="customer.Firstname + ' ' + customer.LastName + ' ' + '(' + customer.HamiFirstName + ')' for customer in customers | filter:{Firstname:$viewValue} " ng-keydown="setNextFocus($event,coll,'hami')" autocomplete="off" required >
+                                </div> 
+                            </td>
+                            <!-- <td>
+                                <div  >
+                                    <label for="hami">Select Hami</label><br>
+                                    <select id="hami" name="hami" ng-change="getChitiList()"  ng-model="coll.hami" ng-options="h.id as h.Firstname + '  ' + h.LastName for h in hami " ></select>
+                                    <!-- <input type="text" focusout="getChitiList()" style="width:70px;" ng-change="getChitiList()" id="hami" name="hami" ng-keydown="setNextFocus($event,$index,collection,'chiti')"   ng-model="coll.hami" class="form-control" typeahead="h.Firstname + '  ' + h.LastName for h in hami| filter:{Firstname : $viewValue}" autocomplete="off" > -->
+                                <!-- </div> 
+                            </td> -->
+                            <td>
+                                <div  >
+                                    <label for="chiti">Select Chiti</label>
+                                    <!-- <input type="text"  id="chiti" name="chiti" ng-keydown="setNextFocus($event,coll,'amount')" ng-model="coll.chiti" class="form-control" > -->
+                                    <select id="chiti" name="chiti" ng-model="coll.chiti" ng-change="getNotes()" ng-options="c.id as c.customername + '(' + c.code + ')' for c in chitiList " class="form-control" required>
+                                        
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="amount">Amount</label>
+                                    <input style="width:100px;" type="text" id="amount" name="amount" ng-keydown="setNextFocus($event,coll,'notes')"  ng-model="coll.amount" class="form-control" required>
+                                    <br>
+                                    <button class="btn btn-primary" ng-click="collamt(100,'steps1')">1</button>
+                                    <button class="btn btn-primary" ng-click="collamt(200,'steps1')">2</button>
+                                    <button class="btn btn-primary" ng-click="collamt(300,'steps1')">3</button>
+                                    <button class="btn btn-primary" ng-click="collamt(500,'steps1')">5</button>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="paymentmode">paymentmode</label>
+                                    <select ng-show="coll.paymentmode != 50" id="steps1paymentmode" name="steps1paymentmode" ng-change="checkmultipm($index)" ng-model="coll.paymentmode" ng-options="pm.id as pm.modename for pm in paymentmodelist" class="form-control" required>
+                                    </select>
+                                    <div ng-show="coll.paymentmode == 50">
+                                        <div class="form-group" ng-repeat="pm in coll.pmtrans">
+                                            <select name="pmtrans{{$index}}" id="pmtrans{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="pm.paymentmode" focus ng-required="cl.paymentmode == 50"> 
+                                                <option selected>Select</option>
+                                            </select>
+                                            <input type="text" name="credit{{$index}}" id="credit{{$index}}" class="form-control" style="width: 55%;" ng-model="pm.credit" ng-change="chckcolamt($parent.$index,$index)" ng-required="cl.paymentmode == 50">
+                                            
+                                        </div>
+                                        <button type="button" class="btn btn-primary" ng-click="addpmmode($index)">Add</button>
+                                        <button type="button" class="btn btn-primary" ng-click="coll.paymentmode = 1;checkmultipm($index)">Single</button>
+                                    </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="notes">Notes :</label>
+                                    <input type="text" style="width:60px;" ng-model="coll.notes" class="form-control" id="notes" name="notes" required>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success" ng-click="addColl()" style="margin-top: 20px;" >Submit</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <hr style="border: 1px solid black;">
+            </div>
+        </div>
+    </form>
+
+    <!-- <div ng-repeat="disp in custDisplay" >
+        <div ng-repeat="cust in customers" ng-show="cust.id == disp" style="margin-top: 50px;">
+            <center><h1>{{cust.Firstname + ' ' + cust.LastName + ' ' + '(' + cust.HamiFirstName + ')'}}</h1></center>
+            <table ng-show="collection.length>0" class="table condensed-table">
+                <thead>
+                    <th>S.NO</th>
+                    <th>Rcvd Date</th>
+                    <th>Customer</th>
+                    <th>Chiti</th>
+                    <th>Chiti ID</th>
+                    <th>Amount</th>
+                    <th>Paymentmode</th>
+                    <th>Notes</th>
+                </thead>
+                <tbody>           
+                    <tr ng-repeat="co in collection" ng-show="cust.id == co.customer">
+                        <td>
+                            {{$index+1}}
+                        </td>
+                        <td>
+                            {{co.date}}
+                        </td>
+                        <td>
+                            {{co.customername}}
+                        </td>
+                        <td>
+                            {{co.chiticode}}
+                        </td>
+                        <td>
+                            {{co.chiti}}
+                        </td>
+                        <td>
+                            {{co.amount}}
+                        </td>
+                        <td ng-show="co.paymentmode != 50">
+                            {{pmName(co.paymentmode)}}
+                        </td>
+                        <td ng-show="co.paymentmode == 50">
+                            <table class="table">
+                                <tr ng-repeat="pm in co.pmtrans">
+                                    <td>{{pmName(pm.paymentmode)}}</td>
+                                    <td>{{pm.credit}} </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            {{co.notes}}
+                        </td>
+                    </tr>         
+                </tbody>
+            </table>
+        </div>           
+    </div>  -->
+
+
+    
+    <div class="container">
+        <table ng-show="collection.length>0" style="width: fit-content;" class="table condensed-table">
+            <thead>
+                <th>S.NO</th>
+                <th>Rcvd Date</th>
+                <th>Customer</th>
+                <th>Chiti</th>
+                <th>Chiti ID</th>
+                <th>Amount</th>
+                <th>Paymentmode</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>          
+                <tr ng-repeat="co in collection">
+                    <td>
+                        {{$index+1}}
+                    </td>
+                    <td>
+                        {{co.date}}
+                    </td>
+                    <td>
+                        {{co.customername}}
+                    </td>
+                    <td>
+                        {{co.chiticode}}
+                    </td>
+                    <td>
+                        {{co.chiti}}
+                    </td>
+                    <td>
+                        {{co.amount}}
+                    </td>
+                    <td ng-show="co.paymentmode != 50">
+                        {{pmName(co.paymentmode)}}
+                    </td>
+                    <td ng-show="co.paymentmode == 50">
+                        <table class="table">
+                            <tr ng-repeat="pm in co.pmtrans">
+                                <td>{{pmName(pm.paymentmode)}}</td>
+                                <td>{{pm.credit}} </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        {{co.notes}}
+                    </td>
+                </tr>         
+            </tbody>
+        </table>
+    </div>           
+        
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" ng-click="createColl()" ng-show="collection.length">Create Collection</button>
+    </div>
+</div>
+
+<div class="container" ng-show="steps == 2 " style="border: 1px solid black;padding: 50px;" > 
+    <center><h1> Daily </h1></center>
+    <h2>Different Customers With Same Date</h2>
+    <form name="dailyStep2CusForm">
+        <div class="form-inline">
+            <div class="row"  style="padding-top: 50px;" >
+
+                <div style="margin-left: 40px;" class="col-md-10">
+                    <table class="table borderless">
+                        <tr>
+                            <td>
+                                <div>
+                                    <label for="customer">Select Customer</label>
+                                    <input type="text" id="customer" name="customer"  ng-blur="getChitiList()" ng-model="coll.customername" class="form-control"  typeahead="customer.Firstname + ' ' + customer.LastName + ' ' + '(' + customer.HamiFirstName + ')' for customer in customers | filter:{Firstname:$viewValue} " ng-keydown="setNextFocus($event,coll,'hami')" autocomplete="off" required>
+                                </div> 
+                            </td>
+                            <td>
+                                <div  >
+                                    <label for="chiti">Select Chiti</label>
+                                    <!-- <input type="text"  id="chiti" name="chiti" ng-keydown="setNextFocus($event,coll,'amount')" ng-model="coll.chiti" class="form-control" > -->
+                                    <select id="chiti" name="chiti" ng-model="coll.chiti" ng-change="getNotes()" ng-options="c.id as c.customername + '(' + c.code + ')' for c in chitiList " required>
+                                        
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="amount">Amount</label>
+                                    <input style="width:100px;" type="text" id="amount" name="amount" ng-keydown="setNextFocus($event,coll,'notes')"  ng-model="coll.amount" class="form-control" required>
+                                    <br>
+                                    <button class="btn btn-primary" ng-click="collamt(100,'steps2')">1</button>
+                                    <button class="btn btn-primary" ng-click="collamt(200,'steps2')">2</button>
+                                    <button class="btn btn-primary" ng-click="collamt(300,'steps2')">3</button>
+                                    <button class="btn btn-primary" ng-click="collamt(500,'steps2')">5</button>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="paymentmode">paymentmode</label>
+                                    <select ng-show="coll.paymentmode != 50" id="steps2paymentmode" name="steps2paymentmode" ng-change="checkmultipm($index)" ng-model="coll.paymentmode" ng-options="pm.id as pm.modename for pm in paymentmodelist" class="form-control" required>
+                                    </select>
+                                    <div ng-show="coll.paymentmode == 50">
+                                        <div class="form-group" ng-repeat="pm in coll.pmtrans">
+                                            <select name="pmtrans{{$index}}" id="pmtrans{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="pm.paymentmode" focus ng-required="cl.paymentmode == 50"> 
+                                                <option selected>Select</option>
+                                            </select>
+                                            <input type="text" name="credit{{$index}}" id="credit{{$index}}" class="form-control" style="width: 55%;" ng-model="pm.credit" ng-change="chckcolamt($parent.$index,$index)" ng-required="cl.paymentmode == 50">
+                                            
+                                        </div>
+                                        <button type="button" class="btn btn-primary" ng-click="addpmmode($index)">Add</button>
+                                        <button type="button" class="btn btn-primary" ng-click="coll.paymentmode = 1;checkmultipm($index)">Single</button>
+                                    </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="notes">Notes :</label>
+                                    <input type="text" style="width:60px;" ng-model="coll.notes" class="form-control" id="notes" name="notes" required>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success" ng-click="addColl()" style="margin-top: 20px;" >Submit</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr style="border: 1px solid black;">
+        </div>
+    </form>
+
+    <!-- <table name="coll" ng-show="collection.length>0" class="table condensed-table">
+        <thead>
+            <th>S.NO</th>
+            <th>Rcvd Date</th>
+            <th>Customer</th>
+            <th>Chiti</th>
+            <th>Amount</th>
+            <th>Paymentmode</th>
+            <th>Notes</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="co in collection" >
+                <td>
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{co.date}}
+                </td>
+                <td>
+                    {{co.customername}}
+                </td>
+                <td>
+                    {{co.chiticode}}
+                </td>
+                <td>
+                    {{co.amount}}
+                </td>
+                <td>
+                    {{co.notes}}
+                </td>
+            </tr>
+        </tbody>
+    </table> -->
+    <!-- <div ng-repeat="disp in custDisplay" >
+        <div ng-repeat="cust in customers" ng-show="cust.id == disp" style="margin-top: 50px;">
+            <center><h1>{{cust.Firstname + ' ' + cust.LastName + ' ' + '(' + cust.HamiFirstName + ')'}}</h1></center>
+            <table ng-show="collection.length>0" class="table condensed-table">
+                <thead>
+                    <th>S.NO</th>
+                    <th>Rcvd Date</th>
+                    <th>Customer</th>
+                    <th>Chiti</th>
+                    <th>Chiti ID</th>
+                    <th>Amount</th>
+                    <th>Paymentmode</th>
+                    <th>Notes</th>
+                </thead>
+                <tbody>           
+                    <tr ng-repeat="co in collection" ng-show="cust.id == co.customer">
+                        <td>
+                            {{$index+1}}
+                        </td>
+                        <td>
+                            {{co.date}}
+                        </td>
+                        <td>
+                            {{co.customername}}
+                        </td>
+                        <td>
+                            {{co.chiticode}}
+                        </td>
+                        <td>
+                            {{co.chiti}}
+                        </td>
+                        <td>
+                            {{co.amount}}
+                        </td>
+                        <td ng-show="co.paymentmode != 50">
+                            {{pmName(co.paymentmode)}}
+                        </td>
+                        <td ng-show="co.paymentmode == 50">
+                            <table class="table">
+                                <tr ng-repeat="pm in co.pmtrans">
+                                    <td>{{pmName(pm.paymentmode)}}</td>
+                                    <td>{{pm.credit}} </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            {{co.notes}}
+                        </td>
+                    </tr>         
+                </tbody>
+            </table>
+        </div>           
+    </div>  -->
+
+
+    <div class="container">
+        <table ng-show="collection.length>0" style="width: fit-content;" class="table condensed-table">
+            <thead>
+                <th>S.NO</th>
+                <th>Rcvd Date</th>
+                <th>Customer</th>
+                <th>Chiti</th>
+                <th>Chiti ID</th>
+                <th>Amount</th>
+                <th>Paymentmode</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>          
+                <tr ng-repeat="co in collection">
+                    <td>
+                        {{$index+1}}
+                    </td>
+                    <td>
+                        {{co.date}}
+                    </td>
+                    <td>
+                        {{co.customername}}
+                    </td>
+                    <td>
+                        {{co.chiticode}}
+                    </td>
+                    <td>
+                        {{co.chiti}}
+                    </td>
+                    <td>
+                        {{co.amount}}
+                    </td>
+                    <td ng-show="co.paymentmode != 50">
+                        {{pmName(co.paymentmode)}}
+                    </td>
+                    <td ng-show="co.paymentmode == 50">
+                        <table class="table">
+                            <tr ng-repeat="pm in co.pmtrans">
+                                <td>{{pmName(pm.paymentmode)}}</td>
+                                <td>{{pm.credit}} </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        {{co.notes}}
+                    </td>
+                </tr>         
+            </tbody>
+        </table>
+    </div> 
+
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" ng-click="createColl()" ng-show="collection.length">Create Collection</button>
+    </div>
+</div>
+<!-- Modal -->
+<div id="sameDateModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h1>Select Date</h1>
+             </center>
+          </div>
+          <div class="modal-body">
+            <div class="container" >
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="input-group date" >
+                            <input type="text" style="width:180px;" class="form-control" ng-change="setDate();"  placeholder="Date" ng-model="coll.date" name="dAtee" id="dAteee" autocomplete="off" required>
+                            <span style="margin-left: -10px;" class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                            <br>
+                                <input type="button" class="btn btn-primary" ng-click="dtodaydate($index)" value="0">
+                                <input type="button" class="btn btn-primary" ng-click="dyesterdaydate($index)" value="1">
+                                <input type="button" class="btn btn-primary" ng-click="dDByesterdaydate($index)" value="2">
+                                <input type="button" class="btn btn-primary" ng-click="dD2Byesterdaydate($index)" value="3">
+                        </div>   
+                    </div>
+                </div>
+                <br>
+                <div class="row form-inline" style="margin-top: 30px;margin-left: 221px;">
+                    <button class="btn btn-success" ng-click="steps2_1()" type="button" >Submit</button>
+                </div>
+            </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- Modal content -->
+
+ <div class="container" ng-show="steps == 3 " style="border: 1px solid black;padding: 50px;" > 
+    <center><h1> Daily </h1></center>
+    <h2>Same Customer --> {{chitiCustomerName}} With Different Dates</h2>
+    <form name="dailyStep3CusForm">
+        <div class="form-inline">
+            <div class="row"  style="padding-top: 50px;" >
+
+                <div style="margin-left: 40px;" class="col-md-10">
+                    <table class="table borderless">
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(1) " value="+1">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(2)" value="+2">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(3)" value="+3">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(4)" value="+4">
+                                    <div class="input-group date" >
+                                    <input type="text" style="width:150px;" class="form-control" ng-change="setDate();"  placeholder="Date" ng-model="coll.date" name="dAtee" id="dAteee" autocomplete="off" required>
+                                    <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                </div>
+                                    <br>
+                                    <br>
+                                        <input type="button" class="btn btn-primary" ng-click="dtodaydate()" value="today">
+                                        <input type="button" class="btn btn-primary" ng-click="dyesterdaydate()" value="1">
+                                        <input type="button" class="btn btn-primary" ng-click="dDByesterdaydate()" value="2">
+                                        <input type="button" class="btn btn-primary" ng-click="dD2Byesterdaydate()" value="3">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <label for="chiti">Select Chiti</label>
+                                    <!-- <input type="text"  id="chiti" name="chiti" ng-keydown="setNextFocus($event,coll,'amount')" ng-model="coll.chiti" class="form-control" > -->
+                                    <select id="chiti" name="chiti" ng-model="coll.chiti" ng-change="getNotes()" ng-options="c.id as c.customername + '(' + c.code + ')' for c in chitiList " required>
+                                        
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="amount">Amount</label>
+                                    <input style="width:100px;" type="text" id="amount" name="amount" ng-keydown="setNextFocus($event,coll,'notes')"  ng-model="coll.amount" class="form-control" required>
+                                    <br>
+                                    <button class="btn btn-primary" ng-click="collamt(100,'steps3')">1</button>
+                                    <button class="btn btn-primary" ng-click="collamt(200,'steps3')">2</button>
+                                    <button class="btn btn-primary" ng-click="collamt(300,'steps3')">3</button>
+                                    <button class="btn btn-primary" ng-click="collamt(500,'steps3')">5</button>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="paymentmode">paymentmode</label>
+                                    <select ng-show="coll.paymentmode != 50" id="steps3paymentmode" name="steps3paymentmode" ng-change="checkmultipm($index)" ng-model="coll.paymentmode" ng-options="pm.id as pm.modename for pm in paymentmodelist" class="form-control" required>
+                                    </select>
+                                    <div ng-show="coll.paymentmode == 50">
+                                        <div class="form-group" ng-repeat="pm in coll.pmtrans">
+                                            <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="pm.paymentmode" focus ng-required="cl.paymentmode == 50"> 
+                                                <option selected>Select</option>
+                                            </select>
+                                            <input type="text" name="credit{{$index}}" id="credit{{$index}}" class="form-control" style="width: 55%;" ng-model="pm.credit" ng-change="chckcolamt($parent.$index,$index)" ng-required="cl.paymentmode == 50">
+                                            
+                                        </div>
+                                        <button type="button" class="btn btn-primary" ng-click="addpmmode($index)">Add</button>
+                                        <button type="button" class="btn btn-primary" ng-click="coll.paymentmode = 1;checkmultipm($index)">Single</button>
+                                    </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="notes">Notes :</label>
+                                    <input type="text" style="width:60px;" ng-model="coll.notes" class="form-control" id="notes" name="notes" required>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success" ng-click="addColl()" style="margin-top: 20px;" >Submit</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr style="border: 1px solid black;">
+        </div>
+    </form>
+
+    <!-- <div ng-repeat="disp in custDisplay" >
+        <div ng-repeat="cust in customers" ng-show="cust.id == disp" style="margin-top: 50px;">
+            <center><h1>{{cust.Firstname + ' ' + cust.LastName + ' ' + '(' + cust.HamiFirstName + ')'}}</h1></center>
+            <table ng-show="collection.length>0" class="table condensed-table">
+                <thead>
+                    <th>S.NO</th>
+                    <th>Rcvd Date</th>
+                    <th>Customer</th>
+                    <th>Chiti</th>
+                    <th>Chiti ID</th>
+                    <th>Amount</th>
+                    <th>Paymentmode</th>
+                    <th>Notes</th>
+                </thead>
+                <tbody>           
+                    <tr ng-repeat="co in collection track by $index" ng-show="cust.id == co.customer">
+                        <td>
+                            {{$index+1}}
+                        </td>
+                        <td>
+                            {{co.date}}
+                        </td>
+                        <td>
+                            {{co.customername}}
+                        </td>
+                        <td>
+                            {{co.chiticode}}
+                        </td>
+                        <td>
+                            {{co.chiti}}
+                        </td>
+                        <td>
+                            {{co.amount}}
+                        </td>
+                        <td ng-show="co.paymentmode != 50">
+                            {{pmName(co.paymentmode)}}
+                        </td>
+                        <td ng-show="co.paymentmode == 50">
+                            <table class="table">
+                                <tr ng-repeat="pm in co.pmtrans">
+                                    <td>{{pmName(pm.paymentmode)}}</td>
+                                    <td>{{pm.credit}} </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            {{co.notes}}
+                        </td>
+                    </tr>         
+                </tbody>
+            </table>
+        </div>           
+    </div>  -->
+    
+
+    <div class="container">
+        <table ng-show="collection.length>0" class="table condensed-table" style="width: fit-content;">
+            <thead>
+                <th>S.NO</th>
+                <th>Rcvd Date</th>
+                <th>Customer</th>
+                <th>Chiti</th>
+                <th>Chiti ID</th>
+                <th>Amount</th>
+                <th>Paymentmode</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>          
+                <tr ng-repeat="co in collection">
+                    <td>
+                        {{$index+1}}
+                    </td>
+                    <td>
+                        {{co.date}}
+                    </td>
+                    <td>
+                        {{co.customername}}
+                    </td>
+                    <td>
+                        {{co.chiticode}}
+                    </td>
+                    <td>
+                        {{co.chiti}}
+                    </td>
+                    <td>
+                        {{co.amount}}
+                    </td>
+                    <td ng-show="co.paymentmode != 50">
+                        {{pmName(co.paymentmode)}}
+                    </td>
+                    <td ng-show="co.paymentmode == 50">
+                        <table class="table">
+                            <tr ng-repeat="pm in co.pmtrans">
+                                <td>{{pmName(pm.paymentmode)}}</td>
+                                <td>{{pm.credit}} </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        {{co.notes}}
+                    </td>
+                </tr>         
+            </tbody>
+        </table>
+    </div> 
+
+
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" ng-click="createColl()" ng-show="collection.length">Create Collection</button>
+    </div>
+</div>
+<!-- Modal -->
+<div id="sameCusModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h1>Select Customer</h1>
+             </center>
+          </div>
+          <div class="modal-body">
+            <div class="container" >   
+                <div>
+                    <label for="customer">Select Customer</label>
+                    <input type="text" id="customer" name="customer"  ng-model="coll.customername"   typeahead="customer.Firstname + ' ' + customer.LastName + ' ' + '(' + customer.HamiFirstName + ')' for customer in customers | filter:{Firstname:$viewValue} "  autocomplete="off" required>
+                </div> 
+                <br>
+                <button class="btn btn-success" ng-click="steps3_1()" type="button" >Submit</button>
+            </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- Modal content -->
+ 
+
+ <div class="container" ng-show="steps == 4 " style="border: 1px solid black;padding: 50px;" > 
+    <center><h1> Daily </h1></center>
+    <h2>Same Chiti --> {{chitiCustomerName}} ({{coll.haminame}}) ({{coll.chiticode}}) : ID ({{coll.chiti}}) With Different Dates</h2>
+    <form name="dailyStep4CusForm">
+        <div class="form-inline">
+            <div class="row"  style="padding-top: 50px;" >
+
+                <div style="margin-left: 40px;width: 60%;" class="col-md-10">
+                    <table class="table borderless">
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(1) " value="+1">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(2)" value="+2">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(3)" value="+3">
+                                    <input type="button" class="btn btn-primary" ng-click="plusDate(4)" value="+4">
+                                    <div class="input-group date" >
+                                    <input type="text" style="width:150px;" class="form-control" ng-change="setDate();" ng-blur="getNotes()"  placeholder="Date" ng-model="coll.date" name="dAtee" id="dAteee" autocomplete="off" required>
+                                    <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                </div>
+                                    <br>
+                                    <br>
+                                        <input type="button" class="btn btn-primary" ng-click="dtodaydate()" value="today">
+                                        <input type="button" class="btn btn-primary" ng-click="dyesterdaydate()" value="1">
+                                        <input type="button" class="btn btn-primary" ng-click="dDByesterdaydate()" value="2">
+                                        <input type="button" class="btn btn-primary" ng-click="dD2Byesterdaydate()" value="3">
+                                </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="amount">Amount</label>
+                                    <input style="width:100px;" type="text" id="amount" name="amount" ng-keydown="setNextFocus($event,coll,'notes')"  ng-model="coll.amount" class="form-control" required>
+                                    <br>
+                                    <button class="btn btn-primary" ng-click="collamt(100,'steps4')">1</button>
+                                    <button class="btn btn-primary" ng-click="collamt(200,'steps4')">2</button>
+                                    <button class="btn btn-primary" ng-click="collamt(300,'steps4')">3</button>
+                                    <button class="btn btn-primary" ng-click="collamt(500,'steps4')">5</button>
+                                </div>
+                            </td>
+                            <td>
+                                <label for="paymentmode">paymentmode</label>
+                                    <select ng-show="coll.paymentmode != 50" id="steps4paymentmode" name="steps4paymentmode" ng-change="checkmultipm($index)" ng-model="coll.paymentmode" ng-options="pm.id as pm.modename for pm in paymentmodelist" class="form-control" required>
+                                    </select>
+                                    <div ng-show="coll.paymentmode == 50">
+                                        <div class="form-group" ng-repeat="pm in coll.pmtrans">
+                                            <select name="pmtrans{{$index}}" id="pmtrans{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="pm.paymentmode" focus ng-required="cl.paymentmode == 50"> 
+                                                <option selected>Select</option>
+                                            </select>
+                                            <input type="text" name="credit{{$index}}" id="credit{{$index}}" class="form-control" style="width: 55%;" ng-model="pm.credit" ng-change="chckcolamt($parent.$index,$index)" ng-required="cl.paymentmode == 50">
+                                            
+                                        </div>
+                                        <button type="button" class="btn btn-primary" ng-click="addpmmode($index)">Add</button>
+                                        <button type="button" class="btn btn-primary" ng-click="coll.paymentmode = 1;checkmultipm($index)">Single</button>
+                                    </div>
+                            </td>
+                            <td>
+                                <div >
+                                    <label for="notes">Notes :</label>
+                                    <input type="text" style="width:60px;" ng-model="coll.notes" class="form-control" id="notes" name="notes" required>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success" ng-click="addColl()" ng-show="editCollDisp == 0" style="margin-top: 20px;" >Submit</button>
+                                <button type="submit" class="btn btn-success" ng-click="editColl()" ng-show="collection.length && editCollDisp == 1">Edit</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <hr style="border: 1px solid black;">
+        </div>
+    </form>
+
+    <!-- <div ng-repeat="disp in custDisplay" >
+        <div ng-repeat="cust in customers" ng-show="cust.id == disp" style="margin-top: 50px;">
+            <center><h1>{{cust.Firstname + ' ' + cust.LastName + ' ' + '(' + cust.HamiFirstName + ')'}}</h1></center>
+            <table ng-show="collection.length>0" class="table condensed-table table-hover">
+                <thead>
+                    <th>S.NO</th>
+                    <th>Rcvd Date</th>
+                    <th>Customer</th>
+                    <th>Chiti</th>
+                    <th>Chiti ID</th>
+                    <th>Amount</th>
+                    <th>Paymentmode</th>
+                    <th>Notes</th>
+                    <th>Edit</th>
+                </thead>
+                <tbody>           
+                    <tr ng-repeat="co in collection" ng-show="cust.id == co.customer">
+                        <td>
+                            {{$index+1}}
+                        </td>
+                        <td>
+                            {{co.date}}
+                        </td>
+                        <td>
+                            {{co.customername}}
+                        </td>
+                        <td>
+                            {{co.chiticode}}
+                        </td>
+                        <td>
+                            {{co.chiti}}
+                        </td>
+                        <td>
+                            {{co.amount}}
+                        </td>
+                        <td ng-show="co.paymentmode != 50">
+                            {{pmName(co.paymentmode)}}
+                        </td>
+                        <td ng-show="co.paymentmode == 50">
+                            <table class="table">
+                                <tr ng-repeat="pm in co.pmtrans">
+                                    <td>{{pmName(pm.paymentmode)}}</td>
+                                    <td>{{pm.credit}} </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            {{co.notes}}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary"><i ng-click="editCollVal($index)"><span class="glyphicon glyphicon-edit" ></span></i></button>
+                        </td>
+                    </tr>         
+                </tbody>
+            </table>
+        </div>         
+        <div class="row"  >
+            <b>Total : {{getsum(collection,"amount")}} </b>
+        </div>
+    </div>  -->
+    <!-- <table name="coll" ng-show="collection.length>0" class="table condensed-table">
+        <thead>
+            <th>S.NO</th>
+            <th>Rcvd Date</th>
+            <th>Customer</th>
+            <th>Chiti</th>
+            <th>Amount</th>
+            <th>Paymentmode</th>
+            <th>Notes</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="co in collection" >
+                <td>
+                    {{$index+1}}
+                </td>
+                <td>
+                    {{co.date}}
+                </td>
+                <td>
+                   
+                    {{co.customername}}
+                </td>
+                <td>
+                    {{co.chiticode}}
+                </td>
+                <td>
+                    {{co.amount}}
+                </td>
+                <td>
+                    {{co.notes}}
+                </td>
+            </tr>
+        </tbody>
+    </table> -->
+    
+
+    <div class="container">
+        <table ng-show="collection.length>0" style="width: fit-content;" class="table condensed-table">
+            <thead>
+                <th>S.NO</th>
+                <th>Rcvd Date</th>
+                <th>Customer</th>
+                <th>Chiti</th>
+                <th>Chiti ID</th>
+                <th>Amount</th>
+                <th>Paymentmode</th>
+                <th>Notes</th>
+            </thead>
+            <tbody>          
+                <tr ng-repeat="co in collection">
+                    <td>
+                        {{$index+1}}
+                    </td>
+                    <td>
+                        {{co.date}}
+                    </td>
+                    <td>
+                        {{co.customername}}
+                    </td>
+                    <td>
+                        {{co.chiticode}}
+                    </td>
+                    <td>
+                        {{co.chiti}}
+                    </td>
+                    <td>
+                        {{co.amount}}
+                    </td>
+                    <td ng-show="co.paymentmode != 50">
+                        {{pmName(co.paymentmode)}}
+                    </td>
+                    <td ng-show="co.paymentmode == 50">
+                        <table class="table">
+                            <tr ng-repeat="pm in co.pmtrans">
+                                <td>{{pmName(pm.paymentmode)}}</td>
+                                <td>{{pm.credit}} </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        {{co.notes}}
+                    </td>
+                </tr>         
+            </tbody>
+        </table>
+    </div> 
+
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-success" ng-click="createColl()" ng-show="collection.length">Create Collection</button>
+    </div>
+</div>
+<!-- Modal -->
+<div id="sameChitiModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" >
+       <!-- Modal content -->
+       <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <center>
+                <h1>Select Customer And chiti</h1>
+             </center>
+          </div>
+          <div class="modal-body">
+            <div class="container" >   
+                <div class="col-md-12">
+                    <label for="customer">Select Customer</label>
+                    <input type="text" ng-blur="getChitiList()" id="customer" name="customer"  ng-model="coll.customername"   typeahead="customer.Firstname + ' ' + customer.LastName + ' ' + '(' + customer.HamiFirstName + ')' for customer in customers | filter:{Firstname:$viewValue} "  autocomplete="off" required>
+                </div> 
+                <div class="col-md-12" style="padding-top: 50px;">
+                    <div class="form-group">
+                        <label for="chiti">Select Chiti</label>
+                        <select id="chiti" name="chiti" ng-model="coll.chiti" ng-change="getNotes()" ng-options="c.id as c.customername + '(' + c.code + ')' for c in chitiList " required>
+                        </select>
+                    </div>
+                </div> 
+                <br>
+                <button class="btn btn-success" ng-click="steps4_1()" type="button" >Submit</button>
+            </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- Modal content -->
+</div>

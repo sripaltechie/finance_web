@@ -1,0 +1,42 @@
+<div class="modal" id="customermodal" >
+    <!-- Modal content -->
+  <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <center><h1>Edit Customer</h1></center>
+        </div>
+        <div class="modal-body">
+            <form ng-submit="editcustomerbyfilter()" name="editcustomerbyfilterform" >
+                <div class="container">
+                    <div class="form-inline">
+                        <div class="row" style="padding-left: 28px;">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>ID : </label>
+                                    <input type="number" name="filterid" id="filterid" ng-model="filterid" class="form-control">
+                                </div>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row" style="padding-top: 30px;">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Customer : </label>
+                                    <select ng-model="filtercustomer"  name="filtercustomer" ng-options="c.id as c.Firstname+ ' ' + c.LastName for c in customers"  class="form-control" >
+                                        <option value="">Select Customer</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row " style="padding-top: 20px;padding-left: 130px;" >
+                            <input type="submit" class="btn btn-primary" >
+                            <button class="btn btn-primary" data-dismiss="modal">CLose the Link</button>
+                        </div>
+                    </div> <!-- form-inline -->
+                </div> <!-- container -->
+            </form>
+        </div>
+    </div>
+</div>
+  <!-- Modal content -->
+
+   

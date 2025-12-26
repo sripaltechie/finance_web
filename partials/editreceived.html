@@ -1,0 +1,105 @@
+<form name="editreceivedform" ng-init="init()" ng-submit="editreceived()">
+    <div class="container">
+            <center><h1>Edit Received Amount</h1></center>
+            <div class="form-inline" style="padding-top: 20px;">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="received.rcvddate" name="dAte" id="dAte" autocomplete="off" >
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+                    <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+                    <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+                    <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+                </div>
+                <!--<div class="col-md-4">
+                    <div class="form-group">
+                    <label>Customer : </label> 
+                    <select ng-model="received.customer"   ng-options="f.id as f.Firstname+ ' ' +f.LastName+'('+f.HamiFirstName+')' for f in customers" class= "form-control" >
+                        <option value="">Select</option>                        
+                    </select>
+                    </div>
+                </div>-->
+                   <!-- <div class="col-md-4">
+                       <div class="form-group">
+                           <label>Customer : </label>
+                           <select ng-change class="form-control" ng-model="received.customer" ng-options="c.id as c.Firstname+ ' ' +c.LastName+ '(' +c.HamiFirstName+')' for c in customers ">
+                               <option value="">Select Customer</option>
+                           </select>
+                       </div>
+                   </div> -->
+                   <div class="col-md-4"  >
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Customer</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input style="width: 250px;" autocomplete="off"  ng-keydown="getid($event,'customer')" type="text" name="customername" id="customername" ng-model="received.customername" class="form-control" typeahead="customer.Firstname + ' ' + customer.LastName  for customer in customers | filter:{Firstname:$viewValue}" required focus> 
+                            <span class="error" ng-show="(drcrform.customername.$dirty || submitted) && drcrform.customername.$error.required" >
+                                Customer Name Required!
+                            </span>
+                        </div>
+                    </div>                   
+                </div>
+                <div class="col-md-3">
+                        <div class="form-group" >
+                        <label>Amount : </label>
+                        <input type="number"  ng-model="received.amount" class="form-control"style="width:100px;" focus>
+                        </div>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-control" ng-model="received.chiti" ng-options="h.id as h.customername + ' - ' + h.id  for h in chiti " focus>
+                        <option value="">Select Chiti</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row text-center">
+                <div class="col-md-6" ng-show="received.paymentmode != 50">
+                    <div class="form-group">
+                        <label>Payment mode: </label>
+                        <select  ng-change="checkmultipm()" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist"  ng-model="received.paymentmode" focus required> 
+                            
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="received.paymentmode == 50"  style="margin-top: 10px;">
+                        <form name="multipmform" >
+                            <div class="row" ng-repeat="multi in received.pmtrans">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Payment mode: </label>
+                                        <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                            <option selected>Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Amount</label>
+                                        <div class="col-md-7 col-xs-7 col-sm-7">
+                                            <input style="width: 100px;" autocomplete="off" type="text" name="credit" id="credit" ng-model="multi.credit" class="form-control" focus> 
+                                        </div>
+                                    </div>        
+                                </div>  
+                                <div class="col-md-1">
+                                    <button class="btn btn-danger"  ng-click="deletepmtrans($index)"><span class="glyphicon glyphicon-trash"></span> </button>
+                                </div>  
+                            </div>                            
+                        </form>
+                        <button type="button" class="btn btn-primary" ng-click="addpmmode()">Add</button>
+                        <button type="button" class="btn btn-primary" ng-click="received.paymentmode = 1;checkmultipm()">Single</button>
+                </div>                            
+                <div class="col-md-6">
+                    <textarea style="width:500px;height:100px;" ng-model="received.note"></textarea>
+                    <br>
+                    <input type="submit" value="submit" class="btn btn-success">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{{response}}

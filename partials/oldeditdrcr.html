@@ -1,0 +1,83 @@
+<form name="editdrcrform" ng-submit="editdrcr()" ng-init="getdrcrlist()">
+    <div class="container">
+            <center><h1>Cash Entry</h1></center>
+        <div class="form-inline" style="padding-top: 20px;">
+            <div class="row">
+                <div class="col-md-3" >
+                    <div class="form-group">
+                        <label>Date :</label>
+                        <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="drcr.date" name="date" id="date" autocomplete="off" ng-change="getcollectionList()" >
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label> Customer :</label>   
+                        <select ng-model="drcr.customer" ng-options="c.id as c.Firstname+ ' ' +c.LastName +'(' + c.HamiFirstName  +')' for c in customers " class="form-control">
+                            <option  value="">Select Customer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Credit :</label>
+                        <input style="width:110px;" type="text" ng-model="drcr.credit" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Debit :</label>
+                        <input style="width:110px;"  type="text" ng-model="drcr.debit" class="form-control">
+                    </div>
+                </div>
+            </div><!--row div-->
+           
+            
+            <div class=" row text-center" style="padding-top: 40px;" >
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                <label>For Int: </label>
+                                <select  class= "form-control" ng-model="drcr.forint">
+                                    <option selected value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>  
+                         <div class="col-md-3">
+                        <div class="form-group" >
+                        <label>Show in Daybook : </label>
+                        <select   ng-model="drcr.showdaybook" class="form-control">
+                        <option value="0" >Show/Hide</option>
+                        <option value="1">Show</option>
+                        <option value="2">Hide</option>
+                        </select>
+                        </div>
+                </div> 
+                         <div class="col-md-3">
+                        <div class="form-group"ng-show="drcr.forint==0" >
+                        <label>Credit : </label>
+                        <select  class= "form-control"  ng-model="drcr.creditexp" >
+                            <option  value="0">Select Type</option>
+                            <option  value="1">Credit</option>
+                            <option value="2">Expenses</option>
+                            <option value="3">P2C</option>
+                            <option value="4">Chit Fund</option>
+                        </select>
+                        </div>
+                </div>
+                <div ng-show="drcr.creditexp==4">
+                    <label>Chit Fund ID : </label>
+                    <select ng-model="drcr.chitfundid"   ng-options="f.id as f.customername+ ' - ' +f.id for f in chitfund" class= "form-control" >
+                        <option value="">Select</option>                        
+                    </select>
+                </div>
+                <textarea style="width:500px;height:100px;" ng-model="drcr.note"></textarea>
+                <textarea ng-show = "drcr.note == 'interestcal' " style="width:500px;height:100px;" ng-model="drcr.note1"></textarea>
+                    <br>
+                <input type="submit" value="submit" class="btn btn-success">
+            </div>
+        </div><!--forminline div-->
+    </div><!--container div-->
+</form>

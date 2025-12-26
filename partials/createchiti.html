@@ -1,0 +1,268 @@
+<div class="container">
+    <form novalidate name="chitiform" ng-init="init()" ng-submit="createchiti()" action="" >
+        <div class="form-inline">          
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <!-- <div class="form-group">
+                            <label>Customer Name:</label>
+                            <select ng-change="customerarray()" ng-keydown="setNextFocus($event,'','code')" ng-model="chiti.customer" name="customer" id="customer" ng-options="c.id as c.Firstname+ ' ' +c.LastName+'('+c.HamiFirstName+')' for c in customers" class= "form-control" required focus>
+                                <option selected value="">select Customer</option>
+                            </select>
+                        </div> -->
+                        <div class="form-group">
+                            <label class="col-md-4 col-sm-4 text-right" >Customer</label>
+                            <div class="col-md-8 col-sm-8" >
+                                <input autocomplete="off" type="text" name="customername" id="customername" ng-model="chiti.customername" class="form-control" ng-keydown="getid($event,'customer');setNextFocus($event,'','code')" typeahead="customer.Firstname + '_' + customer.LastName + '(' + customer.HamiFirstName + ')'  for customer in customers | filter:{Firstname:$viewValue}" required> 
+                            </div>
+                        </div>
+                        <div role="alert">
+                            <span class="error" ng-show= "(chitiform.customer.$dirty || submitted )&& chitiform.customer.$error.required" >
+                                Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label>Chiti code:</label>
+                            <input autocomplete="off" style="width: 50%;" ng-keydown="setNextFocus($event,'','dAte')" type="text" ng-model="chiti.code" name="code" id="code"  class= "form-control">
+                        </div>
+                        <div role="alert">
+                            <span class="error" ng-show= "(chitiform.nAme.$dirty || submitted )&& chitiform.nAme.$error.required" >
+                                Required!
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Date:</label>
+                            <div class="input-group date" >
+                                <input type="text" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="chiti.dAte"  ng-keydown="setNextFocus($event,'','interestrate')" name="dAte" id="dAte" autocomplete="off" ><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="col-md-2" ng-show="chiti.tYpe!=1 && chiti.tYpe!=3">
+                        <div class="form-group">
+                            <label>Interest Rate:</label>
+                            <input style="width:50px;" ng-keydown="setNextFocus($event,'','tYpe')" ng-change="chck()" type="text" ng-model="chiti.interestrate" class="form-control" name="interestrate" id="interestrate" >
+                        </div>
+                    </div>
+                </div>  
+                <div class="row text-center" style=" margin-top:30px;">
+                     <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Chiti Type :</label>
+                                <select ng-change="chck()" ng-model="chiti.tYpe" class="form-control" ng-keydown="setNextFocus($event,'advintmonths','aMount')" ng-options="t.id as t.type for t in chititypes" name="tYpe" id="tYpe" required >
+                                       <option selected value="">Select Chiti Type</option>
+                                    </select>
+                            </div>
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.tYpe.$dirty || submitted) && chitiform.tYpe.$error.required">
+                                    Required!
+                                </span>
+                            </div>
+                     </div>                             
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="iscountable">Is Countable</label>
+                            <select class="form-control" name="iscountable" ng-model = "chiti.iscountable">
+                                <option value=""> Is countable</option>
+                                <option value="1"> Yes </option>
+                                <option value="2"> No </option>
+                            </select>
+                        </div>
+                   </div> -->
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status : </label>
+                            <select class="form-control" ng-model="chiti.status" name="status" id="status" required > 
+                                <option value="1">Pending</option>
+                                <option value="2">Closed</option>
+                            </select>
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.status.$dirty || submitted) && chitiform.status.$error.required">
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="col-md-2" ng-show="chiti.tYpe == 5 || chiti.tYpe == 2">
+                        <div class="form-group">
+                            <label>Adv Int Months:</label>
+                            <input ng-model="chiti.advintmonths" ng-change="chiti.days = chiti.advintmonths" style="width:50px;" ng-keydown="setNextFocus($event,'','intpaymentmode')" ng-change="chck()" type="number"  class="form-control" name="advintmonths" id="advintmonths" >
+                        </div>
+                    </div>
+                    <div class="col-md-3" ng-show="(chiti.tYpe==5 || chiti.tYpe == 2) && chiti.advintmonths"   >
+                        <div class="form-group">
+                            <label>Int Paymentmode: </label>
+                            <select ng-required="chiti.advintmonths > 0" name="intpaymentmode" id="intpaymentmode" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="chiti.advintpaymentmode" focus> 
+                                <option selected>Select</option>
+                            </select>
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.paymentmode.$dirty || submitted) && chitiform.paymentmode.$error.required" >
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-6" ng-show="chiti.advintpaymentmode == 50" style="margin-top: 20px;background-color: grey;" >
+                        <form name="multipmform" >
+                            <h4>Adv Int</h4>
+                            <div class="row" ng-repeat="multi in chiti.advintpmtrans">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Payment mode: </label>
+                                        <select name="advintpaymentmode{{$index}}" id="advintpaymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                            <option selected>Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Amount</label>
+                                        <div class="col-md-7 col-xs-7 col-sm-7">
+                                            <input autocomplete="none" style="width: 100px;" autocomplete="off" type="text" name="amount" id="amount" ng-model="multi.amount" class="form-control" focus> 
+                                        </div>
+                                    </div>                   
+                                </div>    
+                            </div>                            
+                        </form>
+                        <button type="button" class="btn btn-primary" ng-click="addpmmode(1)">Add</button>
+                        <button type="button" class="btn btn-primary" ng-click="chiti.paymentmode = 1;checkmultipm(1)">Single</button>
+                    </div> -->
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <div class="form-group">
+                            <label>Amount:</label>
+                            <input type="number" style="width: 50%;" ng-change="chck()" id="aMount" ng-model="chiti.aMount" ng-keydown="setNextFocus($event,'','paymentmode')" name="aMount" id="aMount" class="form-control" placeholder="Amount" required > 
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.aMount.$dirty || submitted) && chitiform.aMount.$error.required" >
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" ng-show="chiti.paymentmode != 50" style="margin-top: 30px;">
+                        <div class="form-group">
+                            <label>Payment mode: </label>
+                            <select ng-model="chiti.paymentmode" name="paymentmode" id="paymentmode" class= "form-control" ng-change="checkmultipm()" ng-options="pm.id as pm.modename for pm in paymentmodelist"  focus required> 
+                                <option selected>Select</option>
+                            </select>
+                            <div role="alert">
+                                <span class="error" ng-show="(chitiform.paymentmode.$dirty || submitted) && chitiform.paymentmode.$error.required" >
+                                    Required!
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5" ng-show="chiti.paymentmode == 50" style="margin-top: 30px;background-color: grey;" >
+                        <form name="multipmform" >
+                            <h4>Chiti amount</h4>
+                            <div class="row" ng-repeat="multi in chiti.pmtrans">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Payment mode: </label>
+                                        <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                            <option selected>Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Amount</label>
+                                        <div class="col-md-7 col-xs-7 col-sm-7">
+                                            <input autocomplete="none" style="width: 100px;" autocomplete="off" type="text" name="debit{{$index}}" id="debit{{$index}}" ng-model="multi.debit" class="form-control" focus> 
+                                        </div>
+                                    </div>                   
+                                </div>
+                                <div class="col-md-2"></div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-danger"  ng-click="deletepmtrans($index)"><span class="glyphicon glyphicon-trash"></span> </button>
+                                </div>     
+                            </div>                            
+                        </form>
+                        <button type="button" class="btn btn-primary" ng-click="addpmmode()">Add</button>
+                        <button type="button" class="btn btn-primary" ng-click="chiti.paymentmode = 1;checkmultipm()">Single</button>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 30px;">
+                            <div class="form-group">
+                                <label ng-show="chiti.tYpe==1|| chiti.tYpe==5" >Per Day:</label>
+                                <label ng-show="chiti.tYpe==2" >Per Week:</label>
+                                <label ng-show="chiti.tYpe==3" >Per 10's:</label>
+                                <label ng-show="chiti.tYpe==4" >Per Month:</label>
+                                <input ng-change="chck()" ng-show="chiti.tYpe>0" ng-keydown="setNextFocus($event,'suri','noof')" style="width: 50%;" type="number" ng-model="chiti.pdwtm" class="form-control" name="pdwtm" id="pdwtm" required >
+                                <div role="alert">
+                                    <span class="error" ng-show= "(chitiform.pd.$dirty || submitted) && chitiform.pd.$error.required">
+                                        Required!
+                                    </span>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-3" ng-show="carray.hami == 90" style="margin-top: 30px;">
+                        <div class="form-group">
+                            <label>Suri Comm :</label>
+                            <input ng-change="chck()" type="number" ng-keydown="setNextFocus($event,'','noof')" ng-model="chiti.suri" class="form-control" name="suri" id="suri" >
+                        </div>
+                    </div>              
+               
+                 <!-- <div class="container row" style="padding-top: 50px;padding-left: 50px ;" > -->
+                    <!-- <div class="col-md-3" ng-show="carray['hami']!=90 && carray['hami']!=30">
+                        <div class="form-group">
+                            <label>Sowji Comm :</label>
+                            <input type="number" ng-model="chiti.sowji" class="form-control" name="sowji" id="sowji" >
+                        </div>
+                    </div> -->
+                    
+                    <!--<div class="col-md-3" ng-show="carray['hami']==30">
+                        <div class="form-group">
+                            <label>Fullandevi Comm :</label>
+                            <input type="number" ng-model="chiti.fullandevi" class="form-control" name="fullandevi" id="fullandevi" >
+                        </div>
+                    </div> -->
+                    
+                    <div class="col-md-4" style="margin-top: 30px;" >
+                        <div class="form-group">
+                            <label>No. of Entries</label>
+                            <input ng-change="chck()" type="number" name="noof" id="noof" ng-keydown="setNextFocus($event,'','ccomm')" ng-model= "chiti.days" class="form-control">
+                        </div>
+                    
+                    </div>
+                 <!-- </div>
+                 <div class="container row" style="padding-top: 50px;padding-left: 50px ;" > -->
+                    <div class="col-md-3" style="margin-top: 30px;">
+                        <label for="ccomm">Cutting comm: </label>
+                        <input type="number" ng-change="chck()" ng-keydown="setNextFocus($event,'suriccomm','ccommpaymentmode')" class="form-control" ng-model="chiti.ccomm" id="ccomm" name="ccomm"  >
+                    </div>
+                    <div ng-show="carray['hami']==90" class="col-md-3" style="margin-top: 30px;">
+                        <label for="suriccomm">Suri Cutting comm: </label>
+                        <input type="number" ng-keydown="setNextFocus($event,'','note')" class="form-control" ng-model="chiti.suriccomm" id="suriccomm" name="suriccomm"  >
+                    </div>
+                    <div class="col-md-3" ng-show="chiti.ccomm"  style="margin-top: 30px;" >
+                        <div class="form-group">
+                            <label>CCOMM Payment mode: </label>
+                            <select ng-required="chiti.ccomm > 0" name="ccommpaymentmode" id="ccommpaymentmode" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="chiti.ccommpaymentmode" focus> 
+                                <option selected>Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="container row" style="padding-top: 50px;padding-left: 50px ;" >
+                    <div class="col-md-5"  >
+                        <label>Note :</label>
+                        <textarea style="width: 300px;height: 100px;" name="note" id="note" ng-model = "chiti.note" class="form-control" ></textarea>
+                    </div>  
+                 </div>
+                 <div class="text-center"style="padding-top:50px";>
+                    <button type="button" class="btn btn-primary"><a style="color: white;" ng-href="#/createcustomer">Add Customer</a></button>  
+                    <input type="submit" class="btn btn-primary" value="Create Chiti">            
+                 </div>
+                 
+                    
+                </div>
+    </form>
+</div>
+
+
+
+
+        
+        {{response}}    

@@ -1,0 +1,52 @@
+<div class="container" ng-init="init()">
+    <center><h1>Pending Customers</h1></center>
+    <div class="row" >
+        <div class="col-md-3">
+            <label class="col-md-3">Sort:</label>
+            <div class="col-md-9">
+                <select class="form-control" ng-change="sortarr()"  ng-model="filter.sorttype">
+                    <option value="">Select Sort</option>
+                    <option value="customer">Customer</option>
+                    <option value="days">Days</option>
+                    <option value="amount">Amount</option>
+                    <option value="chiti">Chiti</option>
+                    <option value="colid">Colid</option>                  
+                    <option value="rcvddate">Date</option>
+                    <option value="id">Rcvdid</option>
+                </select>
+            </div>
+        </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary" ng-show="filter.sortorder == 'desc'" ng-click="filter.sortorder = 'asc';sortarr()">Asc</button>
+                <button class="btn btn-primary" ng-show="filter.sortorder == 'asc'" ng-click="filter.sortorder = 'desc';sortarr()">Desc</button>
+                <button class="btn btn-primary" ng-show="pendingdays == 340" ng-click="pendingdays = 5000">All days</button>
+                <button class="btn btn-primary" ng-show="pendingdays == 5000" ng-click="pendingdays = 340">Below 340</button>
+            </div>
+    </div>
+    <table class="table table-responsive table-bordered table-condensed table-hover" style="margin-top: 30px;" >
+        <thead>
+            <tr>
+                <th>SNO</th>
+                <th ng-click="filter.sorttype = 'customer';sortarr()">Customer</th>
+                <th ng-click="filter.sorttype = 'amount';sortarr()">Amount</th>
+                <th>Last date</th>
+                <th ng-click="filter.sorttype = 'days';sortarr()">Days</th>
+                <th ng-click="filter.sorttype = 'chiti';sortarr()">Chiti</th>
+                <th ng-click="filter.sorttype = 'colid';sortarr()">Colid</th>
+                <th ng-click="filter.sorttype = 'id';sortarr()">Rcvdid</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="r in rcvdamtlist" ng-show = "r.days < pendingdays">
+                <td>{{$index + 1}}</td>
+                <td><a href="#/chiti/{{r.chiti}}" target="_blank">{{r.customername}}({{r.haminame}})</a></td>
+                <td>{{r.amount}}</td>
+                <td>{{changeDateUserFormat(r.rcvddate)}}</td>
+                <td>{{r.days}}</td>
+                <td><a href="#/chiti/{{r.chiti}}" target="_blank">{{r.chiti}}</a></td>
+                <td><a href="#/editcollection/{{r.colid}}" target="_blank">{{r.colid}}</a></td>
+                <td><a href="#/editreceived/{{r.id}}" target="_blank">{{r.id}}</a></td>
+             </tr>
+        </tbody>
+    </table>
+</div>

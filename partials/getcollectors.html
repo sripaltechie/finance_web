@@ -1,0 +1,37 @@
+<div class="Container" ng-init="init()">
+    <center>
+        <h1>Collectors List</h1>
+    </center>
+    <div class="center">
+        <table class="table table-bordered table-hover" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Sno</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Uid</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="j in collectorsList" ng-class="checkuid(j.uid)">
+                    <td>{{$index+1}}</td>
+                    <td>{{j.name}}</td>
+                    <td>{{j.phone}}</td>
+                    <td>{{j.status}}</td>
+                    <td>{{j.uidfullname}}</td>
+                    <td>{{j.username}}</td>
+                    <td>
+                        <a href="#/editcollector/{{j.id}}" target="_blank" >
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                        &nbsp;&nbsp;
+                        <button class="btn btn-danger" ng-click="deleteCollector(j.id)" ><span class="glyphicon glyphicon-trash"></span></button>                        
+                    </td>                
+                </tr>
+          </tbody>
+     </table>
+    </div>
+</div>

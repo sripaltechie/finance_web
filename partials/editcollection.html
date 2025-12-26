@@ -1,0 +1,175 @@
+
+
+<div ng-init="init()" class="container" >
+   <center>Edit Collection Entry </center>
+    <br>
+    <br>
+    <form name="editcollectionform" ng-submit="editcollection()" ng-init="init()" >
+            <div class="form-inline">
+                <div class="row text-center" style="font-size: 30px;" >
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Customer name : </label>
+                             {{collection.customerFL}} 
+                        </div>
+                    </div>   
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Chiti ID : </label>
+                            {{collection.chiti}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Collection ID : </label>
+                            {{collection.id}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row text-center" style="padding-top: 30px;font-size: 20px;">
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Collection DT : </label>
+                                    <div class="input-group date" style=" padding-right:100 px;">
+                                            <input type="text" style="width:100px; " class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="collection.date" name="dAte" id="dAte" autocomplete="off" >
+                                            <span  class="input-group-addon "><i class="glyphicon glyphicon-th "></i></span>
+                                    </div>
+                            </div>
+                        </div>   
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Amount : </label>
+                                <input type="text" style="width:100px;" ng-model = "collection.amount" class="form-control" >
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Received : </label>
+                                <select ng-model="collection.received" style="width: 100px;">  
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                    <label>Rcvd Date :</label>
+                            <div class="form-group">
+                                <div class="input-group date" style="padding-left: 5px;" >
+                                    <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="collection.rcvddate" name="rcvddate" id="rcvddate" autocomplete="off" >
+                                    <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                </div> 
+                            </div>
+                        </div>
+                        
+                    
+                </div>
+                <div class="row text-center" style="padding-top: 30px;font-size: 20px;">
+                        <!-- <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Sowji : </label>
+                                <input type="text" style="width:100px;" ng-model = "collection.sowji" class="form-control" >
+                            </div>
+                        </div> -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Received From : </label>
+                                    <select ng-model="collection.receivedfrom"   ng-options="f.id as f.Firstname+ ' ' +f.LastName+'('+f.HamiFirstName+')' for f in customers" class= "form-control" >
+                                        <option value="">Select</option>                        
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-6" ng-show="collection.paymentmode != 50">
+                                <div class="form-group">
+                                    <label>Payment mode: </label>
+                                    <select  ng-change="checkmultipm()" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist"  ng-model="collection.paymentmode" focus required> 
+                                        
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6" ng-show="collection.paymentmode == 50"  style="margin-top: 10px;">
+                                <form name="multipmform" >
+                                    <div class="row" ng-repeat="multi in collection.pmtrans">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Payment mode: </label>
+                                                <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist | filter: filterpmtrans()"  ng-model="multi.paymentmode" focus> 
+                                                    <option selected>Select</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Amount</label>
+                                                <div class="col-md-7 col-xs-7 col-sm-7">
+                                                    <input style="width: 100px;" autocomplete="off" type="text" name="credit" id="credit" ng-model="multi.credit" class="form-control" focus> 
+                                                </div>
+                                            </div>        
+                                        </div>  
+                                        <div class="col-md-1">
+                                            <button class="btn btn-danger"  ng-click="deletepmtrans($index)"><span class="glyphicon glyphicon-trash"></span> </button>
+                                        </div>  
+                                    </div>                            
+                                </form>
+                                <button type="button" class="btn btn-primary" ng-click="addpmmode()">Add</button>
+                                <button type="button" class="btn btn-primary" ng-click="collection.paymentmode = 1;checkmultipm()">Single</button>
+                            </div>                             -->
+                
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Notes : </label>
+                            <textarea ng-model="collection.notes" class="form-control" >
+
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" style="padding-top: 30px;">
+                    <button  type="button" class="btn btn-primary"><a  ng-href="#/chiti/{{collection.chiti}}" style="color:white;">Back </a></button>
+                    <button type="submit" class="btn btn-success">Edit</button>
+                    <button class="btn btn-danger" ng-click="deleteColl()">Delete &nbsp; <span class="glyphicon glyphicon-trash"></span> </button>
+                </div>
+            </div>
+    </form>
+
+
+
+    <div ng-show="rcvdamtlist.length" style="margin-top:50px ;" >
+        <center><h1>Received Entries For this Collection</h1></center>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr  >
+                    <th>SNO</th>
+                    <th>Rcvd ID</th>
+                    <th>Customer</th>
+                    <th>amount</th>
+                    <th>Notes</th>
+                    <th>Paymentmode</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in rcvdamtlist">
+                    <td>{{$index + 1}}</td>
+                    <td>{{r.id}}</td>
+                    <td>{{r.customername}}</td>
+                    <td>{{r.amount}}</td>
+                    <td>{{r.note}}</td>
+                    <td ng-show="r.paymentmode != 50">{{r.paymentmodename}}</td>
+                    <td ng-show="r.paymentmode == 50"> 
+                        <table class="table">
+                           <tr ng-repeat="pm in r.pmtrans">
+                                 <td>{{pm.paymentmodename}}</td>
+                                 <td>{{pm.credit}} </td>
+                           </tr>
+                        </table>
+                     </td>
+                    <td> <a ng-href="#/editreceived/{{r.id}}"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> </td>
+                    <!-- <td>{{}}</td>
+                    <td>{{}}</td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{{response}}

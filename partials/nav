@@ -1,0 +1,108 @@
+	<div class='container nopaddinglr noprint'  style='background-color:#0D3061' ng-controller='loginCtrl'>
+		<div class='container'>
+
+			<div class='col-md-12 text-center'>
+<h1 style="color:red;font-size:40px;border : 1px outset white;border-radius: 20px "><img height="40" src="assets/images/hanumanji.jpg"> <b>{{firm}}</b></h1>
+			</div>
+
+		</div>
+
+<nav class="navbar noprint" style='background-color:#EAD400 !important;color:black !important' >
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+            </button>
+            <a class="navbar-brand" href="#" style='color:green;font-size:15px'>{{code}}</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar" >
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="#/dashboard" class="menulink">Home</a>
+                </li>
+<li class="dropdown">
+                    <a  class="menulink dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Masters <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#/createcustomer" class="sublink">Create Customer</a>
+                        </li>
+<li>
+                            <a href="#/customers"  class="sublink">List Customer</a>
+                        </li>
+<li>
+                            <a href="#/onaccountcustomers"  class="sublink">List On Account Customer</a>
+                        </li>
+                    </ul>
+                </li>
+<li class="dropdown">
+        <a  class="menulink dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Transactions <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                                        <li>
+                            <li class="dropdown">
+                                <a  class="menulink dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Receipts <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#/createcustomer" class="sublink">Add</a>
+                                    </li>
+                                    <li>
+                                        <a href="#/customers"  class="sublink">Modify</a>
+                                    </li>
+                                    <li>
+                                        <a href="#/onaccountcustomers"  class="sublink">List</a>
+                                    </li>
+                                </ul>
+                            </li>
+            
+                        </li>
+<li>
+                            <a href="#/customers"  class="sublink">Payments</a>
+                        </li>
+<li>
+                            <a href="#/onaccountcustomers"  class="sublink">List On Account Customer</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a  class="menulink dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">ACCOUNTS <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                                <a href="#/customers"  class="sublink">Daybook</a> 
+                        </li>
+                        <li>
+                                <a href="#/customers"  class="sublink">Ledger</a> 
+                        </li>
+                               
+                            
+                    </ul>
+                            </li>
+        <li class="dropdown">
+                <a  class="menulink dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pending <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                                <a href="#/customers"  class="sublink">ALL</a> 
+                        </li>
+                        <li>
+                                <a href="#/customers"  class="sublink">Daily</a> 
+                        </li>
+                        <li>
+                                <a href="#/customers"  class="sublink">Weekly</a> 
+                        </li>
+                        <li>
+                                <a href="#/customers"  class="sublink">10 Days</a> 
+                        </li>
+                        <li>
+                                <a href="#/customers"  class="sublink">Monthly</a> 
+                        </li>
+                    </ul>
+                
+
+                        
+              
+            </ul>
+        </div>
+    </div>
+</nav>
+</div>

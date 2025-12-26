@@ -1,0 +1,156 @@
+<div class="container" ng-init="init()" style="border: 1px solid black;border-radius: 15px;width: 500px;height: 500px;">
+    <center> <h1>Create Chit Fund chiti</h1><center>
+     <form name="createchitfundChitiForm" ng-submit="createChitfund()" >
+         <div style="margin-top: 30px;">
+             <div >
+                 <div class="col-md-6">
+                     <select id="chitiName" name="chitiName" ng-model="chitfund.name" class="form-control"  focus required >
+                         <option value="">Select Chiti</option>
+                         <option value="1">Sowji Chiti</option>
+                         <option value="2">Lucky Chiti</option>
+                     </select>                  
+                 </div>
+                 <div class="col-md-6">
+                     <div class="form-group form-inline">
+                         <label> Code </label>
+                         <input style="width:80px;" type="text"  ng-model="chitfund.code" name="code" id="code" class="form-control" focus >
+                     </div>
+                 </div>
+             </div>
+             <div class="row">
+                 <div class="col-md-6">
+                    <div class="item form-group has-success text-center">
+                        <label for="date">Date: <span class="required">*</span>
+                        </label><br>
+                        <input id="date" ng-model="chitfund.date" name="date" class="date-picker form-control  has-feedback-left date" type="text" required onfocus="initArrow(this)"  onkeydown="setArrow(event,this)" autocomplete="off" focus> 
+                        <!-- onblur="setProperValue(this)" -->
+                        <span class="error" ng-show="(createchitfundChitiForm.date.$dirty || submitted) && createchitfundChitiForm.date.$error.required" >
+                        Date Required!
+                        </span>
+                     </div>
+                 </div>   
+                 <div class="col-md-6">
+                     <div class="form-group">
+                         <label >amount</label>
+                         <input type="text" style="width:100px;" ng-model="chitfund.amount" name="amount" id="amount" class="form-control" focus required>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <div style="margin-top: 10px;">
+             <div class="row">
+                 <div class="col-md-6">
+                     <div class="form-group">
+                         <label >Type</label>
+                         <select  ng-model="chitfund.type" name="type" id="type"  class="form-control" focus required>
+                             <option value="">Select Type</option>
+                             <option value="1">monthly</option>
+                             <option value="2">weekly</option>
+                         </select>
+                     </div>
+                 </div>
+                 <div class="col-md-6">
+                     <div class="form-group"> 
+                         <label ng-show="chitfund.type == 1" >Months</label>
+                         <label ng-show="chitfund.type == 2" >Weeks</label>
+                         <input style="width:50px;" type="text" name="noof" ng-show="chitfund.type==1 || chitfund.type ==2" ng-model="chitfund.noof" id="noof" class="form-control" focus required>
+                     </div>
+                 </div>
+             </div>
+             <div class="row">
+                <div class="col-md-6">  
+                    <div class="form-group">
+                     <label>Sripal Comm</label> 
+                     <input  type="number" name="sripalComm" id="sripalComm" ng-model="chitfund.sripalcomm" class="form-control" focus required>
+                    </div> 
+                </div>
+                <div  class="col-md-6">
+                    <div class="form-group">
+                      <label>Sowji Comm</label> 
+                      <input type="number" name="sowjiComm" id="sowjiComm" ng-model="chitfund.sowjicomm" class="form-control" focus required>
+                    </div>
+                </div>
+             </div>   
+         </div>
+         <div>
+             <input type="submit" class="btn btn-success" >
+         </div>
+     </form>
+ </div>
+
+
+
+ <!-- <div class="container" style="border: 1px solid black;border-radius: 15px;width: 500px;height: 500px;">
+   <center> <h1>Create Chit Fund chiti</h1><center>
+    <form name="createchitfundChitiForm" ng-submit="createChitfund()" >
+        <div style="margin-top: 30px;width: 70%;" >
+            <div class="col-md-12">
+                <select id="chitiName" name="chitiName" ng-model="chitfund.name" class="form-control">
+                    <option value="">Select Chiti</option>
+                    <option value="1">Sowji Chiti</option>
+                    <option value="2">Lucky Chiti</option>
+                </select>                  
+            </div>
+            <div class="col-md-12" style="margin-top: 10px;">
+                <div class="form-group form-inline">
+                    <label> Code </label>
+                    <input  type="text"  ng-model="chitfund.code" name="code" id="code" class="form-control" >
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label >date</label>
+                    <input  type="date"  ng-model="chitfund.code" name="date" id="date" class="form-control" >
+                </div>
+            </div>
+            
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label >amount</label>
+                    <input type="text" style="width:100px;" ng-model="chitfund.amount" name="amount" id="amount" class="form-control" >
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label >Type</label>
+                    <select  ng-model="chitfund.type" name="type" id="type"  class="form-control">
+                        <option value="">Select Type</option>
+                        <option value="1">monthly</option>
+                        <option value="2">weekly</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group"> 
+                    <label ng-show="chitfund.type == 1" >Months</label>
+                    <label ng-show="chitfund.type == 2" >Weeks</label>
+                    <input type="text" name="noof" ng-show="chitfund.type==1 || chitfund.type ==2" ng-model="chitfund.noof" id="noof" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">  
+                <div class="form-group">
+                 <label>Sripal Comm</label> 
+                 <input  type="number" name="sripalComm" id="sripalComm"ng-model="chitfund." class="form-control" >
+                </div> 
+            </div>
+            <div  class="col-md-6">
+                <div class="form-group">
+                  <label>Sowji Comm</label> 
+                  <input type="number" name="sowjiComm" id="sowjiComm"ng-model="chitfund." class="form-control">
+                </div>
+            </div>
+            <div>
+                <input type="submit" class="btn btn-success" >
+            </div>
+        </div>
+        </form>
+</div>
+
+
+<style>
+    .form-group{
+        margin-bottom: 10px;
+    }
+</style> -->
+
+<!-- duplicate -->

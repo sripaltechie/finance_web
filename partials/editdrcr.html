@@ -1,0 +1,167 @@
+<div class="container" ng-init="init()" style="border: 1px solid;width: 800px;min-height: 570px;">
+    <form name="editdrcrform" ng-submit="editdrcr()" >
+            <center><h1>Cash Entry</h1></center>
+            <div class="form-inline" style="padding-top: 20px;">
+            <div class="row">
+                <div style="margin-top: 10px;" class="col-md-5">
+                    <div class="form-group">
+                        <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="drcr.date" name="dAte" id="dAte" autocomplete="off" >
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <input type="button" class="btn btn-primary" ng-click="todaydate()" value="today">
+                    <input type="button" class="btn btn-primary" ng-click="yesterdaydate()" value="1">
+                    <input type="button" class="btn btn-primary" ng-click="DByesterdaydate()" value="2">
+                    <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate()" value="3">
+                </div>
+                <!-- <div class="col-md-5">
+                    <div class="form-group">
+                    <label>Customer : </label> 
+                    <select ng-model="drcr.customer" ng-change="chck()"  ng-options="f.id as f.Firstname+ ' ' +f.LastName+'('+f.HamiFirstName+')' for f in customers" class= "form-control" >
+                        <option value="">Select</option>                        
+                    </select>
+                    </div>
+                </div> -->
+                <div class="col-md-7"  style="margin-top: 15px;">
+                    <div class="form-group">
+                        <label class="col-md-4 col-xs-4 col-sm-4 text-right" >Customer</label>
+                        <div class="col-md-8 col-xs-8 col-sm-8">
+                            <input style="width: 250px;" ng-keydown="getid($event,'customer')" autocomplete="off" type="text" name="customername" id="customername" ng-model="drcr.customername" class="form-control" typeahead="customer.Firstname + ' ' + customer.LastName for customer in customers | filter:{Firstname:$viewValue}" required focus> 
+                            <span class="error" ng-show="(editdrcrform.customername.$dirty || submitted) && editdrcrform.customername.$error.required" >
+                                Customer Name Required!
+                            </span>
+                        </div>
+                    </div>                   
+                </div>
+            </div>
+            
+            
+            <div class=" row text-center" style="margin-top: 10px;" >
+                <!-- <div class="col-md-5">
+                    <div class="form-group">
+                            <label>Cr/Dr: </label>
+                        <select  class= "form-control"  ng-model="drcr.drorcr" focus>
+                            <option selected value="1">Credit</option>
+                            <option value="2">Debit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group" >
+                    <label>Amount : </label>
+                    <input type="number"  ng-model="drcr.amount" class="form-control"style="width:100px;" focus>
+                    </div>
+                </div> -->
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>Credit :</label>
+                        <input style="width:110px;" type="text" ng-model="drcr.credit" class="form-control" focus>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>Debit :</label>
+                        <input style="width:110px;"  type="text" ng-model="drcr.debit" class="form-control" focus>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row text-center" style="margin-top: 10px;" >
+                <div class="form-inline">
+                    <div class="col-md-6" ng-show="drcr.paymentmode != 50">
+                        <div class="form-group">
+                            <label>Payment mode: </label>
+                            <select  ng-change="checkmultipm()" class= "form-control" ng-options="pm.id as pm.modename for pm in paymentmodelist"  ng-model="drcr.paymentmode" focus> 
+                                <!-- <option selected>Select</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8" ng-show="drcr.paymentmode == 50"  style="margin-top: 10px;">
+                        <form name="multipmform" >
+                            <div class="row" ng-repeat="multi in drcr.pmtrans">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Payment mode: </label>
+                                        <select name="paymentmode{{$index}}" id="paymentmode{{$index}}" class= "form-control" ng-options="pm.id as pm.modename for pm in pmtrans"  ng-model="multi.paymentmode" focus> 
+                                            <option selected>Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-5" ng-show="drcr.credit>0">
+                                    <div class="form-group">
+                                        <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Credit</label>
+                                        <div class="col-md-7 col-xs-7 col-sm-7">
+                                            <input autocomplete="none" style="width: 100px;" autocomplete="off" type="text" name="credit" id="credit" ng-model="multi.credit" class="form-control" focus> 
+                                        </div>
+                                    </div>        
+                                </div>  
+                                <div class="col-md-5" ng-show="drcr.debit>0">
+                                    <div class="form-group">
+                                        <label class="col-md-5 col-xs-5 col-sm-5 text-right" >Debit</label>
+                                        <div class="col-md-7 col-xs-7 col-sm-7">
+                                            <input autocomplete="none" style="width: 100px;" autocomplete="off" type="text" name="debit" id="debit" ng-model="multi.debit" class="form-control" focus> 
+                                        </div>
+                                    </div>        
+                                </div>  
+
+                                <div class="col-md-1">
+                                    <button class="btn btn-danger"  ng-click="deletepmtrans($index)"><span class="glyphicon glyphicon-trash"></span> </button>
+                                </div>  
+                            </div>                            
+                        </form>
+                        <button type="button" class="btn btn-primary" ng-click="addpmmode()">Add</button>
+                        <button type="button" class="btn btn-primary" ng-click="drcr.paymentmode = 1;checkmultipm()">Single</button>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3" > <!--style="position: absolute;left: 660px;"-->
+                        <div class="form-group">
+                            <label>For Int: </label>
+                            <select  class= "form-control"  ng-model="drcr.forint" focus> 
+                                <option selected value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <br>
+            <div class="row text-center" style="margin-top: 10px;" >
+                <div class="col-md-6">
+                    <div class="form-group" >
+                        <label>Show in Daybook : </label>
+                        <select ng-model="drcr.showdaybook" class="form-control"style="width:100px;" focus>
+                        <option value="0" >Show/Hide</option>
+                        <option value="1">Show</option>
+                        <option value="2">Hide</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group"ng-show="drcr.forint==0" >
+                        <label>Trans Type : </label>
+                    <select  class= "form-control"  ng-model="drcr.creditexp" ng-keydown="setNextFocus($event,'chitfundid','note')" focus>
+                        <option value="">Select Type</option>
+                        <option value="1">Credit</option>
+                        <option value="2">Expenses</option>
+                        <option value="3">P2C</option>
+                        <option value="4">ChitFund</option>
+                        <option value="5">Medical</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center" style="margin-top: 10px;" >
+                <div ng-show="drcr.creditexp==4">
+                    <label>Chit Fund ID : </label>
+                    <input ng-model="drcr.chitfundid" name="chitfundid" id="chitfundid" class= "form-control" focus>
+                </div>
+                    <textarea style="width:500px;height:100px;" name="note" id="note" ng-model="drcr.note" focus ></textarea>
+                    <br>
+                <input type="submit" value="Edit" class="btn btn-success">
+            </div>
+        </div>
+    </form>
+</div>

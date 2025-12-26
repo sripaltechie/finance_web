@@ -1,0 +1,38 @@
+<div class="container" ng-init="init()">
+ <center><h1>Customers Last payments</h1></center>
+<table style="margin-top:10px;" class="table table-bordered table-hover">
+    <thead>
+      <tr style=" top: 0;position: sticky;background-color: white;">
+       <th>SNO</th>
+       <th>Days</th>
+       <th>Customername</th>
+       <th>Hami</th>
+       <th>RcvdDate</th>
+       <th>Amount</th>
+       <th>Notes</th>
+       <th>Paymentmode</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in lastpayment" ng-class="checkdays(p.days)" >
+        <td>{{$index+1}}</td>
+        <td>{{p.days}}</td>
+        <td>{{p.customername}}</td>
+        <td>{{p.haminame}}</td>
+        <td>{{changeDateUserFormat(p.rcvddate)}}</td>
+        <td>{{p.amount}}</td>
+        <td>{{p.note}}</td>
+        <td ng-show="p.paymentmode != 50" >{{p.paymentmodename}}</td>
+        <td ng-show="p.paymentmode == 50" >
+          <table class="table table-bordered">
+            <tr ng-repeat="pm in p.pmtrans">
+              <td>{{pm.modename}} </td>
+              <td>{{pm.credit}} </td>
+            </tr>
+          </table>
+        </td>
+        
+      </tr>
+    </tbody>
+</table>
+</div>

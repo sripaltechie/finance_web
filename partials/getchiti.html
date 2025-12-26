@@ -1,0 +1,171 @@
+
+<div class="container" style="font-size: large;">
+   <div class="col-md-3">
+      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Cust names.." title="Type in a name">
+   </div>
+   <div class="col-md-2">
+      <input type="checkbox" ng-change="getchitilist()" ng-true-value="1" ng-false-value ="2" ng-model="filter.status">
+      <label>Pending</label>
+   </div>
+   
+   <div class="col-md-3">
+      <label>Chiti Type</label>
+      <select ng-options="c.id as c.type for c in chititypes"  ng-change="getchitilist()" ng-model="filter.tYpe">
+         <option value="">Select</option>
+      </select>
+   </div>
+   <div class="col-md-2">
+      <button class="btn btn-primary" data-toggle="modal"  data-target="#chitimodal" >Open Modal</button>
+   </div>
+   <div class="col-md-2">
+      <button type="button" class="btn btn-danger" ng-click="clearfilter()" >Clear</button>
+   </div>
+   <div style="padding-top: 50px;">
+   <table id="chitiTable" class="table table-responsive table-bordered table-condensed">
+      <tr>
+         <th>#</th>
+         <th>Chiti Names</th>
+         <th>Date</th>
+         <th> Chiti Type</th>
+         <th>Amount</th>
+         <th>Per </th>
+         <th>Sowji Comm</th>
+         <th>Suri Comm</th>
+         <th>Fullandevi Comm</th>
+         <th>Iscountable </th>
+         <th>Interest Rate</th>
+         <th>Chiti status</th>
+         <th>Edit</th>
+      </tr>
+      <tr ng-repeat="c in chiti " class="text-center" >
+         <td>{{$index+1}}</td>
+         <td><a ng-href="#/chiti/{{c.id}}" >{{c.customername}}<p ng-show="c.code">({{c.code}})</p></a></td>
+         <td>{{changeDateUserFormat(c.date)}}</td>
+         <td> {{chititype[c.tYpe]}} </td>
+         <td> {{c.chitiamount}} </td>
+         <td> {{c.pdwtm}} </td>
+         <td> {{c.sowji}} </td>
+         <td> {{c.suri}} </td>
+         <td> {{c.fullandevi}} </td>
+         <td> {{yesno[c.iscountable] }} </td>
+         <td> {{c.interestrate}} </td>
+         <td>{{chitistatus[c.status]}}</td>
+         <td><a ng-href="#/editchiti/{{c.id}}" ><span class="glyphicon glyphicon-edit"></span></a> </td>
+      </tr>
+   </table>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="chitimodal" class="modal fade" tabindex="-1" role="dialog">
+   <div class="modal-dialog modal-md" >
+      <!-- Modal content -->
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <center>
+               <h1>Edit Chiti</h1>
+            </center>
+         </div>
+         <div class="modal-body">
+            <form ng-submit="getchitilist()" name="editchitibyfilterform" >
+               <div class="container">
+                  <div class="form-inline">
+                     <div class="row" style="padding-left: 28px;">
+                        <div class="col-md-5 text-center">
+                           <div class="form-group">
+                              <label>ID : </label>
+                              <input type="number" name="filterid" ng-model="filter.id" class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                     <!-- row -->
+                     <div class="row" style="padding-top: 28px;" >
+                        <div class="col-md-3" style="padding-left: 0px;" >
+                           <div class="form-group">
+                              <label>From Date : </label>
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.from_date" name="from_date" id="from_date" autocomplete="off" ng-change="getcollectionList()" >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-3"  >
+                           <div class="form-group">
+                              <label>To Date : </label>
+                              <div class="input-group date" >
+                                 <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="filter.to_date" name="to_date" id="to_date" autocomplete="off" ng-change="getcollectionList()" >
+                                 <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row" style="padding-top: 30px;">
+                        <div class="col-md-5 text-center">
+                           <div class="form-group">
+                              <label>Customer : </label>
+                              <select ng-model="filter.customer"  name="filtercustomer" ng-options="c.id as c.Firstname+ ' ' + c.LastName+'('+c.HamiFirstName +')' for c in customers"  class="form-control" >
+                                 <option value="">Select Customer</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row" style="padding-top: 30px;">
+                        <div class="col-md-5 text-center">
+                           <div class="form-group">
+                              <label>Hami : </label>
+                              <select ng-model="filter.hami"  name="filterhami" ng-options="h.id as h.Firstname+ ' ' + h.LastName for h in hAmi"  class="form-control" >
+                                 <option value="">Select Customer</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                     <!-- row -->
+                     <div class="row" style="padding-top: 30px;">
+                        <div class="col-md-5 text-center">
+                           <div class="form-group">
+                              <label>Amount : </label>
+                              <input type="number" name="filteramount" ng-model="filter.amount" class="form-control">
+                           </div>
+                        </div>
+                     </div>
+                     <!-- row -->
+                     <div class="row text-center" style="padding-top: 20px;"  >
+                        <div class="col-md-6">
+                           <input type="submit" class="btn btn-success"  >
+                        </div>
+                     </div>
+                  </div>
+                  <!-- form-inline -->
+               </div>
+               <!-- container -->
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal content -->
+
+<script>
+   function myFunction(){
+     var input, filter, table, tr, td, i, txtValue;
+     input = document.getElementById("myInput");
+     filter = input.value.toUpperCase();
+     table = document.getElementById("chitiTable");
+     tr = table.getElementsByTagName("tr");
+     for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+           txtValue = td.textContent || td.innerText;
+           console.log(txtValue);
+           if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+           } else {
+              tr[i].style.display = "none";
+           }
+        }       
+     }
+   }
+</script>
+
+

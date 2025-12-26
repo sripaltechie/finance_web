@@ -1,0 +1,77 @@
+<div class="container" style="padding-top:50 px;">
+    <div class="row">
+        <div class="col-md-2">
+            Name:   {{customer.firstName}} {{customer.lastName}}
+        </div>
+        <div class="col-md-2">
+           <button class="btn btn-primary" ng-show="customerdet != 1" ng-click = "customerdet=1">Customer Details</button>
+           <button class="btn btn-danger" ng-show="customerdet == 1" ng-click = "customerdet=0">Cancel</button>
+        </div>
+        <div class="col-md-2" ng-show = "customer.phoneNo>0">
+            Phone number:   {{customer.phoneNo}}
+        </div>
+            <div class="col-md-2">
+            Hami :   {{customer.hamiFirstName}}  {{customer.hamiLastName}}
+            </div>
+            <div class="col-md-2"  ng-show = "customer.hamiPhoneNo>0">
+                Hami Phone NO : {{customer.hamiPhoneNo}}
+            </div>
+            <div class="col-md-2">  
+            <select ng-model="status" class="form-control" ng-change="getchitilist()" >
+                <option value="1">Pending</option>
+                <option value="2">Closed</option>
+            </select>
+            </div>
+        </div>
+            <br> 
+            <div style="border: 1px solid black;width: 75%;background-color: bisque;" ng-show="customerdet == 1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3"  ng-show = "customer.phoneNo>0">
+                            Customer Phone NO : {{customer.phoneNo}}
+                        </div>
+                        <div class="col-md-2">
+                            Hami :   {{customer.hamiFirstName}}  {{customer.hamiLastName}}
+                        </div>
+                        <div class="col-md-3"  ng-show = "customer.hamiPhoneNo>0">
+                            Hami Phone NO : {{customer.hamiPhoneNo}}
+                        </div>
+                    </div>
+                    <div style="padding-top: 20px;" class="row" ng-show = "isproof == 1">
+                        <div class="col-md-12">
+                            Proofs Submitted : {{proof}}
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+                <table  class="table table-responsive table-bordered table-condensed">
+                        <tr>
+                            <th>#</th>
+                            <th>Customer Name</th>
+                            <th>Code </th>
+                            <th>Date</th>
+                            <th> Chiti Type</th>
+                            <th>Amount</th>
+                            <th>Per </th>
+                            <th>Sowji Comm</th>
+                            <th>Interest Rate</th>
+                        </tr>
+                        
+                        <tr ng-repeat="c in chiti" >
+                            <td>{{$index+1}}</td>
+                            <td><a ng-href= "#/chiti/{{c.id}}">{{c.customername}}</a></td>
+                            <td> {{c.code}} </td>
+                            <td>{{changeDateUserFormat(c.date)}}</td>
+                            <td> {{chititype[c.tYpe-1]}} </td>
+                            <td> {{c.chitiamount}} </td>
+                            <td> {{c.pdwtm}} </td>
+                            <td> {{c.sowji}} </td>
+                            <td> {{c.interestrate}} </td>
+                        </tr>
+                    </table>
+                   <button class="btn btn-primary"> <a ng-href="#/getcustomers" style="color:white;" >Back</a></button>
+</div>

@@ -1,0 +1,85 @@
+<div class="Container" ng-init="init()">
+    <div style="border: 5px inset black;border-radius: 5px;width: 500px;margin: auto;padding: 40px;">
+        <h1 style="text-align: center;">Edit Collectors Amount</h1>
+        <form nonvalidate name="editCollectorAmountForm" ng-submit="editCollectorAmount()" action=""
+            style="padding-top: 50px;">
+            <div  style="margin-bottom: 10px;" class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="input-group date" >
+                            <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="Date" ng-model="trans.date" name="dAte" id="dAte" autocomplete="off" focus>
+                            <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <br>
+                    <br> -->
+                <div class="col-md-6">
+                    <input type="button" class="btn btn-primary" ng-click="todaydate(0)" value="0">
+                    <input type="button" class="btn btn-primary" ng-click="yesterdaydate(0)" value="1">
+                    <input type="button" class="btn btn-primary" ng-click="DByesterdaydate(0)" value="2">
+                    <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate(0)" value="3">
+                </div>
+            </div>
+            
+            <div class="col-md-12" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label class="col-md-3">Collector</label>
+                    <div class="col-md-9">
+                        <select class="form-control" ng-model="trans.collector" name="collector" id="collector"
+                            ng-options="c.id as c.name for c in collectorslist" focus required >
+
+                        </select>
+                        <div role="alert">
+                            <span class="error" ng-show="(editcollectoramountForm.collector.$dirty || submitted) && editcollectoramountForm.collector.$error.required">
+                            Required!
+                            </span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            
+                <div class="col-md-12" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label class="col-md-3">Amount</label>
+                        <div class="col-md-9">
+                            <input type="text" ng-model="trans.amount" name="Amount" id="Amount" class="form-control"
+                                autocomplete="off" focus>
+                        </div>
+                    </div>
+                    </div>
+                    <div  style="margin-bottom: 10px;" class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group date" >
+                                    <input type="text" style="width:150px;" class="form-control" ng-change="setDate()"  placeholder="collection date" ng-model="trans.collectiondate" name="dAte" id="dAte" autocomplete="off" focus>
+                                    <span  class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <br>
+                            <br> -->
+                        <div class="col-md-6">
+                            <input type="button" class="btn btn-primary" ng-click="todaydate(1)" value="0">
+                            <input type="button" class="btn btn-primary" ng-click="yesterdaydate(1)" value="1">
+                            <input type="button" class="btn btn-primary" ng-click="DByesterdaydate(1)" value="2">
+                            <input type="button" class="btn btn-primary" ng-click="D2Byesterdaydate(1)" value="3">
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label class="col-md-3">Note</label>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="trans.note" name="Note" id="Note" class="form-control"
+                                    autocomplete="off" focus>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" style="padding-top:20px;">
+                        <input type="submit" class="btn btn-primary" value="Edit">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

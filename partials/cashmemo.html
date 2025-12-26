@@ -1,0 +1,211 @@
+<button data-toggle="modal" data-target="#create-modal" class="btn btn-primary btn-lg">Add New city</button>
+
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+   <div class="modal-dialog">
+      <div class="chitimodal-container"  >
+         <h1 class="page-header">Edit City :({{cityname}})</h1>
+         <br>
+         <form ng-submit="updateCity(editCity.id)"  name="cityForm" noValidate>
+            <input type="text" name="name" placeholder="City Name" ng-model="editCity.name" required>
+            <span class="error" ng-show="cityForm.name.$error.required">Required</span>
+            <input type="text" name="code" placeholder="City code" ng-model="editCity.code" required>
+            <span class="error" ng-show="cityForm.code.$error.required">Required</span><br>
+            <textarea name="address" placeholder="Address" ng-model="editCity.address" ></textarea><br>
+            <input type="text" name="phno" placeholder="Phone Number" ng-model="editCity.phno" >
+            <select class="form-control" ng-options="state.id as state.name for state in states" name="state" placeholder="State" ng-model="editCity.state" ></select><br>
+ 
+ <br>
+            <label class="checkbox-inline">
+               <h3>
+                  <input type="checkbox" id="inlineCheckbox1"   ng-model="editCity.source" ng-true-value="1" ng-false-value="0" ng-checked="editCity.source == '1'"> Source
+               </h3>
+            </label>
+            <br>
+            <label class="checkbox-inline">
+               <h3>
+               <input type="checkbox" id="inlineCheckbox1"   ng-model="editCity.destination" ng-true-value="1" ng-false-value="0" ng-checked="editCity.destination == '1'"> Destination</h3>
+            </label>
+ <br>
+ <div ng-show="editCity.destination">Main Station:
+ <select class="form-control" id="mainstation" name="mainstation" ng-model="editCity.mainstation" ng-options="mcity.id as mcity.name for mcity in mainStationList">
+                        <option value="0">Self Main Station</option>
+                     </select></div>
+ 
+           
+            <div class="text-center">
+               <button  type="submit" class="btn btn-success submit" style="width:80% !important">Update</button>
+            </div>
+            <center>
+               <button  class="btn btn-danger " data-dismiss="modal">Cancel</button>
+            </center>
+         </form>
+      </div>
+   </div>
+ </div>
+ 
+ 
+ 
+ <!--create city -->
+ <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+   <div class="modal-dialog">
+      <div class="chitimodal-container">
+         <h1 class="page-header">Create New City</h1>
+         <br>
+         <form ng-submit="createCity()"  name="newCityForm" noValidate>
+            <input type="text" name="name" placeholder="City Name" ng-model="newCity.name" required>
+            <span class="error" ng-show="newCityForm.name.$error.required && newSubmitted">Required</span>
+            <input type="text" name="code" placeholder="City code" ng-model="newCity.code" >
+            <textarea name="address" placeholder="Address" ng-model="newCity.address" ></textarea><br>
+            <input type="text" name="phno" placeholder="Phone Number" ng-model="newCity.phno" ><br>
+ 
+                  <select class="form-control" ng-options="state.id as state.name for state in states" name="state" placeholder="State" ng-model="newCity.state" ><option>-select state-</option></select><br>
+ 
+ <br>
+            <label class="checkbox-inline">
+               <h3>
+                  <input type="checkbox" id="inlineCheckbox1"   ng-model="newCity.source" ng-true-value="1" ng-false-value="0" > Source
+               </h3>
+            </label>
+            <br>
+            <label class="checkbox-inline">
+               <h3>
+                  <input type="checkbox" id="inlineCheckbox1"   ng-model="newCity.destination" ng-true-value="1" ng-false-value="0" > Destination
+               </h3>
+            </label>
+  <br>
+ <div ng-show="newCity.destination">Main Station:
+ <select class="form-control" id="mainstation" name="mainstation" ng-model="newCity.mainstation" ng-options="mcity.id as mcity.name for mcity in mainStationList">
+                        <option value="0">Self Main Station</option>
+                     </select>
+ </div>
+            
+            <div class="text-center">
+               <button  type="submit" class="btn btn-success submit" style="width:80% !important">Create
+               </button>
+            </div>
+            <center>
+               <button  class="btn btn-danger " data-dismiss="modal">Cancel</button>
+            </center>
+         </form>
+      </div>
+   </div>
+ </div>
+ <style type="text/css">
+   @import url(http://fonts.googleapis.com/css?family=Roboto);
+   .checkboxSize {width:20px; height:20px;}
+   /****** LOGIN MODAL ******/
+   .chitimodal-container {
+   padding: 30px;
+   max-width: 350px;
+   width: 100% !important;
+   background-color: #F7F7F7;
+   margin: 0 auto;
+   border-radius: 2px;
+   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+   overflow: hidden;
+   font-family: roboto;
+   }
+   .chitimodal-container h1 {
+   text-align: center;
+   font-size: 1.8em;
+   font-family: roboto;
+   }
+   .chitimodal-container button {
+   width: 100%;
+   display: block;
+   margin-bottom: 10px;
+   position: relative;
+   }
+   .chitimodal-container input[type=text], input[type=password], textarea {
+   height: 44px;
+   font-size: 16px;
+   width: 100%;
+   margin-bottom: 10px;
+   -webkit-appearance: none;
+   background: #fff;
+   border: 1px solid #d9d9d9;
+   border-top: 1px solid #c0c0c0;
+   /* border-radius: 2px; */
+   padding: 0 8px;
+   box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   }
+   .chitimodal-container input[type=text]:hover, input[type=password]:hover,textarea:area {
+   border: 1px solid #b9b9b9;
+   border-top: 1px solid #a0a0a0;
+   -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+   -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+   box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+   }
+   .chitimodal {
+   text-align: center;
+   font-size: 14px;
+   font-family: 'Arial', sans-serif;
+   font-weight: 700;
+   height: 36px;
+   padding: 0 8px;
+   /* border-radius: 3px; */
+   /* -webkit-user-select: none;
+   user-select: none; */
+   }
+   .chitimodal-submit {
+   /* border: 1px solid #3079ed; */
+   border: 0px;
+   color: #fff;
+   text-shadow: 0 1px rgba(0,0,0,0.1); 
+   background-color: #4d90fe;
+   padding: 17px 0px;
+   font-family: roboto;
+   font-size: 14px;
+   /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
+   }
+   .chitimodal-submit:hover {
+   /* border: 1px solid #2f5bb7; */
+   border: 0px;
+   text-shadow: 0 1px rgba(0,0,0,0.3);
+   background-color: #357ae8;
+   /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
+   }
+   .chitimodal-container a {
+   text-decoration: none;
+   color: #666;
+   font-weight: 400;
+   text-align: center;
+   display: inline-block;
+   opacity: 0.6;
+   transition: opacity ease 0.5s;
+   } 
+   .login-help{
+   font-size: 12px;
+   }
+ </style>
+
+
+<table class="table " id="daybooktable">
+      <thead class="thead-dark">
+         <tr>
+            <th>Cid</th>
+            <th>Chiti id</th>
+            <th> Customer </th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Sowji</th>
+            <th>Hami</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr  ng-repeat ="c in collection">
+            <td> {{c.id}}</td>
+            <td> <a href="#/chiti/{{c.chiti}}" >{{c.chiti}} </a></td>
+            <td> {{c.customerFL}} </td>
+            <td> {{c.date}} </td>
+            <td> {{c.amount}} </td>
+            <td> {{c.sowji}} </td>
+            <td> {{c.haminame}} </td>
+         </tr>                        
+      </tbody>
+   </table>        
+
+
+
+   
