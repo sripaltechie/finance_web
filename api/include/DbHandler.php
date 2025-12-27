@@ -2813,11 +2813,10 @@ return $response;
 	{
 		// echo "hi";
 		if ($group == "main") {
-			$url = "https://api.telegram.org/bot6235347930:AAFnxXPu5wkZRvGNbbpB2JEelNWf6Zx6l0w/sendMessage?chat_id=-1001858134013&text=" . $msg;
+			$url ="https://api.telegram.org/<bot id>/sendMessage?chat_id=<fill in chatid>&text=".$msg;
 
 		} else if ($group == "full") {
-			$url = "https://api.telegram.org/bot6235347930:AAFnxXPu5wkZRvGNbbpB2JEelNWf6Zx6l0w/sendMessage?chat_id=-1001858134013&text=" . $msg;
-
+			$url = "https://api.telegram.org/<bot id>/sendMessage?chat_id=<fill in chatid>&text=".$msg;
 		}
 		$ch = curl_init();
 		// set URL and other appropriate options

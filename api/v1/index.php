@@ -6639,7 +6639,7 @@ $app->get('/chiti/:id', function ($id) use ($app) {
 
 
 $app->get('/latestnotes/:id', function ($id) use ($app) {
-	//https://api.telegram.org/bot6235347930:AAFnxXPu5wkZRvGNbbpB2JEelNWf6Zx6l0w/sendMessage?chat_id=-1001325777863&text=testmessage
+	
 	$response = array();
 	$db = new DbHandler();
 	$chiti = array();
@@ -10239,18 +10239,17 @@ function changeDateUserFormat($dte)
 
 function sendTelegram($msg, $group){
 	// echo "hi";
+	//u can customise message like in main 
 	if ($group == "main") {
-		// $url = "https://api.telegram.org/bot6235347930:AAFnxXPu5wkZRvGNbbpB2JEelNWf6Zx6l0w/sendMessage?chat_id=-1001858134013&text=" . $msg;
-		$url = "https://api.telegram.org/bot8115026077:AAFzwvcPT1qr-La4LxHV_7iuSyNixbRVQZY/sendMessage?chat_id=-1002394731928&text=".$msg;
 		
+		$url = "https://api.telegram.org/<bot id>/sendMessage?chat_id=<fill in chatid>&text=".$msg;		
 
-	} else if ($group == "full") {
-		// $url = "https://api.telegram.org/bot6235347930:AAFnxXPu5wkZRvGNbbpB2JEelNWf6Zx6l0w/sendMessage?chat_id=-1001858134013&text=" . $msg;
-		$url = "https://api.telegram.org/bot8115026077:AAFzwvcPT1qr-La4LxHV_7iuSyNixbRVQZY/sendMessage?chat_id=-1002496899048&text=" . $msg;
+	} else if ($group == "full") {		
+		$url = "https://api.telegram.org/<bot id>/sendMessage?chat_id=<fill in chatid>&text=".$msg;
 	}else if($group == "sanju"){
 		
-		$url = "https://api.telegram.org/bot8115026077:AAFzwvcPT1qr-La4LxHV_7iuSyNixbRVQZY/sendMessage?chat_id=-1002297890028&text=".$msg;
-		// $url = "https://api.telegram.org/bot6235347930:AAFnxXPu5wkZRvGNbbpB2JEelNWf6Zx6l0w/sendMessage?chat_id=-1001923669627&text=".$msg;
+		$url = "https://api.telegram.org/<bot id>/sendMessage?chat_id=<fill in chatid>&text=".$msg;
+		
 	}
 
 	$ch = curl_init();
